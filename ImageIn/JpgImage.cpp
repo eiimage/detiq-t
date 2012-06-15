@@ -10,7 +10,8 @@ extern "C" {
 #include <cstdlib>
 
 #include "mystdint.h"
-
+#include <sstream>
+using namespace std;
 /*
  * JPEG ERROR HANDLING EXPLANATION
  *
@@ -42,7 +43,7 @@ struct jpegErrorManager {
     /* for return to caller */
     jmp_buf setjmp_buffer;
 };
-
+char jpegLastErrorMsg[JMSG_LENGTH_MAX];
 void jpegErrorExit (j_common_ptr cinfo)
 {
     /* cinfo->err actually points to a jpegErrorManager struct */
@@ -50,10 +51,14 @@ void jpegErrorExit (j_common_ptr cinfo)
     /* note : *(cinfo->err) is now equivalent to myerr->pub */
 
     /* output_message is a method to print an error message */
-    (* (cinfo->err->output_message) ) (cinfo);
+    /*(* (cinfo->err->output_message) ) (cinfo);*/      
+    
+    /* Create the message */
+    ( *(cinfo->err->format_message) ) (cinfo, jpegLastErrorMsg);
 
     /* Jump to the setjmp point */
     longjmp(myerr->setjmp_buffer, 1);
+  
 }
 
 
@@ -71,9 +76,11 @@ unsigned int JpgImage::readHeight(){
     /* Establish the setjmp return context for my_error_exit to use. */
     if (setjmp(jerr.setjmp_buffer)) {
         /* If we get here, the JPEG code has signaled an error. */
+        ostringstream oss;
+        oss <<  "Error while decompressing JPEG file \"" << _filename << "\" : " << endl << jpegLastErrorMsg;
         jpeg_destroy_decompress(&cinfo);
         fclose(fileHandler);
-        throw ImageFileException("Error while decompressing jpeg file "+this->_filename, __LINE__, __FILE__);
+        throw ImageFileException(oss.str(), __LINE__, __FILE__);
     }
     /* We initialize the JPEG decompression object. */
     jpeg_create_decompress(&cinfo);
@@ -109,10 +116,11 @@ unsigned int JpgImage::readWidth(){
     jerr.pub.error_exit = jpegErrorExit;
     /* Establish the setjmp return context for my_error_exit to use. */
     if (setjmp(jerr.setjmp_buffer)) {
-        /* If we get here, the JPEG code has signaled an error. */
+        ostringstream oss;
+        oss <<  "Error while decompressing JPEG file \"" << _filename << "\" : " << endl << jpegLastErrorMsg;
         jpeg_destroy_decompress(&cinfo);
         fclose(fileHandler);
-        throw ImageFileException("Error while decompressing jpeg file "+this->_filename, __LINE__, __FILE__);
+        throw ImageFileException(oss.str(), __LINE__, __FILE__);
     }
     /* We initialize the JPEG decompression object. */
     jpeg_create_decompress(&cinfo);
@@ -149,10 +157,11 @@ unsigned int JpgImage::readNbChannels(){
     jerr.pub.error_exit = jpegErrorExit;
     /* Establish the setjmp return context for my_error_exit to use. */
     if (setjmp(jerr.setjmp_buffer)) {
-        /* If we get here, the JPEG code has signaled an error. */
+        ostringstream oss;
+        oss <<  "Error while decompressing JPEG file \"" << _filename << "\" : " << endl << jpegLastErrorMsg;
         jpeg_destroy_decompress(&cinfo);
         fclose(fileHandler);
-        throw ImageFileException("Error while decompressing jpeg file "+this->_filename, __LINE__, __FILE__);
+        throw ImageFileException(oss.str(), __LINE__, __FILE__);
     }
     /* We initialize the JPEG decompression object. */
     jpeg_create_decompress(&cinfo);
@@ -192,10 +201,11 @@ void* JpgImage::readData(){
     jerr.pub.error_exit = jpegErrorExit;
     /* Establish the setjmp return context for my_error_exit to use. */
     if (setjmp(jerr.setjmp_buffer)) {
-        /* If we get here, the JPEG code has signaled an error. */
+        ostringstream oss;
+        oss <<  "Error while decompressing JPEG file \"" << _filename << "\" : " << endl << jpegLastErrorMsg;
         jpeg_destroy_decompress(&cinfo);
         fclose(fileHandler);
-        throw ImageFileException("Error while decompressing jpeg file "+this->_filename, __LINE__, __FILE__);
+        throw ImageFileException(oss.str(), __LINE__, __FILE__);
     }
     /* We initialize the JPEG decompression object. */
     jpeg_create_decompress(&cinfo);
