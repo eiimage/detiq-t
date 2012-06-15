@@ -11,7 +11,29 @@ using namespace std;
 StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* gi)
     : ImageWindow(path), _gi(gi), _ctrlPressed(false)
 {
-    _image = new Image(path.toStdString());
+    bool error = false;
+    std::string msg = "";
+    try {
+        _image = new Image(path.toStdString());
+    }
+    catch(const imagein::UnknownFormatException& e) {
+        error = true;
+        msg = "Unknown file format !";
+    }
+    catch(const imagein::ImageFileException& e) {
+        error = true;
+        msg = e.getMsg();
+    }
+    catch(...) {
+        error = true;
+        msg = "Unknown exception";
+    }
+    
+    if(error) {
+        QMessageBox::critical(this, "Error while opening file", msg.c_str());
+        _image = new Image();
+    }
+    
     this->setWindowTitle(ImageWindow::getTitleFromPath(path));
 
     _imageView = new StandardImageView(this, _image);

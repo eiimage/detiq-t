@@ -1,6 +1,7 @@
 #include "WindowService.h"
 
 #include <QListIterator>
+#include <QErrorMessage>
 
 using namespace genericinterface;
 using namespace imagein;
@@ -34,7 +35,10 @@ ImageWindow* WindowService::getCurrentImageWindow()
         ImageWindow* imw = dynamic_cast<ImageWindow*>(sw->widget());
         return imw;
     }
-    else return NULL;
+    else {
+        qDebug ("No current window !");
+        return NULL;
+    }
 }
 
 NodeId WindowService::getNodeId(QWidget* widget) const
