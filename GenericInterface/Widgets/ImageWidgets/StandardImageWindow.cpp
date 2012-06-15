@@ -35,8 +35,7 @@ StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* g
     }
     
     this->setWindowTitle(ImageWindow::getTitleFromPath(path));
-
-    _imageView = new StandardImageView(this, _image);
+    
     init();
 }
 
@@ -46,8 +45,6 @@ StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* g
     _image = image;
 
     this->setWindowTitle(ImageWindow::getTitleFromPath(path));
-
-    _imageView = new StandardImageView(this, _image);
 
     init();
 }
@@ -59,16 +56,17 @@ StandardImageWindow::StandardImageWindow(const StandardImageWindow& siw)
 
     this->setWindowTitle(siw.windowTitle());
 
-    _imageView = new StandardImageView(this, _image);
-
     init();
 }
 
 StandardImageWindow::~StandardImageWindow()
 {
-	delete _imageView;
+	//delete _imageView;
     delete _selectedPixel;
     delete _image;
+    delete _menu;
+    delete _view;
+    delete _scene;
 }
 
 
@@ -91,11 +89,11 @@ void StandardImageWindow::startDrag() {
     mimeData->setData("application/detiqt.genericinterface.stdimgwnd", encodedData);
     
     
-    QImage img = getQImage(this->getImage()).scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation);
+    //QImage img = getQImage(this->getImage()).scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation);
      
     drag->setMimeData(mimeData);
-    drag->setPixmap(QPixmap::fromImage(img));
-    drag->setHotSpot(QPoint(img.width()/2, img.height()/2));
+    drag->setPixmap(_imageView->pixmap().scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation));
+    drag->setHotSpot(QPoint(drag->pixmap().width()/2, drag->pixmap().height()/2));
 
     /*Qt::DropAction dropAction = */drag->exec();
 }
@@ -107,18 +105,37 @@ void StandardImageWindow::mouseMoveEvent(QMouseEvent *event) {
 
 void StandardImageWindow::init()
 {
+    _zoomFactor = 1;
+	_scene = new QGraphicsScene(this);
+    _imageView = new StandardImageView(this, _image);
+	_scene->addItem(_imageView);
+	_scene->addItem(_imageView->getHighlightItem());
+    
+    _view = new QGraphicsView(_scene);
+    
+    
+	_menu = new ImageContextMenu(_view);
+	_view->setContextMenuPolicy(Qt::CustomContextMenu);
+	_menu->addAction("Histogram", this, SLOT(showHistogram()));
+	_menu->addAction("Horizontal Projection Histogram", this, SLOT(showHProjectionHistogram()));
+	_menu->addAction("Vertical Projection Histogram", this, SLOT(showVProjectionHistogram()));
+	_menu->addAction("Pixels Grid", this, SLOT(showPixelsGrid()));
+	_menu->addAction("Column Profile", this, SLOT(showColumnProfile()));
+	_menu->addAction("Line Profile", this, SLOT(showLineProfile()));
+	QObject::connect(_view, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
+    
     _selectedPixel = new QPoint();
 
     initStatusBar();
 
 	QVBoxLayout* layout = new QVBoxLayout();
-	layout->addWidget(_imageView->getGraphicsView());
+	layout->addWidget(_view);
 	layout->addWidget(_statusBar);
     this->setLayout(layout);
 
 	QObject::connect(_imageView, SIGNAL(pixelClicked(int, int)), this, SLOT(showSelectedPixelInformations(int, int)));
 	QObject::connect(_imageView, SIGNAL(pixelHovered(int, int)), this, SLOT(showHoveredPixelInformations(int, int)));
-	QObject::connect(_imageView, SIGNAL(zoomChanged(double)), this, SLOT(updateZoom(double)));
+	//QObject::connect(_imageView, SIGNAL(zoomChanged(double)), this, SLOT(updateZoom(double)));
 	QObject::connect(_imageView, SIGNAL(startDrag()), this, SLOT(startDrag()));
 	QObject::connect(this, SIGNAL(ctrlPressed()), _imageView, SLOT(ctrlPressed()));
 	QObject::connect(this, SIGNAL(highlightRectChange(imagein::Rectangle, ImageWindow*)), _imageView, SLOT(showHighlightRect(imagein::Rectangle, ImageWindow*)));
@@ -229,10 +246,10 @@ void StandardImageWindow::showColumnProfile()
 void StandardImageWindow::initStatusBar()
 {
   std::ostringstream oss;
-  oss << _imageView->getPixmap()->height();
+  oss << _imageView->pixmap().height();
   std::string height = oss.str();
   oss.str("");
-  oss << _imageView->getPixmap()->width();
+  oss << _imageView->pixmap().width();
   std::string width = oss.str();
 	
   QFont font;
@@ -395,6 +412,38 @@ void StandardImageWindow::showHoveredPixelInformations(int x, int y) const
 	}
 }
 
+
+void StandardImageWindow::zoom(int delta) {
+    double wOrigin = _imageView->pixmap().width();
+    double hOrigin = _imageView->pixmap().height();
+    if(delta < 0 && _zoomFactor > 0.05) //Zoom out
+    {
+        _zoomFactor -= 0.05;
+        
+        double wActual = wOrigin * (_zoomFactor + 0.05);
+        double hActual = hOrigin * (_zoomFactor + 0.05);
+        
+        double zoomW = (_zoomFactor * wOrigin) / wActual;
+        double zoomH = (_zoomFactor * hOrigin) / hActual;
+        
+        _view->scale(zoomW, zoomH);
+    }
+    else if(delta > 0)//Zoom in
+    {
+        _zoomFactor += 0.05;
+        
+        double wActual = wOrigin * (_zoomFactor - 0.05);
+        double hActual = hOrigin * (_zoomFactor - 0.05);
+        
+        double zoomW = (_zoomFactor * wOrigin) / wActual;
+        double zoomH = (_zoomFactor * hOrigin) / hActual;
+        
+        _view->scale(zoomW, zoomH);
+    }		
+    
+    updateZoom(_zoomFactor*100);
+}
+
 void StandardImageWindow::updateZoom(double z) const
 {
 	std::ostringstream oss;
@@ -406,7 +455,7 @@ void StandardImageWindow::updateZoom(double z) const
 void StandardImageWindow::wheelEvent (QWheelEvent * event) {
 	if (_ctrlPressed && event->orientation() == Qt::Vertical)
 	{
-        _imageView->zoom(event->delta());
+        this->zoom(event->delta());
 	}
 }
 

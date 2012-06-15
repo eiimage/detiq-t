@@ -21,7 +21,7 @@
 
 namespace genericinterface
 {
-  QImage getQImage(const imagein::Image* image);
+  QImage convertImage(const imagein::Image* image);
   /*!
    * \brief Display an image from imagein
    *
@@ -55,20 +55,22 @@ namespace genericinterface
     inline const imagein::Image* getImage() const { return _image; }
         
 		//! Returns the pixmap
-    inline const QPixmap* getPixmap() const { return _pixmap_img; }
+    //inline const QPixmap* getPixmap() const { return _pixmap_img; }
         
 		//! Returns the selection rectangle
     inline imagein::Rectangle getRectangle() const { return _selection; }
         
-		//! Returns the graphics view
-    inline QGraphicsView* getGraphicsView() const { return _view; }
+	/*	//! Returns the graphics view
+    inline QGraphicsView* getGraphicsView() const { return _view; }*/
+    inline QGraphicsRectItem* getHighlightItem() { return _highlight; }
+    
     
     inline void setMode(Mode mode) { _mode = mode; }
 
 	public slots:
     void ctrlPressed();
     void showHighlightRect(imagein::Rectangle rect, ImageWindow* source);
-    void zoom(int delta);
+    //void zoom(int delta);
 		
 	signals:
 		/*!
@@ -92,7 +94,7 @@ namespace genericinterface
 		 * 
 		 * \param z The zoom factor
 		 */
-		void zoomChanged(double z) const;
+		//void zoomChanged(double z) const;
         
         void startDrag();
     
@@ -101,20 +103,17 @@ namespace genericinterface
     
   private:
     QWidget* _parent;
-    QGraphicsScene* _scene;
-    QGraphicsView* _view;
+    //QGraphicsScene* _scene;
+    //QGraphicsView* _view;
     QGraphicsRectItem* _highlight;
-    QPixmap* _pixmap_img;
     GenericHistogramView* _sourceHighlight;
     
     imagein::Image* _image;
     imagein::Rectangle _selection;
     imagein::Rectangle _visibleArea;
-    ImageContextMenu* _menu;
     
     bool _selectionOn;
     bool _ctrlPressed;
-    double _zoomFactor;
     bool _mouseButtonPressed;
     QPoint _pixelClicked;
     imagein::Rectangle _originalHighlight;
@@ -134,7 +133,7 @@ namespace genericinterface
     void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
     void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
-    void wheelEvent(QGraphicsSceneWheelEvent* event);
+    //void wheelEvent(QGraphicsSceneWheelEvent* event);
   };
 }
 

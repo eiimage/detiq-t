@@ -99,6 +99,7 @@ public:
     
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void zoom(int delta);
 
 
 public slots:
@@ -146,6 +147,12 @@ protected:
     QPushButton* _selectButton;
     QPushButton* _mouseButton;
     bool _ctrlPressed;
+    ImageContextMenu* _menu;
+    double _zoomFactor;
+    
+    
+	QGraphicsScene* _scene;
+    QGraphicsView* _view;
 
     void init();
     void initStatusBar();

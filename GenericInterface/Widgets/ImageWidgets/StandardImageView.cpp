@@ -9,12 +9,11 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QGraphicsPi
     _mode = MODE_MOUSE;
     _selection = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
     _visibleArea = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
-	_scene = new QGraphicsScene();
-    _view = new QGraphicsView();
+	//_scene = new QGraphicsScene();
+    //_view = new QGraphicsView();
 
 	this->setAcceptHoverEvents(true);
     
-	_zoomFactor = 1;
     _ctrlPressed = false;
   
     _sourceHighlight = NULL;
@@ -37,125 +36,36 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QGraphicsPi
 
 StandardImageView::~StandardImageView()
 {
-	delete _menu;
-	delete _pixmap_img;
+	//delete _menu;
 }
 
 void StandardImageView::initMenu()
 {
-	_menu = new ImageContextMenu(_view);
-	_view->setContextMenuPolicy(Qt::CustomContextMenu);
-	
-	_menu->addAction("Histogram", _parent, SLOT(showHistogram()));
-	_menu->addAction("Horizontal Projection Histogram", _parent, SLOT(showHProjectionHistogram()));
-	_menu->addAction("Vertical Projection Histogram", _parent, SLOT(showVProjectionHistogram()));
-	_menu->addAction("Pixels Grid", _parent, SLOT(showPixelsGrid()));
-	_menu->addAction("Column Profile", _parent, SLOT(showColumnProfile()));
-	_menu->addAction("Line Profile", _parent, SLOT(showLineProfile()));
-
-	QObject::connect(_view, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
 }
 
 void StandardImageView::showImage()
 {
-    QImage im(_image->getWidth(), _image->getHeight(), QImage::Format_ARGB32);
-
-    //on récupère les bits de l'image qt, qu'on cast en QRgb (qui fait 32 bits -> une image RGBA)
-    QRgb* data = reinterpret_cast<QRgb*>(im.bits());
-    Image::const_iterator it = _image->begin();
-    
-    for(unsigned int i = 0 ; i < _image->getHeight()*_image->getWidth() ; ++i)
-    {
-        //Pour chaque pixel de l'image Qt, on récupère les données correspondantes de l'image ImageIn grace à l'itérateur
-        if(_image->getNbChannels() == 4)
-        {
-			unsigned char red = *(it++);
-			unsigned char green = *(it++);
-			unsigned char blue = *(it++);
-			unsigned char alpha = *(it++);
-
-			//On utilise la fonction qRgba pour en faire un pointeur de qRgb
-			data[i] = qRgba(red, green, blue, alpha);
-		}
-		else if(_image->getNbChannels() == 3)
-		{
-			unsigned char red = *(it++);
-			unsigned char green = *(it++);
-			unsigned char blue = *(it++);
-
-			//On utilise la fonction qRgba pour en faire un pointeur de qRgb
-			data[i] = qRgb(red, green, blue);		
-		}
-		else if(_image->getNbChannels() == 2)
-		{
-			unsigned char gray = *(it++);
-			unsigned char alpha = *(it++);
-
-			//On utilise la fonction qRgba pour en faire un pointeur de qRgb
-			data[i] = qRgba(gray, gray, gray, alpha);		
-		}
-		else if(_image->getNbChannels() == 1)
-		{
-			unsigned char gray = *(it++);
-
-			//On utilise la fonction qRgba pour en faire un pointeur de qRgb
-			data[i] = qRgb(gray, gray, gray);			
-		}
-    }
-
     //Qt ne peut pas afficher les QImage directement, on en fait un QPixmap...
-    _pixmap_img = new QPixmap();
-    _pixmap_img->convertFromImage(im);
+    this->setPixmap(QPixmap::fromImage(convertImage(this->getImage())));
     
-    this->setPixmap(*_pixmap_img);
-	_scene->addItem(this);
+    //this->setPixmap(_pixmap_img);
+	//_scene->addItem(this);
 	
 	_highlight = new QGraphicsRectItem(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
 	_highlight->setPen(QPen(QBrush(QColor(255, 0, 0, 200)), 1));
 	
-	_scene->addItem(_highlight);
+	//_scene->addItem(_highlight);
 	
-	_view->setScene(_scene);
+	//_view->setScene(_scene);
 }
 
-void StandardImageView::zoom(int delta) {
-    double wOrigin = _pixmap_img->width();
-    double hOrigin = _pixmap_img->height();
-    if(delta < 0 && _zoomFactor > 0.05) //Zoom out
-    {
-        _zoomFactor -= 0.05;
-        
-        double wActual = wOrigin * (_zoomFactor + 0.05);
-        double hActual = hOrigin * (_zoomFactor + 0.05);
-        
-        double zoomW = (_zoomFactor * wOrigin) / wActual;
-        double zoomH = (_zoomFactor * hOrigin) / hActual;
-        
-        _view->scale(zoomW, zoomH);
-    }
-    else if(delta > 0)//Zoom in
-    {
-        _zoomFactor += 0.05;
-        
-        double wActual = wOrigin * (_zoomFactor - 0.05);
-        double hActual = hOrigin * (_zoomFactor - 0.05);
-        
-        double zoomW = (_zoomFactor * wOrigin) / wActual;
-        double zoomH = (_zoomFactor * hOrigin) / hActual;
-        
-        _view->scale(zoomW, zoomH);
-    }		
-    
-    emit zoomChanged(_zoomFactor*100);
-}
-
-void StandardImageView::wheelEvent(QGraphicsSceneWheelEvent* event)
+/*void StandardImageView::wheelEvent(QGraphicsSceneWheelEvent* event)
 {
 	if (_ctrlPressed && event->orientation() == Qt::Vertical)
 	{
         zoom(event->delta());
 	}
-}
+}*/
 
 void StandardImageView::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
@@ -403,8 +313,6 @@ void StandardImageView::setImage(imagein::Image* image)
 {
   _selection = Rectangle(0, 0, image->getWidth(), image->getHeight());
   _visibleArea = Rectangle(0, 0, image->getWidth(), image->getHeight());
-    
-	_zoomFactor = 1;
   
   _sourceHighlight = NULL;
   _originalHighlight = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
@@ -416,16 +324,16 @@ void StandardImageView::setImage(imagein::Image* image)
   
   _pixelClicked = QPoint(-1, -1);
   
-  QImage im(getQImage(image));
+  //QImage im(getQImage(image));
 
   //Qt ne peut pas afficher les QImage directement, on en fait un QPixmap...
-  _pixmap_img = new QPixmap();
-  _pixmap_img->convertFromImage(im);
+  //_pixmap_img = new QPixmap();
+    this->setPixmap(QPixmap::fromImage(convertImage(this->getImage())));
     
-  this->setPixmap(*_pixmap_img);
+  //this->setPixmap(_pixmap_img);
 	//_scene->addItem(this);
 	
-	_highlight = new QGraphicsRectItem(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
+	_highlight->setRect(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
 	
 	//_scene->addItem(_highlight);
 	//_view->setScene(_scene);
@@ -434,51 +342,32 @@ void StandardImageView::setImage(imagein::Image* image)
 }
 
 
-QImage genericinterface::getQImage(const imagein::Image* image) 
+QImage genericinterface::convertImage(const imagein::Image* img) 
 {
-  QImage im(image->getWidth(), image->getHeight(), QImage::Format_ARGB32);
-
-  //on récupère les bits de l'image qt, qu'on cast en QRgb (qui fait 32 bits -> une image RGBA)
-  QRgb* data = reinterpret_cast<QRgb*>(im.bits());
-  Image::const_iterator it = image->begin();
-  
-  for(unsigned int i = 0 ; i < image->getHeight()*image->getWidth() ; ++i)
-  {
+    bool hasAlpha = (img->getNbChannels() == 4 || img->getNbChannels() == 2);
+    QImage qImg(img->getWidth(), img->getHeight(), (hasAlpha ? QImage::Format_ARGB32 : QImage::Format_RGB32));
+    //on récupère les bits de l'image qt, qu'on cast en QRgb (qui fait 32 bits -> une image RGB(A))
+    QRgb* data = reinterpret_cast<QRgb*>(qImg.bits());
     //Pour chaque pixel de l'image Qt, on récupère les données correspondantes de l'image ImageIn grace à l'itérateur
-    if(image->getNbChannels() == 4)
-    {
-      unsigned char red = *(it++);
-      unsigned char green = *(it++);
-      unsigned char blue = *(it++);
-      unsigned char alpha = *(it++);
-
-      //On utilise la fonction qRgba pour en faire un pointeur de qRgb
-      data[i] = qRgba(red, green, blue, alpha);
+    Image::const_iterator it = img->begin();
+    for(int i = 0; i < qImg.width()*qImg.height(); ++i) {
+        int red, green, blue, alpha;
+        if(img->getNbChannels() < 3) {
+            red = green = blue = *(it++);
+        }
+        else {
+            red = *(it++);
+            green = *(it++);
+            blue = *(it++);
+        }
+        if(hasAlpha) {
+            alpha = *(it++);
+            //On utilise la fonction qRgb(a) pour en faire un pointeur de qRgb
+            data[i] = qRgba(red, green, blue, alpha);	
+        }
+        else {
+            data[i] = qRgb(red, green, blue);
+        }
     }
-    else if(image->getNbChannels() == 3)
-    {
-      unsigned char red = *(it++);
-      unsigned char green = *(it++);
-      unsigned char blue = *(it++);
-
-      //On utilise la fonction qRgba pour en faire un pointeur de qRgb
-      data[i] = qRgb(red, green, blue);		
-    }
-    else if(image->getNbChannels() == 2)
-    {
-      unsigned char gray = *(it++);
-      unsigned char alpha = *(it++);
-
-      //On utilise la fonction qRgba pour en faire un pointeur de qRgb
-      data[i] = qRgba(gray, gray, gray, alpha);		
-    }
-    else if(image->getNbChannels() == 1)
-    {
-      unsigned char gray = *(it++);
-
-      //On utilise la fonction qRgba pour en faire un pointeur de qRgb
-      data[i] = qRgb(gray, gray, gray);			
-    }
-  }
-  return im;
+    return qImg;
 }

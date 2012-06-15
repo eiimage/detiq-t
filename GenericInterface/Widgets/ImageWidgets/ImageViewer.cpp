@@ -39,8 +39,8 @@ ImageViewer::ImageViewer (const imagein::Image* img, int x, int y) : QGraphicsSc
 void ImageViewer::init(const imagein::Image* img, int x, int y)
 {
   /* Get info about the image */
-  QImage qimg = getQImage(img);
-  QSize size = (qimg).size();
+  QPixmap pixmap = QPixmap::fromImage(convertImage(img));
+  QSize size = pixmap.size();
 
   int height = size.height();
   int width = size.width();
@@ -58,12 +58,10 @@ void ImageViewer::init(const imagein::Image* img, int x, int y)
 
   /* Creats the scene */
 
-  QPixmap i;
-  i.convertFromImage(qimg);
-  i = i.scaled(width * _scale, height * _scale);
+  pixmap = pixmap.scaled(width * _scale, height * _scale);
 
-  //QGraphicsPixmapItem* im = new QGraphicsPixmapItem(i);
-  ImageItem* im = new ImageItem(i);
+  //QGraphicsPixmapItem* im = new QGraphicsPixmapItem(pixmap);
+  ImageItem* im = new ImageItem(pixmap);
   im->setOffset(_dx, _dy);
 
   QObject::connect(im, SIGNAL(clickListenned(int, int)), this, SLOT(slotPositionReception(int, int)));
