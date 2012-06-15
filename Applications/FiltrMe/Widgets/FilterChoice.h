@@ -12,6 +12,8 @@
 #include <QVBoxLayout>
 #include <QTableWidget>
 #include <QSpinBox>
+#include <QLabel>
+#include <QPushButton>
 
 namespace filtrme
 {

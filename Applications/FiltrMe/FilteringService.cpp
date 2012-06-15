@@ -48,7 +48,7 @@ void FilteringService::edition()
     //QMdiArea* area = (QMdiArea*)_gi->centralWidget();
     //area->addSubWindow(_filterEditor);
     StandardImageWindow* siw = dynamic_cast<StandardImageWindow*>(_ws->getCurrentImageWindow());
-    _ws->addWidget(_ws->getWidgetId(siw), _filterEditor);
+    _ws->addWidget(_ws->getNodeId(siw), _filterEditor);
     //_filterEditor->show();
 
     QObject::connect(_filterEditor, SIGNAL(applyFiltering(imagein::algorithm::Filtering*)), this, SLOT(apply(imagein::algorithm::Filtering*)));
@@ -73,13 +73,12 @@ void FilteringService::applyAlgorithm(Filtering* algo)
     if (_siw != NULL)
     {
         const Image* whole_image = _siw->getImage();
-        const Image* im = whole_image->crop(*(_siw->getSelection()));
-        QString id = _ws->getWidgetId(_siw);
+        const Image* im = whole_image->crop(_siw->getSelection());
         Image_t<int>* im2 = Converter<Image>::convertToInt(*im);
         im2 = (*algo)(im2);
         Image* im_res = Converter<Image>::makeDisplayable(*im2);
-        StandardImageWindow* siw_res = new StandardImageWindow(id, _gi, im_res);
-        siw_res->setWindowTitle(ImageWindow::getTitleFromPath(_siw->getPath()));
-        emit newImageWindowCreated(id, siw_res);
+        StandardImageWindow* siw_res = new StandardImageWindow(_siw->getPath(), _gi, im_res);
+        siw_res->setWindowTitle(_siw->windowTitle());
+        emit newImageWindowCreated(_ws->getNodeId(_siw), siw_res);
     }
 }
