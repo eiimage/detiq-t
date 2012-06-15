@@ -57,46 +57,56 @@ NodeId WindowService::getNodeId(QWidget* widget) const
 }
 
 Node* WindowService::findNode(NodeId id) {
+    _mutex->lock();
     std::map<NodeId, Node*>::iterator it = _widgets.find(id);
     if(it == _widgets.end()) {
         return NULL;
     }
+    _mutex->unlock();
     return it->second;
 }
 
 const Node* WindowService::getNode(NodeId id) const {
+    _mutex->lock();
     std::map<NodeId, Node*>::const_iterator it = _widgets.find(id);
     if(it == _widgets.end()) {
         return NULL;
     }
+    _mutex->unlock();
     return it->second;
 }
 
 const Node* WindowService::getNode(QWidget* widget) const {
+    _mutex->lock();
     for(std::map<NodeId, Node*>::const_iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
     {
         const Node* node = it->second;
         for(QList<QMdiSubWindow*>::const_iterator it = node->windows.begin(); it != node->windows.end(); ++it) {
             if((*it)->widget() == widget) {
+                _mutex->unlock();
                 return node;
             }
         }
     }
+    _mutex->unlock();
     return NULL;
 }
 
 Node* WindowService::addNodeIfNeeded(NodeId id, const Image* img, QString path) {
+    _mutex->lock();
     Node* node = findNode(id);
     if(node == NULL) {
         node = new Node(img, path);
         _widgets[id] = node;
         _nav->addNode(node);
     }
+    _mutex->unlock();
     return node;
 }
 
 void WindowService::addFile(const QString& path)
 {
+    _mutex->lock();
     StandardImageWindow* siw = new StandardImageWindow(path, _gi);
     const Image* img = siw->getImage();
     if(img->size() == 0) {
@@ -105,10 +115,12 @@ void WindowService::addFile(const QString& path)
     else {
         this->addImage(img, siw);
     }
+    _mutex->unlock();
 }
 
 void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd)
 {
+    _mutex->lock();
     Node* node = addNodeIfNeeded(id, imgWnd->getImage(), imgWnd->getPath());
 
     QMdiSubWindow* sw = _mdi->addSubWindow(imgWnd);
@@ -123,10 +135,14 @@ void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd)
                     this, SLOT(removeSubWindow(NodeId,QMdiSubWindow*)));
 
     sw->show();
+    _mdi->setActiveSubWindow(sw);
+    sw->activateWindow();
+    _mutex->unlock();
 }
 
 bool WindowService::addWidget(NodeId id, QWidget* widget)
 {
+    _mutex->lock();
     Node* node = findNode(id);
     if(node == NULL) {
         return false;
@@ -142,41 +158,58 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
                     this, SLOT(removeSubWindow(NodeId,QMdiSubWindow*)));
 
     sw->show();
+    _mdi->setActiveSubWindow(sw);
+    sw->activateWindow();
     return true;
+    _mutex->unlock();
 }
 
 void WindowService::removeSubWindow(NodeId id, QMdiSubWindow* sw)
 {
+    _mutex->lock();
     Node* node = findNode(id);
     if(node == NULL) return;
     
+    std::cout << "node->windows.removeAll(" << sw << ")" << std::endl;
     node->windows.removeAll(sw);
 
     if (node->windows.empty()) {
+        std::cout << "remove node" << std::endl;
         _nav->removeNode(id);
         _widgets.erase(id);
-        //delete node;
+        delete node;
     }
     //this->updateDisplay();
+    _mutex->unlock();
 }
 
 void WindowService::removeId(NodeId id)
 {
+    _mutex->lock();
+    std::cout << "removeId->" << std::endl;
     Node* node = findNode(id);
     if(node == NULL) return;
     
+    QList<QMdiSubWindow*> windows = node->windows;
     
-    for (QList<QMdiSubWindow*>::iterator it = node->windows.begin(); it != node->windows.end(); ++it)
+    for (QList<QMdiSubWindow*>::iterator it = windows.begin(); it != windows.end(); ++it)
     {
         QMdiSubWindow* sw = *it;
-        sw->close();
-        _mdi->removeSubWindow(sw);
+        if(validWindow(sw)) {
+            std::cout << "close(" << sw << ")" << std::endl;
+            std::cout << "_mdi->removeSubWindow(" << sw << ")" << std::endl;
+            _mdi->removeSubWindow(sw);
+            sw->close();
+        }
     }
     //delete node;
     //this->updateDisplay();
+    std::cout << "<-removeId" << std::endl;
+    _mutex->unlock();
 }
 
 void WindowService::moveToNode(StandardImageWindow* siw) {
+    _mutex->lock();
     StandardImageWindow* newSiw = new StandardImageWindow(*siw);
     foreach(QMdiSubWindow *sw, _mdi->subWindowList()) {
         if(sw->widget() == siw) {
@@ -184,11 +217,19 @@ void WindowService::moveToNode(StandardImageWindow* siw) {
         }
     }
     addImage(newSiw->getImage(), newSiw);
+    _mutex->unlock();
+}
+
+bool WindowService::validWindow(QMdiSubWindow* sw) {
+    return _mdi->subWindowList().contains(sw);
 }
 
 void WindowService::updateDisplay()
 {
+    _mutex->lock();
     const QList<NodeId>& selection = _nav->getSelection();
+    
+    QMdiSubWindow* firstValidWindow = NULL;
     
     for(std::map<NodeId, Node*>::iterator it = _widgets.begin(); it != _widgets.end(); ++it) {
     
@@ -198,15 +239,35 @@ void WindowService::updateDisplay()
         
         if(selection.indexOf(id) >= 0) {
             for (QList<QMdiSubWindow*>::iterator jt = windows.begin(); jt != windows.end(); ++jt) {
-                (*jt)->showNormal();
+                if(validWindow((*jt))) {
+                    if(firstValidWindow == NULL) firstValidWindow = *jt;
+                    (*jt)->showNormal();
+                }
             }
         }
         else {
             for (QList<QMdiSubWindow*>::iterator jt = windows.begin(); jt != windows.end(); ++jt) {
-                (*jt)->showMinimized();
+                if(validWindow((*jt))) {
+                    (*jt)->showMinimized();
+                }
             }
         }
     }
+    NodeId currentId = NodeId();
+    QMdiSubWindow* currentWindow = _mdi->currentSubWindow();
+    if(currentWindow != NULL) {
+        currentId = getNodeId(currentWindow->widget());
+        Node* currentNode = findNode(currentId);
+        std::cout << "Current node : " << currentNode->path.toStdString() << std::endl;
+        std::cout << "Current node " << (selection.indexOf(currentId) >= 0 ? "in selection" : "not in selection") << std::endl;
+    }
+    
+    if(!selection.isEmpty() && selection.indexOf(currentId) < 0) {
+        //std::cout << "Raising first window in selection : " << firstValidWindow->windowTitle().toStdString() << std::endl;
+        _mdi->setActiveSubWindow(firstValidWindow);
+    }
+    _mutex->unlock();
+    
 }
 
 SubWindowController::SubWindowController(NodeId id, QMdiSubWindow* sw) : _id(id), _sw(sw)

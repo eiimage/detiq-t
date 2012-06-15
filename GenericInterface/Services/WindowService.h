@@ -3,6 +3,7 @@
 
 #include <QDockWidget>
 #include <QMdiSubWindow>
+#include <QMutex>
 
 #include "Node.h"
 #include "../Widgets/ImageWidgets/StandardImageWindow.h"
@@ -37,6 +38,7 @@ namespace genericinterface
   protected:
 	Node* findNode(NodeId id);
     Node* addNodeIfNeeded(NodeId id, const Image* img, QString path);
+    bool validWindow(QMdiSubWindow* sw);
 
   public slots:
     void addFile(const QString& path);
@@ -57,6 +59,8 @@ namespace genericinterface
     QMdiArea* _mdi;
     NavigationDock* _nav;
     std::map<NodeId, Node*> _widgets;
+    Qt::DockWidgetArea _navPos;
+    QMutex* _mutex;
   };
 
 
