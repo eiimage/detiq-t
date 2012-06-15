@@ -79,10 +79,19 @@ void FileService::saveAs()
 
 void FileService::chooseFile()
 {
-  QString file = QFileDialog::getOpenFileName(_gi, "Open a file", QString(), "Images (*.png *.bmp *.jpg *.jpeg)");
-
-  if(file != "")
-    emit fileChosen(file);
+    QString path;
+	WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    ImageWindow* currentWindow = ws->getCurrentImageWindow();
+    if(currentWindow != NULL) {
+        path = currentWindow->getPath();
+    }
+    QStringList files = QFileDialog::getOpenFileNames(_gi, "Open a file", path, "Images (*.png *.bmp *.jpg *.jpeg)");
+    
+    foreach(QString file, files) {
+        if(file != "") {
+            emit fileChosen(file);
+        }
+    }
 }
 
 void FileService::checkActionsValid(QMdiSubWindow* activeWindow)
