@@ -11,12 +11,8 @@ namespace imagein
     class ImageFileException : public std::exception
     {
     public:
-        ImageFileException( const std::string& msg, int line, std::string file)
+        ImageFileException( const std::string& msg, int line, std::string file) : _msg(msg), _line(line), _file(file)
         {
-            std::ostringstream oss;
-            oss << "Exception raised line " << line << " in file " << file << " : "
-                << msg;
-            this->msg = oss.str();
         }
 
         virtual ~ImageFileException() throw()
@@ -26,11 +22,19 @@ namespace imagein
 
         virtual const char * what() const throw()
         {
-            return this->msg.c_str();
+            std::ostringstream oss;
+            oss << "Exception raised line " << _line << " in file " << _file << " : " << _msg;
+            return oss.str().c_str();
+        }
+        
+        std::string getMsg() const {
+            return _msg;
         }
 
     private:
-        std::string msg;
+        std::string _msg;
+        int _line;
+        std::string _file;
     };
 }
 
