@@ -10,12 +10,12 @@ using namespace genericinterface;
 using namespace imagein;
 using namespace imagein::algorithm;
 
-BinarizationWidget::BinarizationWidget(StandardImageWindow* siw, const QString& id) : _originalPath(id)
+BinarizationWidget::BinarizationWidget(StandardImageWindow* siw, NodeId id) : _nodeId(id)
 {
     this->setWindowTitle("Binarization tool on " + siw->getName());
 
     // backing up the image we're working on while converting it into a grayscale image
-    _originalImage = siw->getImage()->crop(*(siw->getSelection()));
+    _originalImage = siw->getImage()->crop(siw->getSelection());
     //_originalImage = new Image(*siw->getImage());
     _originalGrayscaleImage = Converter<GrayscaleImage>::convert(*_originalImage);
 
@@ -55,7 +55,7 @@ BinarizationWidget::BinarizationWidget(StandardImageWindow* siw, const QString& 
 
     // Bottom left panel = histogram
     //Rectangle* rect = new Rectangle(); //TODO Faire rectangle total sur une image
-    _histo = new HistogramWindow(siw->getPath(), siw->getImage(), new Rectangle(*siw->getSelection()), NULL);
+    _histo = new HistogramWindow(siw->getImage(), siw->getSelection(), NULL);
     layout->addWidget(_histo, 1, 0);
 
 
@@ -119,5 +119,5 @@ void BinarizationWidget::applyBinarization(int value)
 void BinarizationWidget::exportBinarizedImage()
 {
     Image* im = new Image(*(_binarizedImage->getImage()));
-    emit exportBinarizedImage(_originalPath, im);
+    emit exportBinarizedImage(_nodeId, im);
 }

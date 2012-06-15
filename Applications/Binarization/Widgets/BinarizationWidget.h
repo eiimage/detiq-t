@@ -17,10 +17,10 @@ class BinarizationWidget : public QWidget
 {
     Q_OBJECT
 public:
-    BinarizationWidget(StandardImageWindow* siw, const QString& id);
+    BinarizationWidget(StandardImageWindow* siw, NodeId id);
 
 signals:
-    void exportBinarizedImage(QString& path, Image* im);
+    void exportBinarizedImage(NodeId id, Image* im);
 
 private slots:
     void displayThresholdSelection(int index);
@@ -28,7 +28,7 @@ private slots:
     void exportBinarizedImage();
 
 private:
-    QString _originalPath;
+    NodeId _nodeId;
     Image* _originalImage;
     GrayscaleImage* _originalGrayscaleImage;
     QComboBox* _nbThreshold;

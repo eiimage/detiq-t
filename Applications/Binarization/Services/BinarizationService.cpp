@@ -38,19 +38,21 @@ void BinarizationService::applyBinarization()
         }
         else
         {
-            _binWidget = new BinarizationWidget(siw, _ws->getWidgetId(siw));
-            QObject::connect(_binWidget, SIGNAL(exportBinarizedImage(QString&,Image*)),
-                             this, SLOT(exportBinarizedImage(QString&,Image*)));
-            _ws->addWidget(_ws->getWidgetId(siw), _binWidget);
+            NodeId nodeId = _ws->getNodeId(siw);
+            _binWidget = new BinarizationWidget(siw, nodeId);
+            QObject::connect(_binWidget, SIGNAL(exportBinarizedImage(NodeId,Image*)),
+                             this, SLOT(exportBinarizedImage(NodeId,Image*)));
+            _ws->addWidget(nodeId, _binWidget);
         }
     }
 }
 
-void BinarizationService::exportBinarizedImage(QString& path, Image* im)
+void BinarizationService::exportBinarizedImage(NodeId nodeId, Image* im)
 {
-    StandardImageWindow* new_siw = new StandardImageWindow("", _gi, im);
-    new_siw->setWindowTitle(ImageWindow::getTitleFromPath(path));
-    emit newImageWindowCreated(path, new_siw);
+    const Node* node = _ws->getNode(nodeId);
+    StandardImageWindow* new_siw = new StandardImageWindow(node->path, _gi, im);
+    new_siw->setWindowTitle(ImageWindow::getTitleFromPath(node->path));
+    emit newImageWindowCreated(new_siw->getImage(), new_siw);
 }
 
 void BinarizationService::aboutOtsu()

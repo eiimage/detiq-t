@@ -2,7 +2,7 @@
 #define BINARIZATIONSERVICE_H
 
 #include <Services/AlgorithmService.h>
-#include "BinarizationWidget.h"
+#include "../Widgets/BinarizationWidget.h"
 
 #include <QToolBar>
 
@@ -31,10 +31,10 @@ private slots:
     /**
      * \brief Extract the binarized image of the widget.
      *
-     * \param path The path of the source image.
+     * \param id The id of the source image's node.
      * \param im The image from the widget.
      */
-    void exportBinarizedImage(QString& path, Image* im);
+    void exportBinarizedImage(NodeId id, Image* im);
 
     void aboutOtsu();
 
