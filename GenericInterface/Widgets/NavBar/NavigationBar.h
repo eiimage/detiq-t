@@ -12,7 +12,9 @@ namespace genericinterface
     {
       Q_OBJECT
       public:
-        NavigationBar();
+        NavigationBar(QSize itemSize, Qt::Orientation);
+        QSize sizeHintForIndex(const QModelIndex& index) const;
+        QSize sizeHint() const;
       protected:
         void mouseReleaseEvent(QMouseEvent* event );
       signals:

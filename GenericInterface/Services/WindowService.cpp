@@ -5,15 +5,15 @@
 
 using namespace genericinterface;
 using namespace imagein;
+WindowService::WindowService(Qt::DockWidgetArea navPos) : _navPos(navPos),  _mutex(new QMutex(QMutex::Recursive)) {
+
+}
 
 void WindowService::display(GenericInterface* gi)
 {
     _mdi = gi->initCentralWidget();
-
-    QDockWidget* dock = new QDockWidget(gi);
-    gi->addDockWidget(Qt::LeftDockWidgetArea, dock);
-
-    dock->setWidget(_nav = new NavigationDock);
+    _nav = new NavigationDock("Images", gi);
+    gi->addDockWidget(_navPos, _nav);
 }
 
 void WindowService::connect(GenericInterface* gi)

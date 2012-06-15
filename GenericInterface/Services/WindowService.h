@@ -20,6 +20,8 @@ namespace genericinterface
   Q_OBJECT
   public:
   
+    WindowService(Qt::DockWidgetArea navPos);
+  
     void display(GenericInterface* gi);
     void connect(GenericInterface* gi);
 

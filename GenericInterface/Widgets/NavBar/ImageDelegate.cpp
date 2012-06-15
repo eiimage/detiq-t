@@ -13,7 +13,7 @@
 using namespace genericinterface;
 
 
-ImageDelegate::ImageDelegate(int width) : _width(width) {
+ImageDelegate::ImageDelegate(QSize itemSize) : _itemSize(itemSize) {
 }
 
 const Image* getImage(const QModelIndex &index) {

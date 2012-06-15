@@ -3,9 +3,9 @@
 using namespace std;
 using namespace genericinterface;
 
-GenericInterface::GenericInterface(QString name) : _nbServices(3)
+GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _nbServices(3)
 {
-    addService(WINDOW_SERVICE, new WindowService);
+    addService(WINDOW_SERVICE, new WindowService(navPos));
     addService(FILE_SERVICE, new FileService);
     addService(UTILITY_SERVICE, new UtilityService);
 

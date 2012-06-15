@@ -3,12 +3,10 @@
 #include <QMouseEvent>
 
 using namespace genericinterface;
+using namespace imagein;
 
-NavigationBar::NavigationBar() : QListView()
+NavigationBar::NavigationBar(QSize itemSize, Qt::Orientation orientation) : QListView(), _itemSize(itemSize), _mouseDown(false)
 {
-    setFixedWidth(96);
-    ImageDelegate* im = new ImageDelegate(92);
-    setItemDelegate(im);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     
     setSelectionMode(QAbstractItemView::SingleSelection);
@@ -17,24 +15,36 @@ NavigationBar::NavigationBar() : QListView()
     setDropIndicatorShown(true);
     setDragDropMode(DragDrop);
     setAcceptDrops(true);
+    
+    if(orientation == Qt::Horizontal) {
+        this->setFlow(LeftToRight);
+        this->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
+    }
+    else {
+        this->setFlow(TopToBottom);
+        this->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
+    }
+}
+
+void NavigationBar::mousePressEvent(QMouseEvent* event) {
+    std::cout << "NavigationBar::mousePressEvent : " << event->x() << ':' << event->y() << std::endl;
+    _mouseDown = true;
+    _downPos = event->pos();
+    QListView::mousePressEvent(event);
 }
 
 void NavigationBar::mouseReleaseEvent(QMouseEvent* event) {
-    //std::cout << event->x() << ':' << event->y() << std::endl;
-    QModelIndex index = this->indexAt(event->pos());
-    QRect rect = this->visualRect(index);
-    if(!rect.isValid()) return;
-    int posx = event->x() - rect.x();
-    int posy = event->y() - rect.y();
-    //std::cout << posx << "/" << rect.width() << ':' << posy << "/" << rect.height() << std::endl;
-    if(posx>=0 && posx<rect.width() && posy>=0 && posy<rect.width()
-    && (rect.width() - posx) < 14 && (posy) < 13  ) {
-        QVariant data = index.data();
-        if(data.canConvert<const Node*>()) {
-            const Node* node = data.value<const Node*>();
-            emit removeNode(node->getId());
+    std::cout << "NavigationBar::mouseReleaseEvent : " << event->x() << ':' << event->y() << std::endl;
+    
+    if(_mouseDown) {
+        QPoint upPos = event->pos();
+        QModelIndex downIndex = this->indexAt(_downPos);
+        QModelIndex upIndex = this->indexAt(upPos);
+        
+        if(downIndex.isValid() && upIndex.isValid() && downIndex==upIndex) {
+            emit itemClicked(upIndex, _downPos, upPos);
         }
-         
     }
+    
     QListView::mouseReleaseEvent(event);
 }
