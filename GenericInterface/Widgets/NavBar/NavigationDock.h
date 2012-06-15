@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QModelIndex>
 #include <QAction>
+#include <QDockWidget>
 #include "Image.h"
 
 #include "NavigationBar.h"
@@ -16,14 +17,14 @@
 
 namespace genericinterface
 {
-class NavigationDock : public QWidget
+class NavigationDock : public QDockWidget
 {
     Q_OBJECT
 public:
     /**
     * @brief Default constructor, layout the elements
     */
-    NavigationDock();
+    NavigationDock(const QString & title, QWidget * parent = 0, Qt::WindowFlags flags = 0);
 
     QList<NodeId> getSelection();    
 
@@ -35,6 +36,7 @@ public slots:
     */
     void addNode(const Node*);
     void removeNode(NodeId);
+    void changeOrientation(Qt::DockWidgetArea);
 
 protected slots:
     /**
@@ -43,8 +45,9 @@ protected slots:
     * @param pos
     */
     void showContextMenu(const QPoint& pos);
-    void emitAction(const QModelIndex& index);
+    void itemClicked(const QModelIndex& index, QPoint downPos, QPoint upPos);
     void closeSelection();
+    void listResized();
 
 signals:
     void actionDone();
@@ -55,6 +58,7 @@ private:
     //QList<const Node*> _data;
     NodeListModel* _model;
     NavigationBar* _view;
+    ImageDelegate* _itemDelegate;
     QMenu* _contextMenu;
 
 };

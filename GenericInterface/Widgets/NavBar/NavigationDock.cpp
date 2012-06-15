@@ -8,23 +8,17 @@ using namespace genericinterface;
 using namespace imagein;
 using namespace std;
 
-NavigationDock::NavigationDock() : QWidget()
+NavigationDock::NavigationDock(const QString & title, QWidget * parent, Qt::WindowFlags flags) : QDockWidget(title, parent, flags)
 {
     /* Creation of the attributs */
-    _model = new NodeListModel(NULL);
     //_model->setSupportedDragActions(Qt::MoveAction);
     //_model = new QStringListModel;
-    _view = new NavigationBar;
 
-    _view->setModel(_model);
     //_view->setSelectionMode(QAbstractItemView::ExtendedSelection);
     
     //_view->setMovement(QListView::Free);
 
-    QObject::connect(_view, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitAction(const QModelIndex&)));
-    QObject::connect(_view, SIGNAL(removeNode(NodeId)), this, SIGNAL(removeId(NodeId)));
-    QObject::connect(_model, SIGNAL(windowDropped(StandardImageWindow*)), 
-                        this, SIGNAL(windowDropped(StandardImageWindow*)));
+    QSize itemSize(96,96);
 
     _contextMenu = new QMenu(this);
 
@@ -34,14 +28,35 @@ NavigationDock::NavigationDock() : QWidget()
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+    QObject::connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(changeOrientation(Qt::DockWidgetArea)));
+    
 
     /* layout */
-    QHBoxLayout* layout = new QHBoxLayout;
+    /*QHBoxLayout* layout = new QHBoxLayout;
 
     setLayout(layout);
-    layout->addWidget(_view);
+    layout->addWidget(_view);*/
+    
+    
+    _view = new NavigationBar(itemSize, Qt::Horizontal);
+    QObject::connect(_view, SIGNAL(itemClicked(const QModelIndex&, QPoint, QPoint)), this, SLOT(itemClicked(const QModelIndex&, QPoint, QPoint)));
+    //QObject::connect(_view, SIGNAL(removeNode(NodeId)), this, SIGNAL(removeId(NodeId)));
+    QObject::connect(_view, SIGNAL(resized()), this, SLOT(listResized));
+    
+    //this->setFixedWidth(100);
+    //_view->setFixedWidth(96);
+    //_view->setGridSize(itemSize);
+    //_view->setMovement(QListView::Snap);
+    
+    _model = new NodeListModel(NULL);
+    QObject::connect(_model, SIGNAL(windowDropped(StandardImageWindow*)), this, SIGNAL(windowDropped(StandardImageWindow*)));
+    _view->setModel(_model);
+    
+    _itemDelegate = new ImageDelegate(itemSize);
+    _view->setItemDelegate(_itemDelegate);
+    
+    this->setWidget (_view);
 
-    setFixedWidth(110);
 }
 
 QList<NodeId> NavigationDock::getSelection()
@@ -95,9 +110,19 @@ void NavigationDock::showContextMenu(const QPoint& pos)
     _contextMenu->popup(mapToGlobal(pos));
 }
 
-void NavigationDock::emitAction(const QModelIndex& index)
+void NavigationDock::itemClicked(const QModelIndex& index, QPoint downPos, QPoint upPos)
 {
-    emit actionDone();
+    QRect closeRect = _itemDelegate->getCloseRect(index, _view->visualRect(index));
+    if(closeRect.contains(downPos) && closeRect.contains(upPos)) {
+        QVariant data = index.data();
+        if(data.canConvert<const Node*>()) {
+            const Node* node = data.value<const Node*>();
+            emit removeId(node->getId());
+        }
+    }
+    else {
+        emit actionDone();
+    }
 }
 
 void NavigationDock::closeSelection()
@@ -112,4 +137,15 @@ void NavigationDock::closeSelection()
             emit removeId(*it);
         }
     }
+}
+void NavigationDock::listResized() {
+    this->adjustSize();
+}
+
+void NavigationDock::changeOrientation(Qt::DockWidgetArea area) {
+    Qt::Orientation orientation = Qt::Vertical;
+    if(area == Qt::TopDockWidgetArea || area == Qt::BottomDockWidgetArea) {
+        orientation = Qt::Horizontal;
+    }
+    _view->setOrientation(orientation);
 }

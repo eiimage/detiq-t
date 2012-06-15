@@ -5,13 +5,15 @@
 #include <QPainter>
 #include <QRectF>
 
+#include "Image.h"
+
 namespace genericinterface
 {
   class ImageDelegate : public QItemDelegate
   {
     Q_OBJECT
     public:
-    ImageDelegate(int width);
+    ImageDelegate(QSize itemSize);
     /**
 	 * @brief Redefinition of paint() from QItemDelegate to change de display in the navigation bar.
 	 //TODO parameters
@@ -29,11 +31,14 @@ namespace genericinterface
 	 */
     QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
     
+    const QPixmap* getPixmap(const QModelIndex &index) const;
+    QSize getItemSize(const QModelIndex &index) const;
+    QRect getCloseRect(const QModelIndex &index, QRect visualRect) const;
+    
     public slots:
     bool helpEvent ( QHelpEvent * event, QAbstractItemView * view, const QStyleOptionViewItem & option, const QModelIndex & index );
-    
     private:
-        int _width;
+        QSize _itemSize;
   };
 }
 

@@ -48,3 +48,65 @@ void NavigationBar::mouseReleaseEvent(QMouseEvent* event) {
     
     QListView::mouseReleaseEvent(event);
 }
+
+QSize NavigationBar::sizeHintForIndex(const QModelIndex& index) const {
+    QVariant data = index.data();
+    if(data.canConvert<const Node*>()) {
+        const Node* node = data.value<const Node*>();
+        if(node != NULL) {
+            const Image* img = node->image;
+            if(img != NULL) {
+                if(img->getWidth() > img->getHeight()) {
+                    double ratio = (double)img->getHeight() / (double)img->getWidth();
+                    return QSize(_itemSize.width(), _itemSize.height()*ratio);
+                }
+                else if(img->getWidth() < img->getHeight()){
+                    double ratio = (double)img->getWidth() / (double)img->getHeight();
+                    return QSize(_itemSize.width()*ratio, _itemSize.height());
+                }
+                else {
+                    return _itemSize;
+                }
+                
+            }
+        }
+    }
+    return QSize();
+}
+
+QSize NavigationBar::sizeHint() const {
+    return _itemSize+QSize(24,24);
+    return QListView::sizeHint();
+}
+
+void NavigationBar::setOrientation(Qt::Orientation orientation) {
+    std::cout << "NavigationBar::setOrientation" << (orientation == Qt::Horizontal ? "Horizontal" : "Vertical") << std::endl;
+    if(orientation == Qt::Horizontal) {
+        std::cout << "NavigationBar::setOrientation" << "Horizontal" << std::endl;
+        this->setFlow(LeftToRight);
+        this->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred));
+    }
+    else {
+        std::cout << "NavigationBar::setOrientation" << "Vertical" << std::endl;
+        this->setFlow(TopToBottom);
+        this->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding));
+    }
+    emit resized();
+}
+
+void NavigationBar::resizeEvent(QResizeEvent* e) {
+    /*if(this->width() > this->height()) {
+        this->setFlow(LeftToRight);
+        //this->resize(this->width(), _itemSize.height()+24);
+        this->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
+        
+    }
+    else {
+        this->setFlow(TopToBottom);
+        //this->resize(_itemSize.width()+24, this->height());
+        this->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
+    }
+    emit resized();*/
+    
+    QListView::resizeEvent(e);
+}
