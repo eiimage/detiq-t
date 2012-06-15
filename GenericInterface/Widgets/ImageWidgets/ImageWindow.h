@@ -47,9 +47,9 @@ class ImageWindow : public QWidget
          */
         static QString getTitleFromPath(QString path);
 
-        QString getPath(){ return _path; }
+        QString getPath() const { return _path; }
 
-        QString getName(){ return getTitleFromPath(_path); }
+        QString getName() const { return getTitleFromPath(_path); }
 
         /*!
          * \brief Returns the view in the window.
