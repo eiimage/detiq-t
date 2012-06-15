@@ -1,6 +1,7 @@
 //#include "Binarization.h"
 
 #include <limits>
+#include "../Converter.h"
 
 namespace imagein {
 	namespace algorithm {
