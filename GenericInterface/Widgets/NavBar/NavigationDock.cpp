@@ -3,6 +3,7 @@
 #include "../../Services/Node.h"
 
 #include <QAbstractItemModel>
+#include <QDragMoveEvent>
 using namespace genericinterface;
 using namespace imagein;
 using namespace std;
@@ -11,13 +12,19 @@ NavigationDock::NavigationDock() : QWidget()
 {
     /* Creation of the attributs */
     _model = new NodeListModel(NULL);
+    //_model->setSupportedDragActions(Qt::MoveAction);
+    //_model = new QStringListModel;
     _view = new NavigationBar;
 
     _view->setModel(_model);
-    _view->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    //_view->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    
+    //_view->setMovement(QListView::Free);
 
     QObject::connect(_view, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitAction(const QModelIndex&)));
     QObject::connect(_view, SIGNAL(removeNode(NodeId)), this, SIGNAL(removeId(NodeId)));
+    QObject::connect(_model, SIGNAL(windowDropped(StandardImageWindow*)), 
+                        this, SIGNAL(windowDropped(StandardImageWindow*)));
 
     _contextMenu = new QMenu(this);
 

@@ -10,6 +10,7 @@
 #include "Image.h"
 
 #include "NavigationBar.h"
+#include "NodeListModel.h"
 #include "../../Services/Node.h"
 
 

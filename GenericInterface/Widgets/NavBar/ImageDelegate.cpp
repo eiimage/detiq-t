@@ -13,6 +13,8 @@
 using namespace genericinterface;
 
 
+ImageDelegate::ImageDelegate(int width) : _width(width) {
+}
 
 const Image* getImage(const QModelIndex &index) {
     QVariant data = index.data();
@@ -83,5 +85,27 @@ void ImageDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 
 QSize ImageDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-  return QSize(75,75);
+  const Image* dataImg = getImage(index);
+  if(dataImg == NULL) {
+    std::cout << "NULL img" << std::endl;
+    return QSize(0,0);
+  }
+  double ratio = (double)dataImg->getHeight() / (double)dataImg->getWidth();
+  
+  return QSize(_width, ratio*_width);
+}
+
+bool ImageDelegate::helpEvent(QHelpEvent* event, QAbstractItemView* view, const QStyleOptionViewItem& option, const QModelIndex& index ) {
+    if ( !event || !view ) {
+        return false;
+    }
+    if ( event->type() == QEvent::ToolTip ) {
+        QVariant data = index.data();
+        if(data.canConvert<const Node*>()) {
+            const Node* node = data.value<const Node*>();
+            QToolTip::showText( event->globalPos(), node->path, view);
+            return true;
+        }
+    }
+    return false;
 }
