@@ -61,6 +61,27 @@ FileService* GenericInterface::fileService()
     return fs;
 }
 
+int GenericInterface::addNewService(Service* s)
+{
+	int id = this->_nbServices++;
+    _services[id] = s;
+    try
+    {
+      s->display(this);
+      s->connect(this);
+    }
+    catch (ServiceConnectionException e)
+    {
+      Log::info(e.what());
+      QMessageBox::critical(this, "Intégrité de la fenêtre", "L'ajout d'un nouveau service ne s'est pas "
+                                                            "déroulée correctement, il est possible qu'elle "
+                                                            "ne présente pas toutes les fonctionnalités "
+                                                            "attendues");
+    }
+    
+	return id;
+}
+
 void GenericInterface::run(bool shw)
 {
   bool fail(false);

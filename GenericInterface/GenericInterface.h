@@ -65,6 +65,7 @@ namespace genericinterface
 	* @return id the identifier of the service
     */
 	int addService(Service* s);
+	int addNewService(Service* s);
 	
     /**
     * @brief Change the id service to a custom one.
