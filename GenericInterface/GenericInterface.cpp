@@ -184,7 +184,7 @@ void GenericInterface::finalizeInterface()
   QAction* actionExit = this->menu("&File")->addAction("&Exit");
   QObject::connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
-  QAction* actionQt = this->menu("?")->addAction("About Qt");
-  QObject::connect(actionQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+  /*QAction* actionQt = this->menu("?")->addAction("About Qt");
+  QObject::connect(actionQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));*/
 }
 
