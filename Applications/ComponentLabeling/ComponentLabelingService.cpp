@@ -40,15 +40,15 @@ void ComponentLabelingService::applyAlgorithm(ComponentLabeling* algo)
     if (siw != NULL)
     {
         const Image* im = Converter<GrayscaleImage>::convert(*(siw->getImage()));
-        QString id = _ws->getWidgetId(siw);
+        NodeId nodeId = _ws->getNodeId(siw);
         RgbImage* im_res = (*algo)(im);
-        StandardImageWindow* siw_res = new StandardImageWindow("", _gi, im_res);
-        siw_res->setWindowTitle(ImageWindow::getTitleFromPath(id));
-        _ws->addImage(id, siw_res);
+        StandardImageWindow* siw_res = new StandardImageWindow(siw->getPath(), _gi, im_res);
+        siw_res->setWindowTitle(siw->windowTitle() + " [component labeling]");
+        _ws->addImage(nodeId, siw_res);
 
         ResultWidget* r = new ResultWidget(algo->getNbComponents(), algo->getAverageComponentSize(), _gi);
         r->setWindowTitle(siw_res->windowTitle()+" - Statistiques");
-        _ws->addWidget(id, r);
+        _ws->addWidget(nodeId, r);
     }
 }
 

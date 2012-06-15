@@ -10,6 +10,7 @@
 #include <QRadioButton>
 #include <QPushButton>
 #include <QCheckBox>
+#include <QLabel>
 
 class ResultWidget : public QDialog 
 {
