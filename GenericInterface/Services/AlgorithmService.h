@@ -1,16 +1,23 @@
 #ifndef QTINTERFACE_ALGORITHMSERVICE_H
 #define QTINTERFACE_ALGORITHMSERVICE_H
 
-#include "../Service.h"
-#include "../Widgets/ImageWidgets/StandardImageWindow.h"
+#include <QObject>
+#include <QToolBar>
 
+#include <Image.h>
 #include <Algorithm.h>
 #include <GrayscaleImage.h>
 
-#include <QToolBar>
+#include "../Service.h"
+#include "Node.h"
+
+
 
 namespace genericinterface
 {
+    class StandardImageWindow;
+    class WindowService;
+    class GenericInterface;
     class AlgorithmService : public QObject, public Service
     {
     Q_OBJECT
@@ -20,10 +27,10 @@ namespace genericinterface
         virtual void display(GenericInterface* gi);
         virtual void connect(GenericInterface* gi);
 
-        virtual void applyAlgorithm(imagein::GenericAlgorithm_t<Image::depth_t>* algo);
+        virtual void applyAlgorithm(imagein::GenericAlgorithm_t<imagein::Image::depth_t>* algo);
 
     signals:
-        void newImageWindowCreated(const QString& path, ImageWindow* widget);
+        void newImageWindowCreated(NodeId id, StandardImageWindow* widget);
 
     protected:
         GenericInterface* _gi;

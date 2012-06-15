@@ -4,19 +4,22 @@
 #include <QDockWidget>
 #include <QMdiSubWindow>
 
+#include "Node.h"
 #include "../Widgets/ImageWidgets/StandardImageWindow.h"
 #include "../Widgets/ImageWidgets/ImageWindow.h"
 #include "../Widgets/NavBar/NavigationDock.h"
 #include "../GenericInterface.h"
 
-typedef std::map<QString, QList<QMdiSubWindow*> > WidgetsMap;
 
 namespace genericinterface
 {
+  class StandardImageWindow;
+  
   class WindowService : public QObject, public Service
   {
   Q_OBJECT
   public:
+  
     void display(GenericInterface* gi);
     void connect(GenericInterface* gi);
 
@@ -25,26 +28,33 @@ namespace genericinterface
     */
     ImageWindow* getCurrentImageWindow();
 
-	QString getWidgetId(QWidget* widget);
+	NodeId getNodeId(QWidget* widget) const;
+	const Node* getNode(NodeId id) const;
+	const Node* getNode(QWidget* widget) const;
+    
+  protected:
+	Node* findNode(NodeId id);
+    Node* addNodeIfNeeded(NodeId id, const Image* img, QString path);
 
   public slots:
     void addFile(const QString& path);
-    void addImage(const QString& id, ImageWindow* image);
-    void addWidget(const QString& id, QWidget* widget);
+    void addImage(NodeId id, StandardImageWindow* image);
+    bool addWidget(NodeId id, QWidget* widget);
     void updateDisplay();
-    void removeId(const QString& id);
+    void removeId(NodeId id);
+    void moveToNode(StandardImageWindow* siw);
 
   signals:
     void subWindowActivated(QMdiSubWindow*);
 
   private slots:
-    void removeSubWindow(const QString& id, QMdiSubWindow* sw);
+    void removeSubWindow(NodeId id, QMdiSubWindow* sw);
 	
   private:
     GenericInterface* _gi;
     QMdiArea* _mdi;
     NavigationDock* _nav;
-    WidgetsMap _widgets;
+    std::map<NodeId, Node*> _widgets;
   };
 
 
@@ -52,16 +62,16 @@ namespace genericinterface
   {
       Q_OBJECT
   public:
-      SubWindowController(const QString& id, QMdiSubWindow* sw);
+      SubWindowController(NodeId id, QMdiSubWindow* sw);
 
   public slots:
       void closeSubWindow();
 
   signals:
-      void removeFromWindowsMap(const QString& id, QMdiSubWindow* sw);
+      void removeFromWindowsMap(NodeId id, QMdiSubWindow* sw);
 
   private:
-      QString _id;
+      NodeId _id;
       QMdiSubWindow* _sw;
   };
 }

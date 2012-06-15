@@ -7,8 +7,11 @@
 #include <QMenu>
 #include <QModelIndex>
 #include <QAction>
+#include "Image.h"
 
 #include "NavigationBar.h"
+#include "../../Services/Node.h"
+
 
 namespace genericinterface
 {
@@ -21,16 +24,16 @@ public:
     */
     NavigationDock();
 
-    QStringList getSelection();
+    QList<NodeId> getSelection();    
 
 public slots:
     /**
     * @brief
     *
-    * @param path
+    * @param node
     */
-    void addImage(const QString& path);
-    void removeImage(const QString& path);
+    void addNode(const Node*);
+    void removeNode(NodeId);
 
 protected slots:
     /**
@@ -44,11 +47,12 @@ protected slots:
 
 signals:
     void actionDone();
-    void removeId(const QString& path);
+    void removeId(NodeId);
+    void windowDropped(StandardImageWindow *siw);
 
 private:
-    QStringList _data;
-    QStringListModel* _model;
+    //QList<const Node*> _data;
+    NodeListModel* _model;
     NavigationBar* _view;
     QMenu* _contextMenu;
 

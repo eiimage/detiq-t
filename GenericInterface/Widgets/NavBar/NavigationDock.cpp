@@ -1,17 +1,23 @@
 #include "NavigationDock.h"
+#include "Image.h"
+#include "../../Services/Node.h"
 
+#include <QAbstractItemModel>
 using namespace genericinterface;
+using namespace imagein;
+using namespace std;
 
 NavigationDock::NavigationDock() : QWidget()
 {
     /* Creation of the attributs */
-    _model = new QStringListModel;
+    _model = new NodeListModel(NULL);
     _view = new NavigationBar;
 
     _view->setModel(_model);
     _view->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     QObject::connect(_view, SIGNAL(clicked(const QModelIndex&)), this, SLOT(emitAction(const QModelIndex&)));
+    QObject::connect(_view, SIGNAL(removeNode(NodeId)), this, SIGNAL(removeId(NodeId)));
 
     _contextMenu = new QMenu(this);
 
@@ -31,31 +37,50 @@ NavigationDock::NavigationDock() : QWidget()
     setFixedWidth(110);
 }
 
-QStringList NavigationDock::getSelection()
+QList<NodeId> NavigationDock::getSelection()
 {
     QItemSelectionModel *selection = _view->selectionModel();
     QModelIndexList listSelect = selection->selectedIndexes();
 
-    QStringList res;
+    QList<NodeId> res;
 
     for(int i = 0; i < listSelect.size(); i++)
     {
-        res << _model->data(listSelect[i], Qt::DisplayRole).toString();
+        const Node* node = _model->data(listSelect[i], Qt::DisplayRole).value<const Node*>();
+        res << node->getId();
     }
 
     return res;
 }
 
-void NavigationDock::addImage(const QString& path)
+void NavigationDock::addNode(const Node* node)
 {
-    _data << path;
-    _model->setStringList(_data);
+    /*_data << node;
+    _model->setList(_data);*/
+    int i = _model->rowCount();
+    _model->insertRow(i);
+    _model->setData(_model->index(i), QVariant::fromValue(node));
 }
 
-void NavigationDock::removeImage(const QString& path)
+void NavigationDock::removeNode(NodeId id)
 {
-    _data.removeAll(path);
-    _model->setStringList(_data);
+    /*for(int i = 0; i < _data.size(); ++i) {
+        if(_data[i]->getId() == id) {
+            _data.removeAt(i);
+            --i;
+        }
+    }
+    _model->setList(_data);*/
+    for(int i = 0; i < _model->rowCount(); ++i) {
+        QVariant data = _model->data(_model->index(i));
+        if(data.canConvert<const Node*>()) {
+            const Node* node = data.value<const Node*>();
+            if(node && node->getId() == id) {
+                _model->removeRow(i);
+                --i;
+            }
+        }
+    }
 }
 
 void NavigationDock::showContextMenu(const QPoint& pos)
@@ -73,10 +98,11 @@ void NavigationDock::closeSelection()
     int answer = QMessageBox::question(this, "Attention", "You're going to close all the relative windows, are you sure you want to continue?", QMessageBox::Yes | QMessageBox::No);
     if (answer == QMessageBox::Yes)
     {
-        QStringList selection = this->getSelection();
-        for (int i=0; i<selection.size(); i++)
+        QList<NodeId> selection = this->getSelection();
+        
+        for (QList<NodeId>::iterator it = selection.begin(); it != selection.end(); ++it)
         {
-            emit removeId(selection[i]);
+            emit removeId(*it);
         }
     }
 }

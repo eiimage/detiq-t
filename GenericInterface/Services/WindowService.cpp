@@ -19,9 +19,9 @@ void WindowService::connect(GenericInterface* gi)
 {
     _gi = gi;
     QObject::connect(_nav, SIGNAL(actionDone()), this, SLOT(updateDisplay()));
-    QObject::connect(_nav, SIGNAL(removeId(const QString&)), this, SLOT(removeId(const QString&)));
-
-    QObject::connect(_mdi, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SIGNAL(subWindowActivated(QMdiSubWindow*)));
+    QObject::connect(_nav, SIGNAL(removeId(NodeId)), this, SLOT(removeId(NodeId)));
+    QObject::connect(_mdi, SIGNAL(subWindowActivated(QMdiSubWindow*)), 
+                        this, SIGNAL(subWindowActivated(QMdiSubWindow*)));
 }
 
 ImageWindow* WindowService::getCurrentImageWindow()
@@ -35,90 +35,138 @@ ImageWindow* WindowService::getCurrentImageWindow()
     else return NULL;
 }
 
-QString WindowService::getWidgetId(QWidget* widget)
+NodeId WindowService::getNodeId(QWidget* widget) const
 {
-    for(WidgetsMap::iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
+    for(std::map<NodeId, Node*>::const_iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
     {
-        for(int i = 0 ; i < it->second.size() ; ++i)
-        {
-            if(it->second.at(i)->widget() == widget) return it->first;
+        const NodeId& id = it->first;
+        const Node* node = it->second;
+        for(QList<QMdiSubWindow*>::const_iterator it = node->windows.begin(); it != node->windows.end(); ++it) {
+            if((*it)->widget() == widget) {
+                return id;
+            }
         }
     }
-    return "";
+    return NodeId();
+}
+
+Node* WindowService::findNode(NodeId id) {
+    std::map<NodeId, Node*>::iterator it = _widgets.find(id);
+    if(it == _widgets.end()) {
+        return NULL;
+    }
+    return it->second;
+}
+
+const Node* WindowService::getNode(NodeId id) const {
+    std::map<NodeId, Node*>::const_iterator it = _widgets.find(id);
+    if(it == _widgets.end()) {
+        return NULL;
+    }
+    return it->second;
+}
+
+const Node* WindowService::getNode(QWidget* widget) const {
+    for(std::map<NodeId, Node*>::const_iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
+    {
+        const Node* node = it->second;
+        for(QList<QMdiSubWindow*>::const_iterator it = node->windows.begin(); it != node->windows.end(); ++it) {
+            if((*it)->widget() == widget) {
+                return node;
+            }
+        }
+    }
+    return NULL;
+}
+
+Node* WindowService::addNodeIfNeeded(NodeId id, const Image* img, QString path) {
+    Node* node = findNode(id);
+    if(node == NULL) {
+        node = new Node(img, path);
+        _widgets[id] = node;
+        _nav->addNode(node);
+    }
+    return node;
 }
 
 void WindowService::addFile(const QString& path)
 {
-    if(_widgets.find(path) == _widgets.end())
-    {
-        StandardImageWindow* w = new StandardImageWindow(path, _gi);
-        _widgets[path] = QList<QMdiSubWindow*>();
-        this->addImage(path, w);
-        _nav->addImage(path);
+    StandardImageWindow* siw = new StandardImageWindow(path, _gi);
+    const Image* img = siw->getImage();
+    if(img->size() == 0) {
+        delete siw;
+    }
+    else {
+        this->addImage(img, siw);
     }
 }
 
-void WindowService::addImage(const QString& id, ImageWindow* image)
+void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd)
 {
-    if(_widgets.find(id) != _widgets.end())
-    {
-        QMdiSubWindow* sw = _mdi->addSubWindow(image);
-        _widgets[id] << sw;
+    Node* node = addNodeIfNeeded(id, imgWnd->getImage(), imgWnd->getPath());
 
-        SubWindowController* swc = new SubWindowController(id, sw);
+    QMdiSubWindow* sw = _mdi->addSubWindow(imgWnd);
+    node->windows << sw;
 
-        QObject::connect(sw, SIGNAL(aboutToActivate()), image, SLOT(activated()));
+    SubWindowController* swc = new SubWindowController(id, sw);
 
-        QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
-        QObject::connect(swc, SIGNAL(removeFromWindowsMap(const QString&, QMdiSubWindow*)), this, SLOT(removeSubWindow(const QString&,QMdiSubWindow*)));
+    QObject::connect(sw, SIGNAL(aboutToActivate()), imgWnd, SLOT(activated()));
 
-        sw->show();
-    }
+    QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
+    QObject::connect(swc, SIGNAL(removeFromWindowsMap(NodeId, QMdiSubWindow*)), 
+                    this, SLOT(removeSubWindow(NodeId,QMdiSubWindow*)));
+
+    sw->show();
 }
 
-void WindowService::addWidget(const QString& id, QWidget* widget)
+bool WindowService::addWidget(NodeId id, QWidget* widget)
 {
-    if(_widgets.find(id) != _widgets.end())
-    {
-        QMdiSubWindow* sw = _mdi->addSubWindow(widget);
-        _widgets[id] << sw;
-
-        SubWindowController* swc = new SubWindowController(id, sw);
-
-        QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
-        QObject::connect(swc, SIGNAL(removeFromWindowsMap(const QString&, QMdiSubWindow*)), this, SLOT(removeSubWindow(const QString&,QMdiSubWindow*)));
-
-        sw->show();
+    Node* node = findNode(id);
+    if(node == NULL) {
+        return false;
     }
+    
+    QMdiSubWindow* sw = _mdi->addSubWindow(widget);
+    node->windows << sw;
+
+    SubWindowController* swc = new SubWindowController(id, sw);
+
+    QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
+    QObject::connect(swc, SIGNAL(removeFromWindowsMap(NodeId, QMdiSubWindow*)), 
+                    this, SLOT(removeSubWindow(NodeId,QMdiSubWindow*)));
+
+    sw->show();
+    return true;
 }
 
-void WindowService::removeSubWindow(const QString& id, QMdiSubWindow* sw)
+void WindowService::removeSubWindow(NodeId id, QMdiSubWindow* sw)
 {
-    int i;
-    bool subWindowFound = false;
-    for (i=0; i<_widgets[id].size() && !subWindowFound; i++)
-    {
-        if (_widgets[id][i] == sw)
-        {
-            subWindowFound = true;
-        }
-    }
-    _widgets[id].removeAt(i-1);
+    Node* node = findNode(id);
+    if(node == NULL) return;
+    
+    node->windows.removeAll(sw);
 
-    if (_widgets[id].empty()) removeId(id);
+    if (node->windows.empty()) {
+        _nav->removeNode(id);
+        _widgets.erase(id);
+        //delete node;
+    }
     //this->updateDisplay();
 }
 
-void WindowService::removeId(const QString& id)
+void WindowService::removeId(NodeId id)
 {
-    QList<QMdiSubWindow*> l = _widgets[id];
-    QList<QMdiSubWindow*>::iterator it;
-    for (it = l.begin(); it != l.end(); it++)
+    Node* node = findNode(id);
+    if(node == NULL) return;
+    
+    
+    for (QList<QMdiSubWindow*>::iterator it = node->windows.begin(); it != node->windows.end(); ++it)
     {
-        delete *it;
+        QMdiSubWindow* sw = *it;
+        sw->close();
+        _mdi->removeSubWindow(sw);
     }
-    _widgets.erase(id);
-    _nav->removeImage(id);
+    //delete node;
     //this->updateDisplay();
 }
 
@@ -135,25 +183,32 @@ void WindowService::updateDisplay()
         }
     }
 
-    QStringList sel = _nav->getSelection();
-
-    for(int u = 0; u < sel.size(); u++)
-    {
-        for(int x = 0; x < _widgets[sel[u]].size(); x++)
-        {
-            //_widgets[sel[u]][x]->show();
-            _widgets[sel[u]][x]->showNormal();
+void WindowService::updateDisplay()
+{
+    const QList<NodeId>& selection = _nav->getSelection();
+    
+    for(std::map<NodeId, Node*>::iterator it = _widgets.begin(); it != _widgets.end(); ++it) {
+    
+        NodeId id = it->first;
+        Node* node = it->second;
+        QList<QMdiSubWindow*>& windows = node->windows;
+        
+        if(selection.indexOf(id) >= 0) {
+            for (QList<QMdiSubWindow*>::iterator jt = windows.begin(); jt != windows.end(); ++jt) {
+                (*jt)->showNormal();
+            }
+        }
+        else {
+            for (QList<QMdiSubWindow*>::iterator jt = windows.begin(); jt != windows.end(); ++jt) {
+                (*jt)->showMinimized();
+            }
         }
     }
 }
 
-
-
-
-
-
-SubWindowController::SubWindowController(const QString& id, QMdiSubWindow* sw) : _id(id), _sw(sw)
+SubWindowController::SubWindowController(NodeId id, QMdiSubWindow* sw) : _id(id), _sw(sw)
 {
+    
 } 
 
 void SubWindowController::closeSubWindow()

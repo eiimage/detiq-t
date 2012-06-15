@@ -1,5 +1,7 @@
 #include "AlgorithmService.h"
 #include "../GenericInterface.h"
+#include "../Services/WindowService.h"
+#include "../Widgets/ImageWidgets/StandardImageWindow.h"
 
 #include <Converter.h>
 
@@ -21,7 +23,8 @@ void AlgorithmService::connect(GenericInterface* gi)
   _gi = gi;
   _ws = _gi->windowService();
 
-  QObject::connect(this, SIGNAL(newImageWindowCreated(const QString&, ImageWindow*)), _ws, SLOT(addImage(const QString&, ImageWindow*)));
+  QObject::connect(this, SIGNAL(newImageWindowCreated(NodeId, StandardImageWindow*)), 
+                    _ws, SLOT(addImage(NodeId, StandardImageWindow*)));
 }
 
 void AlgorithmService::applyAlgorithm(GenericAlgorithm_t<Image::depth_t>* algo)
@@ -36,7 +39,7 @@ void AlgorithmService::applyAlgorithm(GenericAlgorithm_t<Image::depth_t>* algo)
         Image* im_res = (*algo)(im);
         //im_res = Converter<Image>::makeDisplayable(*im_res);
 
-        StandardImageWindow* siw_res = new StandardImageWindow(name, _gi, im_res);
-        emit newImageWindowCreated(name, siw_res);
+        StandardImageWindow* siw_res = new StandardImageWindow(siw->getPath(), _gi, im_res);
+        emit newImageWindowCreated(_ws->getNodeId(siw), siw_res);
     }
 }

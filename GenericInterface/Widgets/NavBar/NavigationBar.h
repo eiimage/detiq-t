@@ -4,14 +4,20 @@
 #include <QListView>
 
 #include "ImageDelegate.h"
+#include "../../Services/Node.h"
 
 namespace genericinterface
 {
-  class NavigationBar : public QListView
-  {
-  public:
-    NavigationBar();
-  };
+    class NavigationBar : public QListView
+    {
+      Q_OBJECT
+      public:
+        NavigationBar();
+      protected:
+        void mouseReleaseEvent(QMouseEvent* event );
+      signals:
+        void removeNode(NodeId);
+    };
 }
 
 #endif
