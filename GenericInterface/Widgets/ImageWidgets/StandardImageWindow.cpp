@@ -30,11 +30,57 @@ StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* g
     init();
 }
 
+StandardImageWindow::StandardImageWindow(const StandardImageWindow& siw) 
+    : ImageWindow(siw.getPath()), _gi(siw._gi) , _ctrlPressed(false)
+{
+    _image = new Image(*siw._image);
+
+    this->setWindowTitle(siw.windowTitle());
+
+    _imageView = new StandardImageView(this, _image);
+
+    init();
+}
+
 StandardImageWindow::~StandardImageWindow()
 {
 	delete _imageView;
-  delete _selectedPixel;
-  delete _image;
+    delete _selectedPixel;
+    delete _image;
+}
+
+
+void StandardImageWindow::mousePressEvent(QMouseEvent *event) {
+    if (event->button() == Qt::LeftButton) {
+
+
+     }
+     ImageWindow::mousePressEvent(event);
+}
+
+void StandardImageWindow::startDrag() {
+    QDrag *drag = new QDrag(this);
+    QMimeData *mimeData = new QMimeData();
+    QByteArray encodedData;
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+    //Node *node = new Node(this->getImage(), this->getPath());
+    uintptr_t ptr = reinterpret_cast<uintptr_t>(this);
+    stream << ptr;
+    mimeData->setData("application/detiqt.genericinterface.stdimgwnd", encodedData);
+    
+    
+    QImage img = getQImage(this->getImage()).scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation);
+     
+    drag->setMimeData(mimeData);
+    drag->setPixmap(QPixmap::fromImage(img));
+    drag->setHotSpot(QPoint(img.width()/2, img.height()/2));
+
+    /*Qt::DropAction dropAction = */drag->exec();
+}
+
+void StandardImageWindow::mouseMoveEvent(QMouseEvent *event) {
+    //std::cout << "mouseMoveEvent " << event->x() << ":" << event->y() << std::endl;
+     ImageWindow::mouseMoveEvent(event);
 }
 
 void StandardImageWindow::init()
@@ -51,6 +97,7 @@ void StandardImageWindow::init()
 	QObject::connect(_imageView, SIGNAL(pixelClicked(int, int)), this, SLOT(showSelectedPixelInformations(int, int)));
 	QObject::connect(_imageView, SIGNAL(pixelHovered(int, int)), this, SLOT(showHoveredPixelInformations(int, int)));
 	QObject::connect(_imageView, SIGNAL(zoomChanged(double)), this, SLOT(updateZoom(double)));
+	QObject::connect(_imageView, SIGNAL(startDrag()), this, SLOT(startDrag()));
 	QObject::connect(this, SIGNAL(ctrlPressed()), _imageView, SLOT(ctrlPressed()));
 	QObject::connect(this, SIGNAL(highlightRectChange(imagein::Rectangle, ImageWindow*)), _imageView, SLOT(showHighlightRect(imagein::Rectangle, ImageWindow*)));
 }
@@ -217,8 +264,14 @@ void StandardImageWindow::initStatusBar()
   font.setPointSize(8);
   _lZoom->setFont(font);
 
-  QPushButton* bSelectAll = new QPushButton("Select All");
-  QObject::connect(bSelectAll, SIGNAL(clicked()), _imageView, SLOT(selectAll()));
+  _selectButton = new QPushButton("SEL");
+  _mouseButton = new QPushButton("MOU");
+  _selectButton->setCheckable(true);
+  _mouseButton->setCheckable(true);
+  //QObject::connect(_selectButton, SIGNAL(pressed()), _imageView, SLOT(selectionOn()));
+  QObject::connect(_mouseButton, SIGNAL(toggled(bool)), this, SLOT(toggleMouseMode(bool)));
+  QObject::connect(_selectButton, SIGNAL(toggled(bool)), this, SLOT(toggleSelectMode(bool)));
+  //QObject::connect(_selectButton, SIGNAL(clicked()), this, SLOT(makeSelection()));
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->setContentsMargins(0, 0, 0, 0);
@@ -232,7 +285,8 @@ void StandardImageWindow::initStatusBar()
 	layoutImage->addSpacing(30);
 	layoutImage->addWidget(_lZoom);
 	layoutImage->addSpacing(30);
-	layoutImage->addWidget(bSelectAll);
+	layoutImage->addWidget(_mouseButton);
+	layoutImage->addWidget(_selectButton);
   widgetImage->setLayout(layoutImage);
   layout->addWidget(widgetImage);
 	
@@ -257,6 +311,20 @@ void StandardImageWindow::initStatusBar()
   widget->setLayout(layout);
 
   _statusBar->addWidget(widget);
+}
+
+void StandardImageWindow::toggleMouseMode(bool checked) {
+    if(checked) {
+        _selectButton->setChecked(false);
+        _imageView->setMode(StandardImageView::MODE_MOUSE);
+    }
+}
+
+void StandardImageWindow::toggleSelectMode(bool checked) {
+    if(checked) {
+        _mouseButton->setChecked(false);
+        _imageView->setMode(StandardImageView::MODE_SELECT);
+    }
 }
 
 void StandardImageWindow::showSelectedPixelInformations(int x, int y) const
@@ -313,17 +381,27 @@ void StandardImageWindow::updateZoom(double z) const
 	_lZoom->setText(QString::fromStdString("Zoom: " + zs + "%"));
 }
 
+void StandardImageWindow::wheelEvent (QWheelEvent * event) {
+	if (_ctrlPressed && event->orientation() == Qt::Vertical)
+	{
+        _imageView->zoom(event->delta());
+	}
+}
+
 void StandardImageWindow::keyPressEvent(QKeyEvent* event)
 {
 	if(event->key() == Qt::Key_Control) {
         _ctrlPressed = true;
 		emit ctrlPressed();
+    }
 }
 
 void StandardImageWindow::keyReleaseEvent(QKeyEvent* event)
 {
-	if(event->key() == Qt::Key_Control)
+	if(event->key() == Qt::Key_Control) {
+        _ctrlPressed = false;
 		emit ctrlPressed();
+    }
 }
 
 void StandardImageWindow::showHighlightRect(Rectangle rect, ImageWindow* source)

@@ -96,6 +96,9 @@ public:
 
 
     AlternativeImageView* getView() { return NULL; }
+    
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 
 public slots:
@@ -109,6 +112,9 @@ public slots:
     void showHoveredPixelInformations(int x, int y) const;
     void showSelectedPixelInformations(int x, int y) const;
     void updateZoom(double z) const;
+    void toggleMouseMode(bool);
+    void toggleSelectMode(bool);
+    void startDrag();
     
     void showHighlightRect(imagein::Rectangle rect, ImageWindow* source);
 
@@ -137,11 +143,15 @@ protected:
     QLabel* _lSelectedPixelColor;
     QLabel* _lZoom;
     QPoint* _selectedPixel;
+    QPushButton* _selectButton;
+    QPushButton* _mouseButton;
+    bool _ctrlPressed;
 
     void init();
     void initStatusBar();
     void keyPressEvent(QKeyEvent* event);
     void keyReleaseEvent(QKeyEvent* event);
+    void wheelEvent (QWheelEvent * event);
 };
 }
 

@@ -6,6 +6,7 @@ using namespace std;
 
 StandardImageView::StandardImageView(QWidget* parent, Image* image): QGraphicsPixmapItem(), _parent(parent), _image(image)
 {
+    _mode = MODE_MOUSE;
     _selection = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
     _visibleArea = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
 	_scene = new QGraphicsScene();
@@ -27,6 +28,7 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QGraphicsPi
     _mouseButtonPressed = false;
     _pixelClicked = QPoint(-1, -1);
     
+    _selectionOn = false;
 
     initMenu();
 
@@ -198,6 +200,7 @@ void StandardImageView::mousePressEvent(QGraphicsSceneMouseEvent * event)
 
 void StandardImageView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 {
+    std::cout << "mouseReleaseEvent" << std::endl;
     QPoint pos = event->pos().toPoint();
     if(event->button() == Qt::LeftButton)
     {
@@ -286,27 +289,29 @@ void StandardImageView::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             }
             else
             {
-                _sourceHighlight = NULL;
-                if(_pixelClicked->x() < x)
-                {
-                    _selection->w = x - _pixelClicked->x();
-                    _selection->x = _pixelClicked->x();
-                }
-                else
-                {
-                    _selection->x = x;
-                    _selection->w = _pixelClicked->x() - x;
-                }
+                if(_mode == MODE_SELECT) {
+                    _sourceHighlight = NULL;
+                    if(_pixelClicked.x() < pos.x())
+                    {
+                        _selection.w = pos.x() - _pixelClicked.x();
+                        _selection.x = _pixelClicked.x();
+                    }
+                    else
+                    {
+                        _selection.x = pos.x();
+                        _selection.w = _pixelClicked.x() - pos.x();
+                    }
 
-                if(_pixelClicked->y() < y)
-                {
-                    _selection->y = _pixelClicked->y();
-                    _selection->h = y - _pixelClicked->y();
-                }
-                else
-                {
-                    _selection->y = y;
-                    _selection->h = _pixelClicked->y() - y;
+                    if(_pixelClicked.y() < pos.y())
+                    {
+                        _selection.y = _pixelClicked.y();
+                        _selection.h = pos.y() - _pixelClicked.y();
+                    }
+                    else
+                    {
+                        _selection.y = pos.y();
+                        _selection.h = _pixelClicked.y() - pos.y();
+                    }
                 }
             }
             _highlight->setRect(_selection.x, _selection.y, _selection.w, _selection.h);
@@ -376,17 +381,23 @@ void StandardImageView::showHighlightRect(imagein::Rectangle rect, ImageWindow* 
   if(view != NULL && (_sourceHighlight = dynamic_cast<GenericHistogramView*>(view))) {}
   else _sourceHighlight = NULL;
 }
-
+/*
 void StandardImageView::selectAll()
 {
   _sourceHighlight = NULL;
-  _selection->x = 0;
-  _selection->y = 0;
-  _selection->w = _image->getWidth();
-  _selection->h = _image->getHeight();
+  _selection.x = 0;
+  _selection.y = 0;
+  _selection.w = _image->getWidth();
+  _selection.h = _image->getHeight();
   
-  _highlight->setRect(_selection->x, _selection->y, _selection->w, _selection->h);  
+  _highlight->setRect(_selection.x, _selection.y, _selection.w, _selection.h);  
+}*/
+
+void StandardImageView::toggleSelection() {
+    _selectionOn = !_selectionOn;
+    std::cout << "Selection " <<  (_selectionOn ? "on" : "false") << std::endl;
 }
+
 
 void StandardImageView::setImage(imagein::Image* image)
 {

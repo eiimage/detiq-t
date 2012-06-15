@@ -20,6 +20,8 @@ void WindowService::connect(GenericInterface* gi)
     _gi = gi;
     QObject::connect(_nav, SIGNAL(actionDone()), this, SLOT(updateDisplay()));
     QObject::connect(_nav, SIGNAL(removeId(NodeId)), this, SLOT(removeId(NodeId)));
+    QObject::connect(_nav, SIGNAL(windowDropped(StandardImageWindow*)), 
+                        this, SLOT(moveToNode(StandardImageWindow*)));
     QObject::connect(_mdi, SIGNAL(subWindowActivated(QMdiSubWindow*)), 
                         this, SIGNAL(subWindowActivated(QMdiSubWindow*)));
 }
@@ -170,18 +172,15 @@ void WindowService::removeId(NodeId id)
     //this->updateDisplay();
 }
 
-void WindowService::updateDisplay()
-{
-    for(WidgetsMap::iterator it = _widgets.begin(); it != _widgets.end(); ++it)
-    {
-        QList<QMdiSubWindow*> list = (*it).second;
-
-        for(int u = 0; u < list.size(); u++)
-        {
-            list[u]->showMinimized();
-            //list[u]->hide();
+void WindowService::moveToNode(StandardImageWindow* siw) {
+    StandardImageWindow* newSiw = new StandardImageWindow(*siw);
+    foreach(QMdiSubWindow *sw, _mdi->subWindowList()) {
+        if(sw->widget() == siw) {
+            sw->close();
         }
     }
+    addImage(newSiw->getImage(), newSiw);
+}
 
 void WindowService::updateDisplay()
 {

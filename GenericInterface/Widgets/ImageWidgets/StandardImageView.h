@@ -32,6 +32,8 @@ namespace genericinterface
   Q_OBJECT
 
   public:
+  
+    enum Mode {MODE_MOUSE, MODE_SELECT};
 		/*!
 		 * \brief Default constructor
 		 * 
@@ -60,6 +62,8 @@ namespace genericinterface
         
 		//! Returns the graphics view
     inline QGraphicsView* getGraphicsView() const { return _view; }
+    
+    inline void setMode(Mode mode) { _mode = mode; }
 
 	public slots:
     void ctrlPressed();
@@ -120,6 +124,8 @@ namespace genericinterface
     bool _originY;
     bool _vLine;
     bool _hLine;
+    
+    Mode _mode;
     
     void initMenu();
     void showImage();
