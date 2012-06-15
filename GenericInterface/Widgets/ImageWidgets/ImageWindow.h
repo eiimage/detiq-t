@@ -23,7 +23,7 @@ class ImageWindow : public QWidget
 {
         Q_OBJECT
     protected:
-        imagein::Rectangle* _applicationArea;
+        imagein::Rectangle _applicationArea;
         QStatusBar* _statusBar;
         const ImageWindow* _sourceWindow;
         QString _path;
@@ -38,7 +38,7 @@ class ImageWindow : public QWidget
          * \param source The source window
          * \param rect The application area (Rectangle used for Histogram, Algorithm...)
          */
-        ImageWindow(QString path, const ImageWindow *source, Rectangle *rect = 0);
+        ImageWindow(QString path, const ImageWindow *source, imagein::Rectangle rect = imagein::Rectangle());
 
         /*!
          * \brief Returns the title from a path.
@@ -59,7 +59,7 @@ class ImageWindow : public QWidget
 
     public slots:
         void activated();
-        void setApplicationArea(const imagein::Rectangle* rect);
+        void setApplicationArea(const imagein::Rectangle rect);
 
     signals:
         /*!
@@ -67,7 +67,7 @@ class ImageWindow : public QWidget
          *
          * \param rect Rectangle to display on the source window
          */
-        void highlightRectChange(const imagein::Rectangle* rect, ImageWindow* source);
+        void highlightRectChange(imagein::Rectangle rect, ImageWindow* source);
     };
 }
 

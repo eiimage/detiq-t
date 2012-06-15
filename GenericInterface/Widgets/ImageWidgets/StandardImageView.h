@@ -56,14 +56,15 @@ namespace genericinterface
     inline const QPixmap* getPixmap() const { return _pixmap_img; }
         
 		//! Returns the selection rectangle
-    inline imagein::Rectangle* getRectangle() const { return _selection; }
+    inline imagein::Rectangle getRectangle() const { return _selection; }
         
 		//! Returns the graphics view
     inline QGraphicsView* getGraphicsView() const { return _view; }
 
 	public slots:
     void ctrlPressed();
-    void showHighlightRect(const imagein::Rectangle* rect, ImageWindow* source);
+    void showHighlightRect(imagein::Rectangle rect, ImageWindow* source);
+    void zoom(int delta);
 		
 	signals:
 		/*!
@@ -88,9 +89,11 @@ namespace genericinterface
 		 * \param z The zoom factor
 		 */
 		void zoomChanged(double z) const;
+        
+        void startDrag();
     
   private slots:
-    void selectAll();
+    void toggleSelection();
     
   private:
     QWidget* _parent;
@@ -101,15 +104,16 @@ namespace genericinterface
     GenericHistogramView* _sourceHighlight;
     
     imagein::Image* _image;
-    imagein::Rectangle* _selection;
-    imagein::Rectangle* _visibleArea;
+    imagein::Rectangle _selection;
+    imagein::Rectangle _visibleArea;
     ImageContextMenu* _menu;
     
+    bool _selectionOn;
     bool _ctrlPressed;
     double _zoomFactor;
     bool _mouseButtonPressed;
-    QPoint* _pixelClicked;
-    imagein::Rectangle* _originalHighlight;
+    QPoint _pixelClicked;
+    imagein::Rectangle _originalHighlight;
     bool _resize;
     bool _move;
     bool _originX;

@@ -3,13 +3,13 @@
 using namespace genericinterface;
 using namespace imagein;
 
-RowWindow::RowWindow(const imagein::Image* image, imagein::Rectangle* rect, const QString path, GenericInterface *gi, const ImageWindow* source, bool vertical): ImageWindow(path, source, rect), _gi(gi)
+RowWindow::RowWindow(const imagein::Image* image, imagein::Rectangle rect, GenericInterface *gi, const ImageWindow* source, bool vertical): ImageWindow("", source, rect), _gi(gi)
 {
 	_view = new RowView(image, rect);
 	if(vertical)
-        this->setWindowTitle(ImageWindow::getTitleFromPath(_path) + QString::fromStdString(" - Column Profile"));
+        this->setWindowTitle(source->windowTitle() + QString(" - Column Profile"));
 	else
-        this->setWindowTitle(ImageWindow::getTitleFromPath(_path) + QString::fromStdString(" - Line Profile"));
+        this->setWindowTitle(source->windowTitle() + QString(" - Line Profile"));
 	
 	init();
 }

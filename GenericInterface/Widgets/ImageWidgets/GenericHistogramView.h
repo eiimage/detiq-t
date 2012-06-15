@@ -47,7 +47,7 @@ public:
      * \param image The image concerned by the histogram
      * \param rect The part of the image where the histogram is applied
      */
-    GenericHistogramView(const imagein::Image* image, imagein::Rectangle* rect, bool horizontal=false, int value=0, bool projection=false);
+    GenericHistogramView(const imagein::Image* image, imagein::Rectangle rect, bool horizontal=false, int value=0, bool projection=false);
 
     /*!
      * \brief GenericHistogramView destructor.
@@ -56,10 +56,10 @@ public:
      */
     virtual ~GenericHistogramView();
 
-    void update(const imagein::Rectangle* rect);
+    void update(imagein::Rectangle rect);
     
     //! Returns the image's histogram on the param channel
-    inline const imagein::Histogram* getHistogram(int channel) const { return new imagein::Histogram(*_image, channel, *_rectangle); }
+    inline const imagein::Histogram* getHistogram(int channel) const { return new imagein::Histogram(*_image, channel, _rectangle); }
 
     //! Returns the graphical histogram
     inline QwtPlot* getGraphicalHistogram() const { return _qwtPlot; }
@@ -86,7 +86,7 @@ signals:
      */
     void hoveredValue(int value) const;
     
-    void updateApplicationArea(const imagein::Rectangle* rect) const;
+    void updateApplicationArea(imagein::Rectangle rect) const;
 
 private slots:
     void showItem(QwtPlotItem*, bool on) const;
@@ -95,7 +95,7 @@ private slots:
     void rightClick(const QPointF&) const;
 
 protected:
-    imagein::Rectangle* _rectangle;
+    imagein::Rectangle _rectangle;
     bool _horizontal;
     int _value;
     QwtPlot* _qwtPlot;

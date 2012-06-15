@@ -63,6 +63,7 @@ public:
      * \param image The image which is used
      */
     StandardImageWindow(const QString path, GenericInterface* gi, Image* image);
+    StandardImageWindow(const StandardImageWindow&);
 
 
     /*!
@@ -89,7 +90,7 @@ public:
      * \brief Returns the Rectangle which is the current image's selection on the window.
      *
      */
-    const imagein::Rectangle* getSelection();
+    imagein::Rectangle getSelection();
 
     inline StandardImageView* getStandardView() { return _imageView; }
 
@@ -109,7 +110,7 @@ public slots:
     void showSelectedPixelInformations(int x, int y) const;
     void updateZoom(double z) const;
     
-    void showHighlightRect(const imagein::Rectangle* rect, ImageWindow* source);
+    void showHighlightRect(imagein::Rectangle rect, ImageWindow* source);
 
 signals:
     //! Signal emits when crtl key is pressed
@@ -120,7 +121,7 @@ signals:
      *
      * \param rect The rectangle to display
      */
-    void highlightRectChange(const imagein::Rectangle* rect, ImageWindow* source);
+    void highlightRectChange(imagein::Rectangle rect, ImageWindow* source);
     
 protected:
     GenericInterface* _gi;

@@ -2,43 +2,41 @@
 
 using namespace genericinterface;
 using namespace imagein;
+using namespace std;
 
 StandardImageView::StandardImageView(QWidget* parent, Image* image): QGraphicsPixmapItem(), _parent(parent), _image(image)
 {
-  _selection = new Rectangle(0, 0, _image->getWidth(), _image->getHeight());
-  _visibleArea = new Rectangle(0, 0, _image->getWidth(), _image->getHeight());
+    _selection = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
+    _visibleArea = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
 	_scene = new QGraphicsScene();
-  _view = new QGraphicsView();
+    _view = new QGraphicsView();
 
 	this->setAcceptHoverEvents(true);
     
 	_zoomFactor = 1;
-  _ctrlPressed = false;
+    _ctrlPressed = false;
   
-  _sourceHighlight = NULL;
-  _originalHighlight = new Rectangle(0, 0, _image->getWidth(), _image->getHeight());
-  _resize = false;
-  _originX = false;
-  _originY = false;
-  _vLine = false;
-  _hLine = false;
+    _sourceHighlight = NULL;
+    _originalHighlight = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
+    _resize = false;
+    _originX = false;
+    _originY = false;
+    _vLine = false;
+    _hLine = false;
   
-  _mouseButtonPressed = false;
-  _pixelClicked = new QPoint(-1, -1);
+    _mouseButtonPressed = false;
+    _pixelClicked = QPoint(-1, -1);
     
-	initMenu();
-    
-  showImage();
+
+    initMenu();
+
+    showImage();
 }
 
 StandardImageView::~StandardImageView()
 {
-	delete _selection;
-	delete _visibleArea;
-	delete _pixelClicked;
 	delete _menu;
 	delete _pixmap_img;
-  delete _originalHighlight;
 }
 
 void StandardImageView::initMenu()
@@ -110,7 +108,7 @@ void StandardImageView::showImage()
     this->setPixmap(*_pixmap_img);
 	_scene->addItem(this);
 	
-	_highlight = new QGraphicsRectItem(((int)_selection->x), ((int)_selection->y), ((int)_selection->w), ((int)_selection->h));
+	_highlight = new QGraphicsRectItem(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
 	_highlight->setPen(QPen(QBrush(QColor(255, 0, 0, 200)), 1));
 	
 	_scene->addItem(_highlight);
@@ -118,169 +116,173 @@ void StandardImageView::showImage()
 	_view->setScene(_scene);
 }
 
+void StandardImageView::zoom(int delta) {
+    double wOrigin = _pixmap_img->width();
+    double hOrigin = _pixmap_img->height();
+    if(delta < 0 && _zoomFactor > 0.05) //Zoom out
+    {
+        _zoomFactor -= 0.05;
+        
+        double wActual = wOrigin * (_zoomFactor + 0.05);
+        double hActual = hOrigin * (_zoomFactor + 0.05);
+        
+        double zoomW = (_zoomFactor * wOrigin) / wActual;
+        double zoomH = (_zoomFactor * hOrigin) / hActual;
+        
+        _view->scale(zoomW, zoomH);
+    }
+    else if(delta > 0)//Zoom in
+    {
+        _zoomFactor += 0.05;
+        
+        double wActual = wOrigin * (_zoomFactor - 0.05);
+        double hActual = hOrigin * (_zoomFactor - 0.05);
+        
+        double zoomW = (_zoomFactor * wOrigin) / wActual;
+        double zoomH = (_zoomFactor * hOrigin) / hActual;
+        
+        _view->scale(zoomW, zoomH);
+    }		
+    
+    emit zoomChanged(_zoomFactor*100);
+}
+
 void StandardImageView::wheelEvent(QGraphicsSceneWheelEvent* event)
 {
 	if (_ctrlPressed && event->orientation() == Qt::Vertical)
 	{
-		double wOrigin = _pixmap_img->width();
-		double hOrigin = _pixmap_img->height();
-		if(event->delta() < 0 && _zoomFactor > 0.05) //Zoom out
-		{
-			_zoomFactor -= 0.05;
-			
-			double wActual = wOrigin * (_zoomFactor + 0.05);
-			double hActual = hOrigin * (_zoomFactor + 0.05);
-			
-			double zoomW = (_zoomFactor * wOrigin) / wActual;
-			double zoomH = (_zoomFactor * hOrigin) / hActual;
-			
-			_view->scale(zoomW, zoomH);
-		}
-		else if(event->delta() > 0)//Zoom in
-		{
-			_zoomFactor += 0.05;
-			
-			double wActual = wOrigin * (_zoomFactor - 0.05);
-			double hActual = hOrigin * (_zoomFactor - 0.05);
-			
-			double zoomW = (_zoomFactor * wOrigin) / wActual;
-			double zoomH = (_zoomFactor * hOrigin) / hActual;
-			
-			_view->scale(zoomW, zoomH);
-		}		
-		
-		emit zoomChanged(_zoomFactor*100);
+        zoom(event->delta());
 	}
 }
 
 void StandardImageView::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
-	int x = event->pos().x();
-	int y = event->pos().y();
-  if(x >= 0 && x < pixmap().width() && y >= 0 && y < pixmap().height())
-  {
-    if(event->button() == Qt::LeftButton)
+    QPoint pos = event->pos().toPoint();
+    if(pixmap().rect().contains(pos))
     {
-      _mouseButtonPressed = true;
-      _pixelClicked->setX(x);
-      _pixelClicked->setY(y);
-  
-      int posX = QCursor::pos().x(), posY = QCursor::pos().y();
-      if(x >= _highlight->rect().x() - 2 && x <= _highlight->rect().x() + 2)
-        posX = QCursor::pos().x() + _highlight->rect().x() - x;
-      if(x >= _highlight->rect().x() + _highlight->rect().width() - 2 && x <= _highlight->rect().x() + _highlight->rect().width() + 2)
-        posX = QCursor::pos().x() + _highlight->rect().x() + _highlight->rect().width() - x;
-      
-      if(y >= _highlight->rect().y() - 2 && y <= _highlight->rect().y() + 2)
-        posY = QCursor::pos().y() + _highlight->rect().y() - y;
-      else if(y >= _highlight->rect().y() + _highlight->rect().height() - 2 && y <= _highlight->rect().y() + _highlight->rect().height() + 2)
-        posY = QCursor::pos().y() + _highlight->rect().y() + _highlight->rect().height() - y;
-      
-      QCursor::setPos(posX, posY);
+        if(event->button() == Qt::LeftButton)
+        {
+            _mouseButtonPressed = true;
+            _pixelClicked = pos;
+
+            if(_move) {
+                int posX = QCursor::pos().x();
+                int posY = QCursor::pos().y();
+                
+                int delta;
+                
+                if( abs( delta = pos.x() - _highlight->rect().left() ) <= 2) {
+                    posX -= delta;
+                }
+                else if( abs( delta = pos.x() - _highlight->rect().right() ) <= 2) {
+                    posX -= delta;
+                }
+
+                if( abs( delta = pos.y() - _highlight->rect().top()) <= 2) {
+                    posY -= delta;
+                }
+                else if( abs( delta = pos.y() - _highlight->rect().bottom()) <= 2) {
+                    posY -= delta;
+                }
+
+                QCursor::setPos(posX, posY);
+            }
+            else {
+                emit startDrag();
+            }
+            
+            
+        }
     }
-	}
 }
 
 void StandardImageView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 {
-	int x = event->pos().x();
-	int y = event->pos().y();
-	if(x >= 0 && x < pixmap().width() && y >= 0 && y < pixmap().height())
+    QPoint pos = event->pos().toPoint();
+    if(event->button() == Qt::LeftButton)
     {
-		if(event->button() == Qt::LeftButton)
-		{
-			if(x == _pixelClicked->x() && y == _pixelClicked->y())
-				emit pixelClicked(x, y);
-			
-			_mouseButtonPressed = false;
-			_pixelClicked->setX(-1);
-			_pixelClicked->setY(-1);
-      
-      _originalHighlight->x = _selection->x;
-      _originalHighlight->y = _selection->y;
-      _originalHighlight->h = _selection->h;
-      _originalHighlight->w = _selection->w;
-		}
-	}
+        if(pixmap().rect().contains(pos))
+        {
+            if(pos == _pixelClicked) {
+                emit pixelClicked(pos.x(), pos.y());
+            }
+        }
+        _mouseButtonPressed = false;
+        _pixelClicked = QPoint(-1, -1);
+        _originalHighlight = _selection;
+    }
 }
 
 void StandardImageView::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-    qreal x = event->pos().x();
-    qreal y = event->pos().y();
-
-    if(x >= 0 && x < pixmap().width() && y >= 0 && y < pixmap().height())
+    QPoint pos = event->pos().toPoint();
+    if(pixmap().rect().contains(pos))
     {
         if(_mouseButtonPressed)
         {
             if(_move)
             {
-                int newX = _selection->x - (_pixelClicked->x() - x);
-                int newY = _selection->y - (_pixelClicked->y() - y);
-                if(!_hLine)
-                    _selection->x = newX < 0 ? 0 : newX + _selection->w >= _image->getWidth() ? _image->getWidth() - _selection->w - 1 : newX;
-                if(!_vLine)
-                    _selection->y = newY < 0 ? 0 : newY + _selection->h >= _image->getHeight() ? _image->getHeight() - _selection->h - 1 : newY;
-                _pixelClicked->setX(x);
-                _pixelClicked->setY(y);
-                if(_sourceHighlight != NULL)
-                    _sourceHighlight->update(_selection);
+                int dx = pos.x() - _pixelClicked.x();
+                int dy = pos.y() - _pixelClicked.y();
+                _pixelClicked = pos;
+                _selection.x = min( max((int)_selection.x + dx, 0), (int)_image->getWidth() - (int)_selection.w - 1);
+                _selection.y = min( max((int)_selection.y + dy, 0), (int)_image->getHeight() - (int)_selection.h - 1);
+                if(_sourceHighlight != NULL) _sourceHighlight->update(_selection);
             }
             else if(_resize && this->hasCursor())
             {
                 if(this->cursor().shape() == Qt::SizeHorCursor || this->cursor().shape() == Qt::SizeFDiagCursor || this->cursor().shape() == Qt::SizeBDiagCursor)
                 {
-                    if(_originX && x < _originalHighlight->x  + _originalHighlight->w)
+                    if(_originX && pos.x() < (int)(_originalHighlight.x  + _originalHighlight.w))
                     {
-                        _selection->w = _originalHighlight->x - x + _originalHighlight->w;
-                        _selection->x = x;
+                        _selection.w = _originalHighlight.x - pos.x() + _originalHighlight.w;
+                        _selection.x = pos.x();
                     }
                     else if(_originX)
                     {
-                        _originalHighlight->x = _originalHighlight->x + _originalHighlight->w;
-                        _originalHighlight->w = x - _originalHighlight->x;
+                        _originalHighlight.x = _originalHighlight.x + _originalHighlight.w;
+                        _originalHighlight.w = pos.x() - _originalHighlight.x;
                         _originX = false;
                     }
 
-                    if(!_originX && _originalHighlight->x >= x)
+                    if(!_originX && (int)_originalHighlight.x >= pos.x())
                     {
-                        _selection->w = _originalHighlight->x - x;
-                        _selection->x = x;
+                        _selection.w = _originalHighlight.x - pos.x();
+                        _selection.x = pos.x();
                     }
                     else if(!_originX)
                     {
-                        _selection->w = x - _originalHighlight->x;
-                        _selection->x = _originalHighlight->x;
+                        _selection.w = pos.x() - _originalHighlight.x;
+                        _selection.x = _originalHighlight.x;
                     }
                 }
 
                 if(this->cursor().shape() == Qt::SizeVerCursor || this->cursor().shape() == Qt::SizeFDiagCursor || this->cursor().shape() == Qt::SizeBDiagCursor)
                 {
-                    if(_originY && y < _originalHighlight->y  + _originalHighlight->h)
+                    if(_originY && pos.y() < (int)(_originalHighlight.y  + _originalHighlight.h))
                     {
-                        _selection->h = _originalHighlight->y - y + _originalHighlight->h;
-                        _selection->y = y;
+                        _selection.h = _originalHighlight.y - pos.y() + _originalHighlight.h;
+                        _selection.y = pos.y();
                     }
                     else if(_originY)
                     {
-                        _originalHighlight->y = _originalHighlight->y + _originalHighlight->h;
-                        _originalHighlight->h = y - _originalHighlight->y;
+                        _originalHighlight.y = _originalHighlight.y + _originalHighlight.h;
+                        _originalHighlight.h = pos.y() - _originalHighlight.y;
                         _originY = false;
                     }
 
-                    if(!_originY && _originalHighlight->y >= y)
+                    if(!_originY && (int)_originalHighlight.y >= pos.y())
                     {
-                        _selection->h = _originalHighlight->y - y;
-                        _selection->y = y;
+                        _selection.h = _originalHighlight.y - pos.y();
+                        _selection.y = pos.y();
                     }
                     else if(!_originY)
                     {
-                        _selection->h = y - _originalHighlight->y;
-                        _selection->y = _originalHighlight->y;
+                        _selection.h = pos.y() - _originalHighlight.y;
+                        _selection.y = _originalHighlight.y;
                     }
                 }
-                if(_sourceHighlight != NULL)
-                    _sourceHighlight->update(_selection);
+                if(_sourceHighlight != NULL) _sourceHighlight->update(_selection);
             }
             else
             {
@@ -307,95 +309,49 @@ void StandardImageView::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                     _selection->h = _pixelClicked->y() - y;
                 }
             }
-            _highlight->setRect(_selection->x, _selection->y, _selection->w, _selection->h);
+            _highlight->setRect(_selection.x, _selection.y, _selection.w, _selection.h);
         }
     }
 }
 
 void StandardImageView::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
-  int x = event->pos().x();
-	int y = event->pos().y();
-  
-	emit pixelHovered(x, y);
-  
-  if(!_mouseButtonPressed)
-      this->setCursor(mouseOverHighlight(x, y));
+    QPoint pos = event->pos().toPoint();
+    
+    if(pixmap().rect().contains(pos)) {
+        emit pixelHovered(pos.x(), pos.y());
+    }
+    
+    if(!_mouseButtonPressed) {
+        this->setCursor(mouseOverHighlight(pos.x(), pos.y()));
+    }
 }
 
 Qt::CursorShape StandardImageView::mouseOverHighlight(int x, int y)
 {
-  Qt::CursorShape res = Qt::ArrowCursor;
+    const QRectF& rect = _highlight->rect();
+    bool nearLeft = ( abs(x - rect.left()) <= 2 );
+    bool nearRight = ( abs(x - rect.right()) <= 2 );
+    bool nearTop = ( abs(y - rect.top()) <= 2 );
+    bool nearBottom = ( abs(y - rect.bottom()) <= 2 );
+    bool inX = ( x >= rect.left()-2 ) && ( x <= rect.right()+2 );
+    bool inY = ( y >= rect.top()-2 ) && ( y <= rect.bottom()+2 );
   
-  _originX = false;
-  _originY = false;
+    Qt::CursorShape res;
+    if(_ctrlPressed && (nearLeft || nearRight || nearTop || nearBottom) ) res = Qt::SizeAllCursor;
+    else if( (nearLeft && nearTop) || (nearRight && nearBottom) ) res = Qt::SizeFDiagCursor;
+    else if( (nearLeft && nearBottom) || (nearRight && nearTop) ) res = Qt::SizeBDiagCursor;
+    else if(inY && (nearLeft || nearRight)) res = Qt::SizeHorCursor;
+    else if(inX && (nearTop || nearBottom)) res = Qt::SizeVerCursor;
+    else res = Qt::ArrowCursor;
   
-  if(_vLine && x >= _highlight->rect().x() - 2 && x <= _highlight->rect().x() + 2)
-      res = Qt::SizeAllCursor;
-  else if(_hLine && y >= _highlight->rect().y() - 2 && y <= _highlight->rect().y() + 2)
-      res = Qt::SizeAllCursor;
-  
-  if(x >= _highlight->rect().x() - 2 && x <= _highlight->rect().x() + 2)
-  {
-    if(_ctrlPressed)
-      res = Qt::SizeAllCursor;
-    else
-    {
-      _originX = true;
-      if(y >= _highlight->rect().y() - 2 && y <= _highlight->rect().y() + 2)
-      {
-        _originY = true;
-        res = Qt::SizeFDiagCursor;
-      }
-      else if(res == Qt::ArrowCursor && (y >= _highlight->rect().y() + _highlight->rect().height() - 2 && y <= _highlight->rect().y() + _highlight->rect().height() + 2))
-        res = Qt::SizeBDiagCursor;
-      else if(res == Qt::ArrowCursor && (y >= _highlight->rect().y() - 2 && y <= _highlight->rect().y() + _highlight->rect().height() + 2))
-        res = Qt::SizeHorCursor;
-    }
-  }
+    _move = (res == Qt::SizeAllCursor);
+    _resize = (res != Qt::ArrowCursor);
     
-  if(res == Qt::ArrowCursor && (x >= _highlight->rect().x() + _highlight->rect().width() - 2 && x <= _highlight->rect().x() + _highlight->rect().width() + 2))
-  {
-    if(_ctrlPressed)
-      res = Qt::SizeAllCursor;
-    else if(y >= _highlight->rect().y() - 2 && y <= _highlight->rect().y() + 2)
-    {
-      res = Qt::SizeBDiagCursor;
-      _originY = true;
-    }
-    else if(res == Qt::ArrowCursor && (y >= _highlight->rect().y() + _highlight->rect().height() - 2 && y <= _highlight->rect().y() + _highlight->rect().height() + 2))
-      res = Qt::SizeFDiagCursor;
-    else if(res == Qt::ArrowCursor && (y >= _highlight->rect().y() - 2 && y <= _highlight->rect().y() + _highlight->rect().height() + 2))
-      res = Qt::SizeHorCursor;
-  }
-  
-  if(res == Qt::ArrowCursor && (y >= _highlight->rect().y() - 2 && y <= _highlight->rect().y() + 2 && x >= _highlight->rect().x() - 2 && x <= _highlight->rect().x() + _highlight->rect().width() + 2))
-  {
-    if(_ctrlPressed)
-      res = Qt::SizeAllCursor;
-    else
-    {
-      _originY = true;
-      res = Qt::SizeVerCursor;
-    }
-  }
+    _originX = nearLeft;
+    _originY = nearTop;
     
-  if(res == Qt::ArrowCursor && (y >= _highlight->rect().y() + _highlight->rect().height()  - 2 && y <= _highlight->rect().y() + _highlight->rect().height() + 2 && x >= _highlight->rect().x() - 2 && x <= _highlight->rect().x() + _highlight->rect().width() + 2))
-  {
-    if(_ctrlPressed)
-      res = Qt::SizeAllCursor;
-    else
-      res = Qt::SizeVerCursor;
-  }
-  
-  _move = false;
-  _resize = false;
-  if(res == Qt::SizeAllCursor)
-    _move = true;
-  else if(res != Qt::ArrowCursor)
-    _resize = true;
-    
-  return res;
+    return res;
 }
 
 void StandardImageView::ctrlPressed()
@@ -403,21 +359,18 @@ void StandardImageView::ctrlPressed()
 	_ctrlPressed = !_ctrlPressed;
 }
 
-void StandardImageView::showHighlightRect(const imagein::Rectangle* rect, ImageWindow* source)
+void StandardImageView::showHighlightRect(imagein::Rectangle rect, ImageWindow* source)
 {
-	_highlight->setRect(((int)rect->x), ((int)rect->y), ((int)rect->w), ((int)rect->h));
-  _originalHighlight->x = (int)rect->x;
-  _originalHighlight->y = (int)rect->y;
-  _originalHighlight->w = (int)rect->w;
-  _originalHighlight->h = (int)rect->h;
+	_highlight->setRect(((int)rect.x), ((int)rect.y), ((int)rect.w), ((int)rect.h));
+  _originalHighlight = rect;
   
-  _selection->x = (int)rect->x;
-  _selection->y = (int)rect->y;
-  _selection->w = (int)rect->w;
-  _selection->h = (int)rect->h;
+  _selection.x = (int)rect.x;
+  _selection.y = (int)rect.y;
+  _selection.w = (int)rect.w;
+  _selection.h = (int)rect.h;
   
-  _vLine = (_originalHighlight->w == 0 && _originalHighlight->h == _image->getHeight());
-  _hLine = (_originalHighlight->h == 0 && _originalHighlight->w == _image->getWidth());
+  _vLine = (_originalHighlight.w == 0 && _originalHighlight.h == _image->getHeight());
+  _hLine = (_originalHighlight.h == 0 && _originalHighlight.w == _image->getWidth());
   
   AlternativeImageView* view = source->getView();
   if(view != NULL && (_sourceHighlight = dynamic_cast<GenericHistogramView*>(view))) {}
@@ -437,20 +390,20 @@ void StandardImageView::selectAll()
 
 void StandardImageView::setImage(imagein::Image* image)
 {
-  _selection = new Rectangle(0, 0, image->getWidth(), image->getHeight());
-  _visibleArea = new Rectangle(0, 0, image->getWidth(), image->getHeight());
+  _selection = Rectangle(0, 0, image->getWidth(), image->getHeight());
+  _visibleArea = Rectangle(0, 0, image->getWidth(), image->getHeight());
     
 	_zoomFactor = 1;
   
   _sourceHighlight = NULL;
-  _originalHighlight = new Rectangle(0, 0, _image->getWidth(), _image->getHeight());
+  _originalHighlight = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
   _resize = false;
   _originX = false;
   _originY = false;
   _vLine = false;
   _hLine = false;
   
-  _pixelClicked = new QPoint(-1, -1);
+  _pixelClicked = QPoint(-1, -1);
   
   QImage im(getQImage(image));
 
@@ -461,7 +414,7 @@ void StandardImageView::setImage(imagein::Image* image)
   this->setPixmap(*_pixmap_img);
 	//_scene->addItem(this);
 	
-	_highlight = new QGraphicsRectItem(((int)_selection->x), ((int)_selection->y), ((int)_selection->w), ((int)_selection->h));
+	_highlight = new QGraphicsRectItem(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
 	
 	//_scene->addItem(_highlight);
 	//_view->setScene(_scene);

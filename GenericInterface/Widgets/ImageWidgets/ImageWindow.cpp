@@ -5,18 +5,14 @@ using namespace imagein;
 
 ImageWindow::ImageWindow(QString path): _path(path)
 {
-    _sourceWindow =  NULL;
-    _applicationArea = new Rectangle();
+    _sourceWindow = NULL;
+    _applicationArea = Rectangle();
     _statusBar = new QStatusBar();
 }
 
-ImageWindow::ImageWindow(QString path, const ImageWindow* source, Rectangle* rect): QWidget(), _sourceWindow(source), _path(path)
+ImageWindow::ImageWindow(QString path, const ImageWindow* source, Rectangle rect): QWidget(), _sourceWindow(source), _path(path)
 {
-    if(rect)
-        _applicationArea = new Rectangle(*rect);
-    else
-        _applicationArea = new Rectangle();
-
+    _applicationArea = rect;
     _statusBar = new QStatusBar();
 }
 
@@ -25,12 +21,9 @@ void ImageWindow::activated()
     emit(highlightRectChange(_applicationArea, this));
 }
 
-void ImageWindow::setApplicationArea(const imagein::Rectangle* rect)
+void ImageWindow::setApplicationArea(imagein::Rectangle rect)
 {
-    _applicationArea->x = rect->x;
-    _applicationArea->y = rect->y;
-    _applicationArea->w = rect->w;
-    _applicationArea->h = rect->h;
+    _applicationArea = rect;
 }
 
 QString ImageWindow::getTitleFromPath(QString path)

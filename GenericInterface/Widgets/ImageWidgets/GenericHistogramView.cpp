@@ -3,7 +3,7 @@
 using namespace genericinterface;
 using namespace imagein;
 
-GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle* rect, bool horizontal, int value, bool projection): AlternativeImageView(image), _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection)
+GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection): AlternativeImageView(image), _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection)
 {
 	_qwtPlot = new QwtPlot();
 	init();
@@ -87,9 +87,9 @@ void GenericHistogramView::populate()
 	{
 		imagein::Array<unsigned int>* histogram;
 		if(_projection)
-			histogram = new imagein::ProjectionHistogram(*_image, _value, _horizontal, *_rectangle, i);
+			histogram = new imagein::ProjectionHistogram(*_image, _value, _horizontal, _rectangle, i);
 		else
-			histogram = new imagein::Histogram(*_image, i, *_rectangle);
+			histogram = new imagein::Histogram(*_image, i, _rectangle);
 		
 		int values[histogram->getWidth()];
 
@@ -128,12 +128,9 @@ void GenericHistogramView::populate()
 	}
 }
 
-void GenericHistogramView::update(const imagein::Rectangle* rect)
+void GenericHistogramView::update(imagein::Rectangle rect)
 {
-  _rectangle->x = rect->x;
-  _rectangle->y = rect->y;
-  _rectangle->w = rect->w;
-  _rectangle->h = rect->h;
+  _rectangle = rect;
   
   emit(updateApplicationArea(rect));
   
@@ -141,9 +138,9 @@ void GenericHistogramView::update(const imagein::Rectangle* rect)
 	{
 		imagein::Array<unsigned int>* histogram;
 		if(_projection)
-			histogram = new imagein::ProjectionHistogram(*_image, _value, _horizontal, *_rectangle, i);
+			histogram = new imagein::ProjectionHistogram(*_image, _value, _horizontal, _rectangle, i);
 		else
-			histogram = new imagein::Histogram(*_image, i, *_rectangle);
+			histogram = new imagein::Histogram(*_image, i, _rectangle);
 		
 		int values[histogram->getWidth()];
 
