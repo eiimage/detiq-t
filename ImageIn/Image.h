@@ -72,7 +72,7 @@ namespace imagein
              *
              * \param other The image to be copied.
              */
-            Image_t(const Image_t& other);
+            Image_t(const Image_t<D>& other);
 
             /*!
              * \brief Affect operator.
@@ -80,7 +80,7 @@ namespace imagein
              * \param other The image to be affected.
              * \sa Image(const Image_t<D>& other)
              */
-            Image_t<D>& operator=(const Image_t& other);
+            Image_t<D>& operator=(const Image_t<D>& other);
 
             //! Returns the width of the image
             inline unsigned int getWidth() const { return _width; };
