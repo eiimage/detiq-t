@@ -43,7 +43,7 @@ void WindowService::connect(GenericInterface* gi)
     QObject::connect(_nav, SIGNAL(windowDropped(StandardImageWindow*, int)), 
                         this, SLOT(moveToNode(StandardImageWindow*, int)));
     QObject::connect(_mdi, SIGNAL(subWindowActivated(QMdiSubWindow*)), 
-                        this, SIGNAL(subWindowActivated(QMdiSubWindow*)));
+                        this, SLOT(swActivated(QMdiSubWindow*)));
 }
 
 ImageWindow* WindowService::getCurrentImageWindow()
@@ -57,6 +57,25 @@ ImageWindow* WindowService::getCurrentImageWindow()
     else {
         qDebug ("No current window !");
         return NULL;
+    }
+}
+
+NodeId WindowService::findNodeId(QMdiSubWindow* sw) const {
+    for(std::map<NodeId, Node*>::const_iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
+    {
+        if(it->second->windows.contains(sw)) {
+            return it->first;
+        }
+    }
+    return NodeId();
+}
+    
+void WindowService::swActivated(QMdiSubWindow* sw) {
+    
+    NodeId id = findNodeId(sw);
+    if(id != NodeId()) {
+        _nav->setActiveNode(id);
+        emit subWindowActivated(sw);
     }
 }
 
@@ -245,7 +264,7 @@ void WindowService::moveToNode(StandardImageWindow* siw, int pos) {
     _mutex->unlock();
 }
 
-bool WindowService::validWindow(QMdiSubWindow* sw) {
+bool WindowService::validWindow(QMdiSubWindow* sw) const {
     return _mdi->subWindowList().contains(sw);
 }
 
@@ -279,13 +298,13 @@ void WindowService::updateDisplay()
         }
     }
     NodeId currentId = NodeId();
-    QMdiSubWindow* currentWindow = _mdi->currentSubWindow();
+    /*QMdiSubWindow* currentWindow = _mdi->currentSubWindow();
     if(currentWindow != NULL) {
         currentId = getNodeId(currentWindow->widget());
         Node* currentNode = findNode(currentId);
         //std::cout << "Current node : " << currentNode->path.toStdString() << std::endl;
         //std::cout << "Current node " << (selection.indexOf(currentId) >= 0 ? "in selection" : "not in selection") << std::endl;
-    }
+    }*/
     
     if(!selection.isEmpty() && selection.indexOf(currentId) < 0) {
         //std::cout << "Raising first window in selection : " << firstValidWindow->windowTitle().toStdString() << std::endl;

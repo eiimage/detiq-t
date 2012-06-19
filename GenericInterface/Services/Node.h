@@ -37,6 +37,7 @@ namespace genericinterface
       public:
         inline NodeId(const imagein::Image* id = NULL) : _id(id) {}
         inline bool operator==(const NodeId& other) { return _id==other._id; }
+        inline bool operator!=(const NodeId& other) { return _id!=other._id; }
         inline bool operator<(const NodeId& other) const { return _id<other._id; }
         inline bool isValid() { return _id != NULL;}
       private:

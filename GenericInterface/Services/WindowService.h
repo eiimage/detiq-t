@@ -57,7 +57,8 @@ namespace genericinterface
   protected:
 	Node* findNode(NodeId id);
     Node* addNodeIfNeeded(NodeId id, const Image* img, QString path, int pos = -1);
-    bool validWindow(QMdiSubWindow* sw);
+    bool validWindow(QMdiSubWindow* sw) const;
+	NodeId findNodeId(QMdiSubWindow* sw) const;
 
   public slots:
     void addFile(const QString& path);
@@ -72,6 +73,7 @@ namespace genericinterface
 
   private slots:
     void removeSubWindow(NodeId id, QMdiSubWindow* sw);
+    void swActivated(QMdiSubWindow*);
 	
   private:
     GenericInterface* _gi;

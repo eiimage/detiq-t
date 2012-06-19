@@ -98,7 +98,7 @@ void NavigationDock::addNode(const Node* node, int pos)
 {
     /*_data << node;
     _model->setList(_data);*/
-    int i = pos > 0 ? pos : _model->rowCount();
+    int i = pos >= 0 ? pos : _model->rowCount();
     _model->insertRow(i);
     _model->setData(_model->index(i), QVariant::fromValue(node));
 }
