@@ -22,8 +22,11 @@
 using namespace std;
 using namespace genericinterface;
 
+inline void initResource_res() { Q_INIT_RESOURCE(res); }
+
 GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _nbServices(3)
 {
+    initResource_res();
     addService(WINDOW_SERVICE, new WindowService(navPos));
     addService(FILE_SERVICE, new FileService);
     addService(UTILITY_SERVICE, new UtilityService);

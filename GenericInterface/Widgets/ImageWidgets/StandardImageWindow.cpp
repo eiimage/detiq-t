@@ -322,10 +322,18 @@ void StandardImageWindow::initStatusBar()
   font.setPointSize(8);
   _lZoom->setFont(font);
 
-  _selectButton = new QPushButton("SEL");
-  _mouseButton = new QPushButton("MOU");
+  _selectButton = new QToolButton(this);
+  _selectButton->setIcon(QIcon(":/images/tool-rect-select.png"));
   _selectButton->setCheckable(true);
+  _selectButton->setAutoRaise(true);
+  _selectButton->setIconSize (QSize(24, 24));
+  
+  _mouseButton = new QToolButton(this);
+  _mouseButton->setIcon(QIcon(":/images/tool-smudge.png"));
   _mouseButton->setCheckable(true);
+  _mouseButton->setAutoRaise(true);
+  _mouseButton->setIconSize (QSize(24, 24));
+  
   //QObject::connect(_selectButton, SIGNAL(pressed()), _imageView, SLOT(selectionOn()));
   QObject::connect(_mouseButton, SIGNAL(toggled(bool)), this, SLOT(toggleMouseMode(bool)));
   QObject::connect(_selectButton, SIGNAL(toggled(bool)), this, SLOT(toggleSelectMode(bool)));
@@ -343,8 +351,10 @@ void StandardImageWindow::initStatusBar()
 	layoutImage->addSpacing(30);
 	layoutImage->addWidget(_lZoom);
 	layoutImage->addSpacing(30);
+    layoutImage->setSpacing(0);
 	layoutImage->addWidget(_mouseButton);
 	layoutImage->addWidget(_selectButton);
+	layoutImage->addSpacing(8);
   widgetImage->setLayout(layoutImage);
   layout->addWidget(widgetImage);
 	
@@ -376,12 +386,22 @@ void StandardImageWindow::toggleMouseMode(bool checked) {
         _selectButton->setChecked(false);
         _imageView->setMode(StandardImageView::MODE_MOUSE);
     }
+    else {
+        if(!_selectButton->isChecked()) {
+            _mouseButton->setChecked(true);
+        }
+    }
 }
 
 void StandardImageWindow::toggleSelectMode(bool checked) {
     if(checked) {
         _mouseButton->setChecked(false);
         _imageView->setMode(StandardImageView::MODE_SELECT);
+    }
+    else {
+        if(!_mouseButton->isChecked()) {
+            _selectButton->setChecked(true);
+        }
     }
 }
 

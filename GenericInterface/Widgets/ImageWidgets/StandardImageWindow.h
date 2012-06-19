@@ -29,6 +29,7 @@
 #include <QKeyEvent>
 #include <QPoint>
 #include <QInputDialog>
+#include <QToolButton>
 
 #include <sstream>
 #include <iostream>
@@ -163,8 +164,8 @@ protected:
     QLabel* _lSelectedPixelColor;
     QLabel* _lZoom;
     QPoint* _selectedPixel;
-    QPushButton* _selectButton;
-    QPushButton* _mouseButton;
+    QToolButton* _selectButton;
+    QToolButton* _mouseButton;
     bool _ctrlPressed;
     ImageContextMenu* _menu;
     double _zoomFactor;

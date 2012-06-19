@@ -246,6 +246,7 @@ void StandardImageView::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                 }
                 else if( (_downPos - pos).manhattanLength() > 8){
                     emit startDrag();
+                    _mouseButtonPressed = false;
                 }
             }
             _highlight->setRect(_selection.x, _selection.y, _selection.w, _selection.h);
