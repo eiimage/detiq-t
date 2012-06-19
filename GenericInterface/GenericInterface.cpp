@@ -1,3 +1,22 @@
+/*
+ * Copyright 2011-2012 Benoit Averty, Samuel Babin, Matthieu Bergere, Thomas Letan, Sacha Percot-Tétu, Florian Teyssier
+ * 
+ * This file is part of DETIQ-T.
+ * 
+ * DETIQ-T is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * DETIQ-T is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "GenericInterface.h"
 
 using namespace std;
@@ -73,9 +92,9 @@ int GenericInterface::addNewService(Service* s)
     catch (ServiceConnectionException e)
     {
       Log::info(e.what());
-      QMessageBox::critical(this, "Intégrité de la fenêtre", "L'ajout d'un nouveau service ne s'est pas "
-                                                            "déroulée correctement, il est possible qu'elle "
-                                                            "ne présente pas toutes les fonctionnalités "
+      QMessageBox::critical(this, "IntÃ©gritÃ© de la fenÃªtre", "L'ajout d'un nouveau service ne s'est pas "
+                                                            "dÃ©roulÃ©e correctement, il est possible qu'elle "
+                                                            "ne prÃ©sente pas toutes les fonctionnalitÃ©s "
                                                             "attendues");
     }
     
@@ -115,9 +134,9 @@ void GenericInterface::run(bool shw)
 
   if (fail)
   {
-    QMessageBox::critical(this, "Intégrité de la fenêtre", "La construction de l'application ne s'est pas "
-                                                            "déroulée correctement, il est possible qu'elle "
-                                                            "ne présente pas toutes les fonctionnalités "
+    QMessageBox::critical(this, "IntÃ©gritÃ© de la fenÃªtre", "La construction de l'application ne s'est pas "
+                                                            "dÃ©roulÃ©e correctement, il est possible qu'elle "
+                                                            "ne prÃ©sente pas toutes les fonctionnalitÃ©s "
                                                             "attendues");
   }
 

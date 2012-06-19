@@ -1,3 +1,22 @@
+/*
+ * Copyright 2011-2012 Benoit Averty, Samuel Babin, Matthieu Bergere, Thomas Letan, Sacha Percot-TÃ©tu, Florian Teyssier
+ * 
+ * This file is part of DETIQ-T.
+ * 
+ * DETIQ-T is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * DETIQ-T is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "StandardImageView.h"
 
 using namespace genericinterface;
@@ -346,9 +365,9 @@ QImage genericinterface::convertImage(const imagein::Image* img)
 {
     bool hasAlpha = (img->getNbChannels() == 4 || img->getNbChannels() == 2);
     QImage qImg(img->getWidth(), img->getHeight(), (hasAlpha ? QImage::Format_ARGB32 : QImage::Format_RGB32));
-    //on récupère les bits de l'image qt, qu'on cast en QRgb (qui fait 32 bits -> une image RGB(A))
+    //on rÃ©cupÃ¨re les bits de l'image qt, qu'on cast en QRgb (qui fait 32 bits -> une image RGB(A))
     QRgb* data = reinterpret_cast<QRgb*>(qImg.bits());
-    //Pour chaque pixel de l'image Qt, on récupère les données correspondantes de l'image ImageIn grace à l'itérateur
+    //Pour chaque pixel de l'image Qt, on rÃ©cupÃ¨re les donnÃ©es correspondantes de l'image ImageIn grace Ã  l'itÃ©rateur
     Image::const_iterator it = img->begin();
     for(int i = 0; i < qImg.width()*qImg.height(); ++i) {
         int red, green, blue, alpha;
