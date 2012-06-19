@@ -205,7 +205,7 @@ void WindowService::removeSubWindow(NodeId id, QMdiSubWindow* sw)
 void WindowService::removeId(NodeId id)
 {
     _mutex->lock();
-    std::cout << "removeId->" << std::endl;
+    //std::cout << "removeId->" << std::endl;
     Node* node = findNode(id);
     if(node == NULL) return;
     
@@ -277,8 +277,8 @@ void WindowService::updateDisplay()
     if(currentWindow != NULL) {
         currentId = getNodeId(currentWindow->widget());
         Node* currentNode = findNode(currentId);
-        std::cout << "Current node : " << currentNode->path.toStdString() << std::endl;
-        std::cout << "Current node " << (selection.indexOf(currentId) >= 0 ? "in selection" : "not in selection") << std::endl;
+        //std::cout << "Current node : " << currentNode->path.toStdString() << std::endl;
+        //std::cout << "Current node " << (selection.indexOf(currentId) >= 0 ? "in selection" : "not in selection") << std::endl;
     }
     
     if(!selection.isEmpty() && selection.indexOf(currentId) < 0) {
