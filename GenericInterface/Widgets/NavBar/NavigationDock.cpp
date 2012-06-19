@@ -68,7 +68,7 @@ NavigationDock::NavigationDock(const QString & title, QWidget * parent, Qt::Wind
     //_view->setMovement(QListView::Snap);
     
     _model = new NodeListModel(NULL);
-    QObject::connect(_model, SIGNAL(windowDropped(StandardImageWindow*)), this, SIGNAL(windowDropped(StandardImageWindow*)));
+    QObject::connect(_model, SIGNAL(windowDropped(StandardImageWindow*, int)), this, SIGNAL(windowDropped(StandardImageWindow*, int)));
     _view->setModel(_model);
     
     _itemDelegate = new ImageDelegate(itemSize);
@@ -94,11 +94,11 @@ QList<NodeId> NavigationDock::getSelection()
     return res;
 }
 
-void NavigationDock::addNode(const Node* node)
+void NavigationDock::addNode(const Node* node, int pos)
 {
     /*_data << node;
     _model->setList(_data);*/
-    int i = _model->rowCount();
+    int i = pos > 0 ? pos : _model->rowCount();
     _model->insertRow(i);
     _model->setData(_model->index(i), QVariant::fromValue(node));
 }

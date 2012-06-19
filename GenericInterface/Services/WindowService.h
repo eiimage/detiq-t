@@ -56,16 +56,16 @@ namespace genericinterface
     
   protected:
 	Node* findNode(NodeId id);
-    Node* addNodeIfNeeded(NodeId id, const Image* img, QString path);
+    Node* addNodeIfNeeded(NodeId id, const Image* img, QString path, int pos = -1);
     bool validWindow(QMdiSubWindow* sw);
 
   public slots:
     void addFile(const QString& path);
-    void addImage(NodeId id, StandardImageWindow* image);
+    void addImage(NodeId id, StandardImageWindow* image, int pos = -1);
     bool addWidget(NodeId id, QWidget* widget);
     void updateDisplay();
     void removeId(NodeId id);
-    void moveToNode(StandardImageWindow* siw);
+    void moveToNode(StandardImageWindow* siw, int pos = -1);
 
   signals:
     void subWindowActivated(QMdiSubWindow*);

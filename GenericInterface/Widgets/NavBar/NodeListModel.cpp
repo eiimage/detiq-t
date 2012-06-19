@@ -131,6 +131,7 @@ QMimeData* NodeListModel::mimeData(const QModelIndexList& indexes ) const {
 
 bool NodeListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
+    std::cout << "NodeListModel::dropMimeData on row " << row << std::endl;
     if (action == Qt::IgnoreAction)
         return true;
     if (!data->hasFormat("application/detiqt.genericinterface.node")
@@ -177,7 +178,7 @@ bool NodeListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         if(siw == NULL) {
             return false;
         }
-        emit windowDropped(siw);
+        emit windowDropped(siw, beginRow);
     }
 
     return true;

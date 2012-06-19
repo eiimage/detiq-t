@@ -40,8 +40,8 @@ void WindowService::connect(GenericInterface* gi)
     _gi = gi;
     QObject::connect(_nav, SIGNAL(actionDone()), this, SLOT(updateDisplay()));
     QObject::connect(_nav, SIGNAL(removeId(NodeId)), this, SLOT(removeId(NodeId)));
-    QObject::connect(_nav, SIGNAL(windowDropped(StandardImageWindow*)), 
-                        this, SLOT(moveToNode(StandardImageWindow*)));
+    QObject::connect(_nav, SIGNAL(windowDropped(StandardImageWindow*, int)), 
+                        this, SLOT(moveToNode(StandardImageWindow*, int)));
     QObject::connect(_mdi, SIGNAL(subWindowActivated(QMdiSubWindow*)), 
                         this, SIGNAL(subWindowActivated(QMdiSubWindow*)));
 }
@@ -111,13 +111,13 @@ const Node* WindowService::getNode(QWidget* widget) const {
     return NULL;
 }
 
-Node* WindowService::addNodeIfNeeded(NodeId id, const Image* img, QString path) {
+Node* WindowService::addNodeIfNeeded(NodeId id, const Image* img, QString path, int pos) {
     _mutex->lock();
     Node* node = findNode(id);
     if(node == NULL) {
         node = new Node(img, path);
         _widgets[id] = node;
-        _nav->addNode(node);
+        _nav->addNode(node, pos);
     }
     _mutex->unlock();
     return node;
@@ -137,10 +137,10 @@ void WindowService::addFile(const QString& path)
     _mutex->unlock();
 }
 
-void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd)
+void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd, int pos)
 {
     _mutex->lock();
-    Node* node = addNodeIfNeeded(id, imgWnd->getImage(), imgWnd->getPath());
+    Node* node = addNodeIfNeeded(id, imgWnd->getImage(), imgWnd->getPath(), pos);
 
     QMdiSubWindow* sw = _mdi->addSubWindow(imgWnd);
     node->windows << sw;
@@ -215,19 +215,19 @@ void WindowService::removeId(NodeId id)
     {
         QMdiSubWindow* sw = *it;
         if(validWindow(sw)) {
-            std::cout << "close(" << sw << ")" << std::endl;
-            std::cout << "_mdi->removeSubWindow(" << sw << ")" << std::endl;
+            //std::cout << "close(" << sw << ")" << std::endl;
+            //std::cout << "_mdi->removeSubWindow(" << sw << ")" << std::endl;
             _mdi->removeSubWindow(sw);
             sw->close();
         }
     }
     //delete node;
     //this->updateDisplay();
-    std::cout << "<-removeId" << std::endl;
+    //std::cout << "<-removeId" << std::endl;
     _mutex->unlock();
 }
 
-void WindowService::moveToNode(StandardImageWindow* siw) {
+void WindowService::moveToNode(StandardImageWindow* siw, int pos) {
     _mutex->lock();
     StandardImageWindow* newSiw = new StandardImageWindow(*siw);
     foreach(QMdiSubWindow *sw, _mdi->subWindowList()) {
@@ -235,7 +235,7 @@ void WindowService::moveToNode(StandardImageWindow* siw) {
             sw->close();
         }
     }
-    addImage(newSiw->getImage(), newSiw);
+    addImage(newSiw->getImage(), newSiw, pos);
     _mutex->unlock();
 }
 

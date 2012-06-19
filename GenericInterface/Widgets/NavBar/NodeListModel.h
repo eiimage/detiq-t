@@ -51,7 +51,7 @@ namespace genericinterface
         bool dropMimeData(const QMimeData*, Qt::DropAction, int row, int column, const QModelIndex &parent = QModelIndex());
         
       signals:
-        void windowDropped(StandardImageWindow *siw);
+        void windowDropped(StandardImageWindow *siw, int pos);
 
       protected:
         QList<const Node*> _nodes;

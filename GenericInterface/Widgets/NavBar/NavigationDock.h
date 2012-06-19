@@ -53,7 +53,7 @@ public slots:
     *
     * @param node
     */
-    void addNode(const Node*);
+    void addNode(const Node*, int pos = -1);
     void removeNode(NodeId);
     void changeOrientation(Qt::DockWidgetArea);
 
@@ -71,7 +71,7 @@ protected slots:
 signals:
     void actionDone();
     void removeId(NodeId);
-    void windowDropped(StandardImageWindow *siw);
+    void windowDropped(StandardImageWindow *siw, int pos);
 
 private:
     //QList<const Node*> _data;
