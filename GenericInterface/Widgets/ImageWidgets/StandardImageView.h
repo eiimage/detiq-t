@@ -142,6 +142,7 @@ namespace genericinterface
     bool _originY;
     bool _vLine;
     bool _hLine;
+    QPoint _downPos;
     
     Mode _mode;
     

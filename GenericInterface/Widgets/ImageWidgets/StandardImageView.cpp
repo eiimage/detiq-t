@@ -45,6 +45,7 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QGraphicsPi
   
     _mouseButtonPressed = false;
     _pixelClicked = QPoint(-1, -1);
+    _downPos = QPoint(-1, -1);
     
     _selectionOn = false;
 
@@ -91,6 +92,7 @@ void StandardImageView::mousePressEvent(QGraphicsSceneMouseEvent * event)
     QPoint pos = event->pos().toPoint();
     if(pixmap().rect().contains(pos))
     {
+        _downPos = pos;
         if(event->button() == Qt::LeftButton)
         {
             _mouseButtonPressed = true;
@@ -119,7 +121,7 @@ void StandardImageView::mousePressEvent(QGraphicsSceneMouseEvent * event)
                 QCursor::setPos(posX, posY);
             }
             else {
-                emit startDrag();
+                //emit startDrag();
             }
             
             
@@ -241,6 +243,9 @@ void StandardImageView::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
                         _selection.y = pos.y();
                         _selection.h = _pixelClicked.y() - pos.y();
                     }
+                }
+                else if( (_downPos - pos).manhattanLength() > 8){
+                    emit startDrag();
                 }
             }
             _highlight->setRect(_selection.x, _selection.y, _selection.w, _selection.h);
