@@ -26,7 +26,7 @@ CXXFLAGS ?=
 CPPFLAGS ?= 
 
 # Standard linker flags 
-LDFLAGS ?= 
+LDFLAGS ?= -static 
 
 # Set to 0 to build release version [0,1]
 DEBUG ?= 1
