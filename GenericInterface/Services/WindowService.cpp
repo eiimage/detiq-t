@@ -209,6 +209,11 @@ void WindowService::removeId(NodeId id)
     Node* node = findNode(id);
     if(node == NULL) return;
     
+    if(node->windows.size() > 1) {
+        int answer = QMessageBox::question(_gi, "Attention", "You're going to close all the relative windows, are you sure you want to continue?", QMessageBox::Yes | QMessageBox::No);
+        if(answer != QMessageBox::Yes) return;
+    }
+    
     QList<QMdiSubWindow*> windows = node->windows;
     
     for (QList<QMdiSubWindow*>::iterator it = windows.begin(); it != windows.end(); ++it)

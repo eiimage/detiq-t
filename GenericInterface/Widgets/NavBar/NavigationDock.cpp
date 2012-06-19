@@ -144,17 +144,13 @@ void NavigationDock::itemClicked(const QModelIndex& index, QPoint downPos, QPoin
     }
 }
 
-void NavigationDock::closeSelection()
-{
-    int answer = QMessageBox::question(this, "Attention", "You're going to close all the relative windows, are you sure you want to continue?", QMessageBox::Yes | QMessageBox::No);
-    if (answer == QMessageBox::Yes)
+void NavigationDock::closeSelection() {
+
+    QList<NodeId> selection = this->getSelection();
+
+    for (QList<NodeId>::iterator it = selection.begin(); it != selection.end(); ++it)
     {
-        QList<NodeId> selection = this->getSelection();
-        
-        for (QList<NodeId>::iterator it = selection.begin(); it != selection.end(); ++it)
-        {
-            emit removeId(*it);
-        }
+        emit removeId(*it);
     }
 }
 void NavigationDock::listResized() {
