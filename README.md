@@ -1,4 +1,4 @@
-The project Detiq-T
+# The project Detiq-T
 
 The project Detiq-T provides a solid basis for people who are interested
 by image processing. It can be used by students, teachers or researcher
@@ -8,7 +8,7 @@ divided into two parts : ImageIn, the image processing library, and
 GenericInterface, which allows users to demonstrate their work easily.
 
 
-ImageIn, the image processing library
+## ImageIn, the image processing library
 
 ImageIn is an image processing library providing several low-level
 actions, such as reading/writing in image file (currently supported :
@@ -26,7 +26,7 @@ interface, so they can be used together easily. This way of thinking
 helps to build an extensible and generic library.
 
 
-GenericInterface, a basis for demonstrative applications
+## GenericInterface, a basis for demonstrative applications
 
 A demonstrative environment is included in Detiq-T, to help users
 demonstrate their work. It is called GenericInterface, and it provides a
@@ -39,7 +39,7 @@ you system easily. Its philosophy is the same than the library : we want
 you to be able to build an application quickly and effectively, so it is
 highly customizable with your own widgets and algorithms.
 
-Copyright
+## Copyright
 
 DETIQ-T is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
