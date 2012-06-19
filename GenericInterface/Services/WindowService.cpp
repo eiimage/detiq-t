@@ -156,6 +156,7 @@ void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd, int pos)
     sw->show();
     _mdi->setActiveSubWindow(sw);
     sw->activateWindow();
+    _nav->setActiveNode(id);
     _mutex->unlock();
 }
 

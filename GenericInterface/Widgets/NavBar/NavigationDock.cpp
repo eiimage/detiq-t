@@ -103,6 +103,19 @@ void NavigationDock::addNode(const Node* node, int pos)
     _model->setData(_model->index(i), QVariant::fromValue(node));
 }
 
+void NavigationDock::setActiveNode(NodeId id) {
+    for(int i = 0; i < _model->rowCount(); ++i) {
+        QVariant data = _model->data(_model->index(i));
+        if(data.canConvert<const Node*>()) {
+            const Node* node = data.value<const Node*>();
+            if(node && node->getId() == id) {
+                QItemSelectionModel* selectModel = _view->selectionModel();
+                selectModel->select(_model->index(i), QItemSelectionModel::ClearAndSelect);
+            }
+        }
+    }
+}
+
 void NavigationDock::removeNode(NodeId id)
 {
     /*for(int i = 0; i < _data.size(); ++i) {

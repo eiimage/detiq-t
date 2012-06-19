@@ -56,6 +56,7 @@ public slots:
     void addNode(const Node*, int pos = -1);
     void removeNode(NodeId);
     void changeOrientation(Qt::DockWidgetArea);
+    void setActiveNode(NodeId id);
 
 protected slots:
     /**
