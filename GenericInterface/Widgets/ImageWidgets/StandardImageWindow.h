@@ -136,8 +136,6 @@ public slots:
     void toggleMouseMode(bool);
     void toggleSelectMode(bool);
     void startDrag();
-    
-    void showHighlightRect(imagein::Rectangle rect, ImageWindow* source);
 
 signals:
     //! Signal emits when crtl key is pressed

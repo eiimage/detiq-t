@@ -22,10 +22,9 @@
 using namespace genericinterface;
 using namespace imagein;
 
-HistogramWindow::HistogramWindow(const Image* image, imagein::Rectangle rect, const ImageWindow* source): ImageWindow("", source, rect)
+HistogramWindow::HistogramWindow(const Image* image, imagein::Rectangle rect): ImageWindow("", rect)
 {
     _view = new HistogramView(image, rect);
-    this->setWindowTitle(ImageWindow::getTitleFromPath(_path) + QString::fromStdString(" - Histogram"));
 
     init();
 }
@@ -52,8 +51,6 @@ void HistogramWindow::init()
     connect(_view, SIGNAL(leftClickedValue(int)), this, SLOT(showLeftClickedValue(int)));
     connect(_view, SIGNAL(rightClickedValue(int)), this, SLOT(showRightClickedValue(int)));
     connect(_view, SIGNAL(hoveredValue(int)), this, SLOT(showHoveredValue(int)));
-
-    this->show();
 }
 
 void HistogramWindow::initStatusBar()

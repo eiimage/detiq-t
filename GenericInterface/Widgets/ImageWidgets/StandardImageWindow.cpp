@@ -157,20 +157,21 @@ void StandardImageWindow::init()
 	//QObject::connect(_imageView, SIGNAL(zoomChanged(double)), this, SLOT(updateZoom(double)));
 	QObject::connect(_imageView, SIGNAL(startDrag()), this, SLOT(startDrag()));
 	QObject::connect(this, SIGNAL(ctrlPressed(bool)), _imageView, SLOT(ctrlPressed(bool)));
-	QObject::connect(this, SIGNAL(highlightRectChange(imagein::Rectangle, ImageWindow*)), _imageView, SLOT(showHighlightRect(imagein::Rectangle, ImageWindow*)));
 }
 
 void StandardImageWindow::showHistogram()
 {
     //QString path = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE))->getWidgetId(this);
-    const Image* im = _imageView->getImage();
-    HistogramWindow* histo = new HistogramWindow(im, _imageView->getRectangle(), this);
+    HistogramWindow* histo = new HistogramWindow( _imageView->getImage(), _imageView->getRectangle());
+    histo->setWindowTitle(this->windowTitle() + QString::fromStdString(" - Histogram"));
 
     AlternativeImageView* view = histo->getView();
     GenericHistogramView* source;
-    if(view != NULL && (source = dynamic_cast<GenericHistogramView*>(view)))
+    if(view != NULL && (source = dynamic_cast<GenericHistogramView*>(view))) {
         QObject::connect(source, SIGNAL(updateApplicationArea(imagein::Rectangle)), histo, SLOT(setApplicationArea(imagein::Rectangle)));
-        QObject::connect(histo, SIGNAL(highlightRectChange(imagein::Rectangle, ImageWindow*)), this, SLOT(showHighlightRect(imagein::Rectangle, ImageWindow*)));
+        _imageView->setSelectSrc(source);
+    }
+    QObject::connect(histo, SIGNAL(selectRectChange(imagein::Rectangle, ImageWindow*)), _imageView, SLOT(showSelectRect(imagein::Rectangle, ImageWindow*)));
    
     WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
     ws->addWidget(ws->getNodeId(this), histo);
@@ -186,7 +187,7 @@ void StandardImageWindow::showHProjectionHistogram()
 
     if (ok)
     {
-        ProjectionHistogramWindow* histo = new ProjectionHistogramWindow(im, _imageView->getRectangle(), this, value);
+        ProjectionHistogramWindow* histo = new ProjectionHistogramWindow(im, _imageView->getRectangle(), value);
 
         AlternativeImageView* view = histo->getView();
         GenericHistogramView* source;
@@ -208,7 +209,7 @@ void StandardImageWindow::showVProjectionHistogram()
 	
 	if(ok)
 	{
-        ProjectionHistogramWindow* histo = new ProjectionHistogramWindow(im, _imageView->getRectangle(), this, value, false);
+        ProjectionHistogramWindow* histo = new ProjectionHistogramWindow(im, _imageView->getRectangle(), value, false);
     
 		AlternativeImageView* view = histo->getView();
 		GenericHistogramView* source;
@@ -224,7 +225,8 @@ void StandardImageWindow::showPixelsGrid()
 {
  
     WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-    GridWindow* grid = new GridWindow(_imageView->getImage(), this);
+    GridWindow* grid = new GridWindow(_imageView->getImage());
+    grid->setWindowTitle(this->windowTitle() + QString::fromStdString(" - Pixels Grid"));
     ws->addWidget(ws->getNodeId(this), grid);
 }
 
@@ -234,7 +236,8 @@ void StandardImageWindow::showLineProfile()
 
 	const Image* im = _imageView->getImage();
 	imagein::Rectangle rect(0, _selectedPixel->y(), im->getWidth(), 0);
-    RowWindow* histo = new RowWindow(im, rect, _gi, this);
+    RowWindow* histo = new RowWindow(im, rect, _gi);
+    histo->setWindowTitle(this->windowTitle() + QString(" - Line Profile"));
     
 	AlternativeImageView* view = histo->getView();
 	GenericHistogramView* source;
@@ -251,7 +254,8 @@ void StandardImageWindow::showColumnProfile()
 
     const Image* im = _imageView->getImage();
 	imagein::Rectangle rect(_selectedPixel->x(), 0, 0, im->getHeight());
-    RowWindow* histo = new RowWindow(im, rect, _gi, this, true);
+    RowWindow* histo = new RowWindow(im, rect, _gi, true);
+    histo->setWindowTitle(this->windowTitle() + QString(" - Column Profile"));
     
 	AlternativeImageView* view = histo->getView();
 	GenericHistogramView* source;
@@ -510,11 +514,6 @@ void StandardImageWindow::keyReleaseEvent(QKeyEvent* event)
         _ctrlPressed = false;
 		emit ctrlPressed(_ctrlPressed);
     }
-}
-
-void StandardImageWindow::showHighlightRect(imagein::Rectangle rect, ImageWindow* source)
-{
-	emit(highlightRectChange(rect, source));
 }
 
 const imagein::Image* StandardImageWindow::getImage()

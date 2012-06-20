@@ -359,18 +359,20 @@ void StandardImageView::ctrlPressed(bool isDown)
 	_ctrlDown = isDown;
 }
 
-void StandardImageView::showHighlightRect(imagein::Rectangle rect, ImageWindow* source)
+void StandardImageView::showSelectRect(imagein::Rectangle rect, ImageWindow* source)
 {
     _select.setRect(((int)rect.x), ((int)rect.y), ((int)rect.w), ((int)rect.h));
     _rubberBand->setGeometry(_select);
+    _rubberBand->show();
     _oldSelect = _select;
   
     _vLine = (_oldSelect.width() == 0 && _oldSelect.height() == (int)_image->getHeight());
     _hLine = (_oldSelect.height() == 0 && _oldSelect.width() == (int)_image->getWidth());
     
     AlternativeImageView* view = source->getView();
-    if(view != NULL && (_selectSrc = dynamic_cast<GenericHistogramView*>(view))) {}
-    else _selectSrc = NULL;
+    if(view != NULL) {
+        _selectSrc = dynamic_cast<GenericHistogramView*>(view);
+    }
 }
 
 void StandardImageView::selectAll()

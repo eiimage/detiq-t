@@ -74,7 +74,7 @@ namespace genericinterface
 		 * \param source The ImageWindow source (window which contains the image)
 		 * \param vertical False : row profile ; True : column profile
 		 */
-    RowWindow(const imagein::Image* image, imagein::Rectangle rect, GenericInterface *gi, const ImageWindow* source, bool vertical=false);
+    RowWindow(const imagein::Image* image, imagein::Rectangle rect, GenericInterface *gi, bool vertical=false);
     
 		
 		/*!

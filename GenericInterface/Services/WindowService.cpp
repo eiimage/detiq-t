@@ -192,6 +192,9 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
 
     SubWindowController* swc = new SubWindowController(id, sw);
 
+    if(qobject_cast<ImageWindow*>(widget)) {
+        QObject::connect(sw, SIGNAL(aboutToActivate()), widget, SLOT(activated()));
+    }
     QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
     QObject::connect(swc, SIGNAL(removeFromWindowsMap(NodeId, QMdiSubWindow*)), 
                     this, SLOT(removeSubWindow(NodeId,QMdiSubWindow*)));
@@ -199,8 +202,9 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
     sw->show();
     _mdi->setActiveSubWindow(sw);
     sw->activateWindow();
-    return true;
+    _nav->setActiveNode(id);
     _mutex->unlock();
+    return true;
 }
 
 void WindowService::removeSubWindow(NodeId id, QMdiSubWindow* sw)

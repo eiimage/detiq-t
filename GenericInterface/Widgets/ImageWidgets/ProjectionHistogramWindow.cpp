@@ -22,7 +22,7 @@
 using namespace genericinterface;
 using namespace imagein;
 
-ProjectionHistogramWindow::ProjectionHistogramWindow(const imagein::Image* image, imagein::Rectangle rect, const ImageWindow* source, int value, bool horizontal): ImageWindow("", source, rect)
+ProjectionHistogramWindow::ProjectionHistogramWindow(const imagein::Image* image, imagein::Rectangle rect, int value, bool horizontal): ImageWindow("", rect)
 {
 	_view = new ProjectionHistogramView(image, rect, value, horizontal);
 	if(horizontal)
@@ -55,8 +55,6 @@ void ProjectionHistogramWindow::init()
     connect(_view, SIGNAL(leftClickedValue(int)), this, SLOT(showLeftClickedValue(int)));
     connect(_view, SIGNAL(rightClickedValue(int)), this, SLOT(showRightClickedValue(int)));
     connect(_view, SIGNAL(hoveredValue(int)), this, SLOT(showHoveredValue(int)));	
-	
-	this->show();
 }
 
 void ProjectionHistogramWindow::initStatusBar()

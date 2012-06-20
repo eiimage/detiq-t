@@ -22,13 +22,9 @@
 using namespace genericinterface;
 using namespace imagein;
 
-RowWindow::RowWindow(const imagein::Image* image, imagein::Rectangle rect, GenericInterface *gi, const ImageWindow* source, bool vertical): ImageWindow("", source, rect), _gi(gi)
+RowWindow::RowWindow(const imagein::Image* image, imagein::Rectangle rect, GenericInterface *gi, bool vertical): ImageWindow("", rect), _gi(gi)
 {
 	_view = new RowView(image, rect);
-	if(vertical)
-        this->setWindowTitle(source->windowTitle() + QString(" - Column Profile"));
-	else
-        this->setWindowTitle(source->windowTitle() + QString(" - Line Profile"));
 	
 	init();
 }
@@ -55,8 +51,6 @@ void RowWindow::init()
     connect(_view, SIGNAL(leftClickedValue(int)), this, SLOT(showLeftClickedValue(int)));
     connect(_view, SIGNAL(rightClickedValue(int)), this, SLOT(showRightClickedValue(int)));
     connect(_view, SIGNAL(hoveredValue(int)), this, SLOT(showHoveredValue(int)));	
-	
-	this->show();
 }
 
 void RowWindow::initStatusBar()

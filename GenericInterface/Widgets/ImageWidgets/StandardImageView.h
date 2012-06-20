@@ -91,6 +91,8 @@ namespace genericinterface
         
 		//! Returns the selection rectangle
     inline imagein::Rectangle getRectangle() const { return imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()); }
+    
+    inline void setSelectSrc(GenericHistogramView* src) { _selectSrc = src; }
         
 	/*	//! Returns the graphics view
     inline QGraphicsView* getGraphicsView() const { return _view; }*/
@@ -101,7 +103,7 @@ namespace genericinterface
 
 	public slots:
     void ctrlPressed(bool);
-    void showHighlightRect(imagein::Rectangle rect, ImageWindow* source);
+    void showSelectRect(imagein::Rectangle rect, ImageWindow* source);
     void selectAll();
     void scale(double);
 		
