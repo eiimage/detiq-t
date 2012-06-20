@@ -29,6 +29,8 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QKeyEvent>
 #include <QObject>
+#include <QRubberBand>
+//#include <QGLWidget>
 #include <iostream>
 
 #include "ImageContextMenu.h"
@@ -46,13 +48,23 @@ namespace genericinterface
    *
    * Display an image from imagein and manages mouse events
    */
-  class StandardImageView : public QObject, public QGraphicsPixmapItem
+  class StandardImageView : public QScrollArea
   {
   Q_OBJECT
 
   public:
   
+    class ImgWidget : public QWidget  {
+      public:
+        ImgWidget(QWidget* parent, const imagein::Image* img);
+        inline QPixmap pixmap() const { return _pixmap; }
+      protected:
+        void paintEvent (QPaintEvent* event );
+        QPixmap _pixmap;
+    };
+  
     enum Mode {MODE_MOUSE, MODE_SELECT};
+    enum SelectMode {SELECTMODE_NONE, SELECTMODE_MAKE, SELECTMODE_RESIZE, SELECTMODE_MOVE};
 		/*!
 		 * \brief Default constructor
 		 * 
@@ -75,21 +87,23 @@ namespace genericinterface
         
 		//! Returns the pixmap
     //inline const QPixmap* getPixmap() const { return _pixmap_img; }
+    inline QPixmap pixmap() const { return _imgWidget->pixmap(); }
         
 		//! Returns the selection rectangle
-    inline imagein::Rectangle getRectangle() const { return _selection; }
+    inline imagein::Rectangle getRectangle() const { return imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()); }
         
 	/*	//! Returns the graphics view
     inline QGraphicsView* getGraphicsView() const { return _view; }*/
-    inline QGraphicsRectItem* getHighlightItem() { return _highlight; }
+    //inline QGraphicsRectItem* getHighlightItem() { return _highlight; }
     
     
-    inline void setMode(Mode mode) { _mode = mode; }
+    void switchMode(Mode mode);
 
 	public slots:
-    void ctrlPressed();
+    void ctrlPressed(bool);
     void showHighlightRect(imagein::Rectangle rect, ImageWindow* source);
-    //void zoom(int delta);
+    void selectAll();
+    void scale(double);
 		
 	signals:
 		/*!
@@ -117,43 +131,41 @@ namespace genericinterface
         
         void startDrag();
     
-  private slots:
-    void toggleSelection();
-    
-  private:
+  protected:
     QWidget* _parent;
     //QGraphicsScene* _scene;
     //QGraphicsView* _view;
-    QGraphicsRectItem* _highlight;
-    GenericHistogramView* _sourceHighlight;
+    //QGraphicsRectItem* _highlight;
     
     imagein::Image* _image;
-    imagein::Rectangle _selection;
-    imagein::Rectangle _visibleArea;
+    ImgWidget* _imgWidget;
+    QRect _select;
+    QRect _oldSelect;
+    GenericHistogramView* _selectSrc;
+    //imagein::Rectangle _visibleArea;
     
-    bool _selectionOn;
-    bool _ctrlPressed;
-    bool _mouseButtonPressed;
-    QPoint _pixelClicked;
-    imagein::Rectangle _originalHighlight;
-    bool _resize;
-    bool _move;
+    bool _ctrlDown;
+    SelectMode _selectMode;
     bool _originX;
     bool _originY;
     bool _vLine;
     bool _hLine;
     QPoint _downPos;
+    QRubberBand* _rubberBand;
     
     Mode _mode;
     
     void initMenu();
     void showImage();
     Qt::CursorShape mouseOverHighlight(int x, int y);
-    void mousePressEvent(QGraphicsSceneMouseEvent * event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
-    //void wheelEvent(QGraphicsSceneWheelEvent* event);
+    void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event);
+    void mouseMoveEvent(QMouseEvent * event);
+    void mouseDoubleClickEvent(QMouseEvent * event); 
+    void wheelEvent(QWheelEvent* event);
+    void selectionMove(QPoint);
+    void selectionResize(QPoint);
+    void selectionMake(QPoint);
   };
 }
 

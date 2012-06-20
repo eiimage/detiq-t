@@ -84,8 +84,8 @@ StandardImageWindow::~StandardImageWindow()
     delete _selectedPixel;
     delete _image;
     delete _menu;
-    delete _view;
-    delete _scene;
+    //delete _view;
+    //delete _scene;
 }
 
 
@@ -125,30 +125,30 @@ void StandardImageWindow::mouseMoveEvent(QMouseEvent *event) {
 void StandardImageWindow::init()
 {
     _zoomFactor = 1;
-	_scene = new QGraphicsScene(this);
+	//_scene = new QGraphicsScene(this);
     _imageView = new StandardImageView(this, _image);
-	_scene->addItem(_imageView);
-	_scene->addItem(_imageView->getHighlightItem());
+	//_scene->addItem(_imageView);
+	//_scene->addItem(_imageView->getHighlightItem());
     
-    _view = new QGraphicsView(_scene);
+    //_view = new QGraphicsView(_scene);
     
     
-	_menu = new ImageContextMenu(_view);
-	_view->setContextMenuPolicy(Qt::CustomContextMenu);
+	_menu = new ImageContextMenu(_imageView);
+	_imageView->setContextMenuPolicy(Qt::CustomContextMenu);
 	_menu->addAction("Histogram", this, SLOT(showHistogram()));
 	_menu->addAction("Horizontal Projection Histogram", this, SLOT(showHProjectionHistogram()));
 	_menu->addAction("Vertical Projection Histogram", this, SLOT(showVProjectionHistogram()));
 	_menu->addAction("Pixels Grid", this, SLOT(showPixelsGrid()));
 	_menu->addAction("Column Profile", this, SLOT(showColumnProfile()));
 	_menu->addAction("Line Profile", this, SLOT(showLineProfile()));
-	QObject::connect(_view, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
+	QObject::connect(_imageView, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
     
     _selectedPixel = new QPoint();
 
     initStatusBar();
 
 	QVBoxLayout* layout = new QVBoxLayout();
-	layout->addWidget(_view);
+	layout->addWidget(_imageView);
 	layout->addWidget(_statusBar);
     this->setLayout(layout);
 
@@ -156,7 +156,7 @@ void StandardImageWindow::init()
 	QObject::connect(_imageView, SIGNAL(pixelHovered(int, int)), this, SLOT(showHoveredPixelInformations(int, int)));
 	//QObject::connect(_imageView, SIGNAL(zoomChanged(double)), this, SLOT(updateZoom(double)));
 	QObject::connect(_imageView, SIGNAL(startDrag()), this, SLOT(startDrag()));
-	QObject::connect(this, SIGNAL(ctrlPressed()), _imageView, SLOT(ctrlPressed()));
+	QObject::connect(this, SIGNAL(ctrlPressed(bool)), _imageView, SLOT(ctrlPressed(bool)));
 	QObject::connect(this, SIGNAL(highlightRectChange(imagein::Rectangle, ImageWindow*)), _imageView, SLOT(showHighlightRect(imagein::Rectangle, ImageWindow*)));
 }
 
@@ -334,9 +334,17 @@ void StandardImageWindow::initStatusBar()
   _mouseButton->setAutoRaise(true);
   _mouseButton->setIconSize (QSize(24, 24));
   
+  _selectAllButton = new QToolButton(this);
+  _selectAllButton->setIcon(QIcon(":/images/tool-align.png"));
+  _selectAllButton->setCheckable(false);
+  _selectAllButton->setAutoRaise(true);
+  _selectAllButton->setIconSize (QSize(24, 24));
+  _selectAllButton->setEnabled(false);
+  
   //QObject::connect(_selectButton, SIGNAL(pressed()), _imageView, SLOT(selectionOn()));
   QObject::connect(_mouseButton, SIGNAL(toggled(bool)), this, SLOT(toggleMouseMode(bool)));
   QObject::connect(_selectButton, SIGNAL(toggled(bool)), this, SLOT(toggleSelectMode(bool)));
+  QObject::connect(_selectAllButton, SIGNAL(clicked()), _imageView, SLOT(selectAll()));
   //QObject::connect(_selectButton, SIGNAL(clicked()), this, SLOT(makeSelection()));
 
 	QVBoxLayout* layout = new QVBoxLayout();
@@ -354,6 +362,7 @@ void StandardImageWindow::initStatusBar()
     layoutImage->setSpacing(0);
 	layoutImage->addWidget(_mouseButton);
 	layoutImage->addWidget(_selectButton);
+	layoutImage->addWidget(_selectAllButton);
 	layoutImage->addSpacing(8);
   widgetImage->setLayout(layoutImage);
   layout->addWidget(widgetImage);
@@ -384,7 +393,8 @@ void StandardImageWindow::initStatusBar()
 void StandardImageWindow::toggleMouseMode(bool checked) {
     if(checked) {
         _selectButton->setChecked(false);
-        _imageView->setMode(StandardImageView::MODE_MOUSE);
+        _imageView->switchMode(StandardImageView::MODE_MOUSE);
+        _selectAllButton->setEnabled(false);
     }
     else {
         if(!_selectButton->isChecked()) {
@@ -396,7 +406,8 @@ void StandardImageWindow::toggleMouseMode(bool checked) {
 void StandardImageWindow::toggleSelectMode(bool checked) {
     if(checked) {
         _mouseButton->setChecked(false);
-        _imageView->setMode(StandardImageView::MODE_SELECT);
+        _imageView->switchMode(StandardImageView::MODE_SELECT);
+        _selectAllButton->setEnabled(true);
     }
     else {
         if(!_mouseButton->isChecked()) {
@@ -422,7 +433,9 @@ void StandardImageWindow::showSelectedPixelInformations(int x, int y) const
 	for(unsigned int i = 0; i < im->getNbChannels(); i++)
 	{
 		oss.str("");
-		oss << (unsigned int) im->getPixel(x, y, i);
+        if(x>0 && y>0 && x<(int)im->getWidth() && y<(int)im->getHeight()) {
+            oss << (unsigned int) im->getPixel(x, y, i);
+        }
 		_lSelectedPixelColor->setText(_lSelectedPixelColor->text() + QString::fromStdString(" " + oss.str()));
 	}
 }
@@ -458,27 +471,12 @@ void StandardImageWindow::zoom(int delta) {
     if(delta < 0 && _zoomFactor > 0.05) //Zoom out
     {
         _zoomFactor -= 0.05;
-        
-        double wActual = wOrigin * (_zoomFactor + 0.05);
-        double hActual = hOrigin * (_zoomFactor + 0.05);
-        
-        double zoomW = (_zoomFactor * wOrigin) / wActual;
-        double zoomH = (_zoomFactor * hOrigin) / hActual;
-        
-        _view->scale(zoomW, zoomH);
     }
     else if(delta > 0)//Zoom in
     {
         _zoomFactor += 0.05;
-        
-        double wActual = wOrigin * (_zoomFactor - 0.05);
-        double hActual = hOrigin * (_zoomFactor - 0.05);
-        
-        double zoomW = (_zoomFactor * wOrigin) / wActual;
-        double zoomH = (_zoomFactor * hOrigin) / hActual;
-        
-        _view->scale(zoomW, zoomH);
     }		
+    _imageView->scale(_zoomFactor);
     
     updateZoom(_zoomFactor*100);
 }
@@ -502,7 +500,7 @@ void StandardImageWindow::keyPressEvent(QKeyEvent* event)
 {
 	if(event->key() == Qt::Key_Control) {
         _ctrlPressed = true;
-		emit ctrlPressed();
+		emit ctrlPressed(_ctrlPressed);
     }
 }
 
@@ -510,11 +508,11 @@ void StandardImageWindow::keyReleaseEvent(QKeyEvent* event)
 {
 	if(event->key() == Qt::Key_Control) {
         _ctrlPressed = false;
-		emit ctrlPressed();
+		emit ctrlPressed(_ctrlPressed);
     }
 }
 
-void StandardImageWindow::showHighlightRect(Rectangle rect, ImageWindow* source)
+void StandardImageWindow::showHighlightRect(imagein::Rectangle rect, ImageWindow* source)
 {
 	emit(highlightRectChange(rect, source));
 }

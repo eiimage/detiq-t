@@ -23,40 +23,49 @@ using namespace genericinterface;
 using namespace imagein;
 using namespace std;
 
-StandardImageView::StandardImageView(QWidget* parent, Image* image): QGraphicsPixmapItem(), _parent(parent), _image(image)
+StandardImageView::StandardImageView(QWidget* parent, Image* image): QScrollArea(parent), _parent(parent), _image(image)
 {
     _mode = MODE_MOUSE;
-    _selection = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
-    _visibleArea = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
+    _selectMode = SELECTMODE_NONE;
+    _select = QRect(0, 0, _image->getWidth(), _image->getHeight());
+    _oldSelect = _select;
+    _selectSrc = NULL;
+    //_visibleArea = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
 	//_scene = new QGraphicsScene();
     //_view = new QGraphicsView();
 
-	this->setAcceptHoverEvents(true);
+	//this->setAcceptHoverEvents(true);
+    this->setMouseTracking(true);
     
-    _ctrlPressed = false;
+    _ctrlDown = false;
   
-    _sourceHighlight = NULL;
-    _originalHighlight = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
-    _resize = false;
     _originX = false;
     _originY = false;
     _vLine = false;
     _hLine = false;
   
-    _mouseButtonPressed = false;
-    _pixelClicked = QPoint(-1, -1);
     _downPos = QPoint(-1, -1);
     
-    _selectionOn = false;
-
+    _imgWidget = new ImgWidget(this, image);
+    _imgWidget->setFixedSize(_select.size());
+    _imgWidget->setMouseTracking(true);
+    this->setWidget(_imgWidget);
+    this->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    
+    _rubberBand = new QRubberBand(QRubberBand::Rectangle, _imgWidget);
+    _rubberBand->setGeometry(_select);
+    _rubberBand->hide();
+/*
     initMenu();
 
     showImage();
+*/
 }
 
 StandardImageView::~StandardImageView()
 {
 	//delete _menu;
+    //delete _imgWidget;
 }
 
 void StandardImageView::initMenu()
@@ -65,6 +74,7 @@ void StandardImageView::initMenu()
 
 void StandardImageView::showImage()
 {
+/*
     //Qt ne peut pas afficher les QImage directement, on en fait un QPixmap...
     this->setPixmap(QPixmap::fromImage(convertImage(this->getImage())));
     
@@ -72,11 +82,12 @@ void StandardImageView::showImage()
 	//_scene->addItem(this);
 	
 	_highlight = new QGraphicsRectItem(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
-	_highlight->setPen(QPen(QBrush(QColor(255, 0, 0, 200)), 1));
+	_highlight->setPen(QPen(QBrush(QColor(255, 0, 0, 32)), 1));
 	
 	//_scene->addItem(_highlight);
 	
 	//_view->setScene(_scene);
+*/
 }
 
 /*void StandardImageView::wheelEvent(QGraphicsSceneWheelEvent* event)
@@ -87,173 +98,222 @@ void StandardImageView::showImage()
 	}
 }*/
 
-void StandardImageView::mousePressEvent(QGraphicsSceneMouseEvent * event)
-{
-    QPoint pos = event->pos().toPoint();
-    if(pixmap().rect().contains(pos))
-    {
-        _downPos = pos;
-        if(event->button() == Qt::LeftButton)
-        {
-            _mouseButtonPressed = true;
-            _pixelClicked = pos;
-
-            if(_move) {
-                int posX = QCursor::pos().x();
-                int posY = QCursor::pos().y();
-                
-                int delta;
-                
-                if( abs( delta = pos.x() - _highlight->rect().left() ) <= 2) {
-                    posX -= delta;
-                }
-                else if( abs( delta = pos.x() - _highlight->rect().right() ) <= 2) {
-                    posX -= delta;
-                }
-
-                if( abs( delta = pos.y() - _highlight->rect().top()) <= 2) {
-                    posY -= delta;
-                }
-                else if( abs( delta = pos.y() - _highlight->rect().bottom()) <= 2) {
-                    posY -= delta;
-                }
-
-                QCursor::setPos(posX, posY);
-            }
-            else {
-                //emit startDrag();
-            }
-            
-            
-        }
-    }
+StandardImageView::ImgWidget::ImgWidget(QWidget* parent, const imagein::Image* img) : QWidget(parent) {
+    _pixmap.convertFromImage(convertImage(img));
 }
 
-void StandardImageView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+void StandardImageView::ImgWidget::paintEvent (QPaintEvent* event ) {
+    QPainter painter(this);
+    //QSize size = _pixmap.size();
+    //size.scale(this->rect().size(), Qt::KeepAspectRatio);
+    //painter.drawPixmap(QRect(this->rect().topLeft(), size), _pixmap);
+    painter.drawPixmap(this->rect(), _pixmap);
+}
+
+void StandardImageView::mousePressEvent(QMouseEvent * event)
 {
-    std::cout << "mouseReleaseEvent" << std::endl;
-    QPoint pos = event->pos().toPoint();
+    QPoint pos = event->pos() - _imgWidget->geometry().topLeft();
     if(event->button() == Qt::LeftButton)
     {
-        if(pixmap().rect().contains(pos))
-        {
-            if(pos == _pixelClicked) {
-                emit pixelClicked(pos.x(), pos.y());
+        _downPos = pos;
+        _oldSelect = _select;
+        
+        if(_selectMode == SELECTMODE_NONE) {
+        
+            SelectMode newMode = _ctrlDown ? SELECTMODE_MOVE : SELECTMODE_RESIZE;
+            
+            int posX = QCursor::pos().x();
+            int posY = QCursor::pos().y();
+            
+            int delta;
+            std::cout << "_move" << std::endl;
+            
+            if( abs( delta = pos.x() - _select.left() ) <= 2) {
+                posX -= delta;
+                _selectMode = newMode;
             }
+            else if( abs( delta = pos.x() - (_select.right()) ) <= 2) {
+                posX -= delta;
+                _selectMode = newMode;
+            }
+
+            if( abs( delta = pos.y() - _select.top()) <= 2) {
+                posY -= delta;
+                _selectMode = newMode;
+            }
+            else if( abs( delta = pos.y() - (_select.bottom())) <= 2) {
+                posY -= delta;
+                _selectMode = newMode;
+            }
+
+            QCursor::setPos(posX, posY);
         }
-        _mouseButtonPressed = false;
-        _pixelClicked = QPoint(-1, -1);
-        _originalHighlight = _selection;
+        
+        if(_mode == MODE_SELECT && _selectMode == SELECTMODE_NONE) {
+            _selectMode = SELECTMODE_MAKE;
+        }
+        
+        
+    }
+    std::cout << "selectMode = " << (_selectMode==SELECTMODE_MAKE ? "SELECTMODE_MAKE" : (_selectMode==SELECTMODE_MOVE ? "SELECTMODE_MOVE" : (_selectMode==SELECTMODE_RESIZE ? "SELECTMODE_RESIZE" : "SELECTMODE_NONE"))) << std::endl;
+}
+
+void StandardImageView::mouseDoubleClickEvent(QMouseEvent * event) {
+    if(event->button() == Qt::LeftButton)
+    {
+        if(_imgWidget->geometry().contains(event->pos()))
+        {
+            emit startDrag();
+        }
     }
 }
 
-void StandardImageView::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+void StandardImageView::mouseReleaseEvent(QMouseEvent * event)
 {
-    QPoint pos = event->pos().toPoint();
-    if(pixmap().rect().contains(pos))
+    std::cout << "mouseReleaseEvent" << std::endl;
+    if(event->button() == Qt::LeftButton)
     {
+        _selectMode = SELECTMODE_NONE;
+        QPoint pos = event->pos() - _imgWidget->geometry().topLeft();
+        if(_imgWidget->rect().contains(event->pos()) && pos == _downPos)
+        {
+            emit pixelClicked(pos.x(), pos.y());
+        }
+        _downPos = QPoint(-1, -1);
+    }
+}
+
+void StandardImageView::selectionMove(QPoint pos) {
+    int x = min( max(_oldSelect.x() + pos.x() - _downPos.x(), 0), (int)_image->getWidth() - _oldSelect.width() - 1);
+    int y = min( max(_oldSelect.y() + pos.y() - _downPos.y(), 0), (int)_image->getHeight() - _oldSelect.height() - 1);
+    _select.moveTo(x, y);
+    _rubberBand->setGeometry(_select);
+    if(_selectSrc != NULL) _selectSrc->update(imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
+}
+
+void StandardImageView::selectionResize(QPoint pos) {
+    
+    if(this->cursor().shape() == Qt::SizeHorCursor || this->cursor().shape() == Qt::SizeFDiagCursor || this->cursor().shape() == Qt::SizeBDiagCursor)
+    {
+        if(_originX) {
+            _select.setLeft(pos.x());
+        }
+        else {
+            _select.setRight(pos.x());
+        }
+    }
+    
+    if(this->cursor().shape() == Qt::SizeVerCursor || this->cursor().shape() == Qt::SizeFDiagCursor || this->cursor().shape() == Qt::SizeBDiagCursor)
+    {
+        if(_originY) {
+            _select.setTop(pos.y());
+        }
+        else {
+            _select.setBottom(pos.y());
+        }
+    }
+    
+    if(_select.width() < 0) _originX = !_originX;
+    if(_select.height() < 0) _originY = !_originY;
+    
+    
+    _select = _select.normalized();
+    _select &= _imgWidget->rect();
+    _rubberBand->setGeometry(_select);
+    if(_selectSrc != NULL) _selectSrc->update(imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
+}
+
+void StandardImageView::selectionMake(QPoint pos) {
+    _selectSrc = NULL;
+    /*if(_pixelClicked.x() < pos.x())
+    {
+        _selection.w = pos.x() - _pixelClicked.x();
+        _selection.x = _pixelClicked.x();
+    }
+    else
+    {
+        _selection.x = pos.x();
+        _selection.w = _pixelClicked.x() - pos.x();
+    }
+
+    if(_pixelClicked.y() < pos.y())
+    {
+        _selection.y = _pixelClicked.y();
+        _selection.h = pos.y() - _pixelClicked.y();
+    }
+    else
+    {
+        _selection.y = pos.y();
+        _selection.h = _pixelClicked.y() - pos.y();
+    }*/
+    _select = QRect(_downPos, pos);
+    _select = _select.normalized();
+    _select = _select.intersected(_imgWidget->rect());
+    _rubberBand->setGeometry(_select);
+    _rubberBand->show();
+}
+
+
+void StandardImageView::mouseMoveEvent(QMouseEvent* event)
+{
+    QPoint pos = event->pos() - _imgWidget->geometry().topLeft();
+    
+    if(_imgWidget->rect().contains(pos))
+    {
+        emit pixelHovered(pos.x(), pos.y());
+    }
+    
+     switch(_selectMode) {
+        case SELECTMODE_MOVE:
+        {
+            selectionMove(pos);
+            break;
+        }
+        case SELECTMODE_RESIZE:
+        {
+            selectionResize(pos);
+            break;
+        }
+        case SELECTMODE_MAKE:
+        {
+            selectionMake(pos);
+            break;
+        }
+        default:
+            this->setCursor(mouseOverHighlight(pos.x(), pos.y()));
+    }
+        /*
         if(_mouseButtonPressed)
         {
             if(_move)
             {
-                int dx = pos.x() - _pixelClicked.x();
-                int dy = pos.y() - _pixelClicked.y();
-                _pixelClicked = pos;
-                _selection.x = min( max((int)_selection.x + dx, 0), (int)_image->getWidth() - (int)_selection.w - 1);
-                _selection.y = min( max((int)_selection.y + dy, 0), (int)_image->getHeight() - (int)_selection.h - 1);
-                if(_sourceHighlight != NULL) _sourceHighlight->update(_selection);
+                this->selectionMove(pos);
             }
-            else if(_resize && this->hasCursor())
+            else if(_resize && this->cursor().shape() != Qt::ArrowCursor )
             {
-                if(this->cursor().shape() == Qt::SizeHorCursor || this->cursor().shape() == Qt::SizeFDiagCursor || this->cursor().shape() == Qt::SizeBDiagCursor)
-                {
-                    if(_originX && pos.x() < (int)(_originalHighlight.x  + _originalHighlight.w))
-                    {
-                        _selection.w = _originalHighlight.x - pos.x() + _originalHighlight.w;
-                        _selection.x = pos.x();
-                    }
-                    else if(_originX)
-                    {
-                        _originalHighlight.x = _originalHighlight.x + _originalHighlight.w;
-                        _originalHighlight.w = pos.x() - _originalHighlight.x;
-                        _originX = false;
-                    }
-
-                    if(!_originX && (int)_originalHighlight.x >= pos.x())
-                    {
-                        _selection.w = _originalHighlight.x - pos.x();
-                        _selection.x = pos.x();
-                    }
-                    else if(!_originX)
-                    {
-                        _selection.w = pos.x() - _originalHighlight.x;
-                        _selection.x = _originalHighlight.x;
-                    }
-                }
-
-                if(this->cursor().shape() == Qt::SizeVerCursor || this->cursor().shape() == Qt::SizeFDiagCursor || this->cursor().shape() == Qt::SizeBDiagCursor)
-                {
-                    if(_originY && pos.y() < (int)(_originalHighlight.y  + _originalHighlight.h))
-                    {
-                        _selection.h = _originalHighlight.y - pos.y() + _originalHighlight.h;
-                        _selection.y = pos.y();
-                    }
-                    else if(_originY)
-                    {
-                        _originalHighlight.y = _originalHighlight.y + _originalHighlight.h;
-                        _originalHighlight.h = pos.y() - _originalHighlight.y;
-                        _originY = false;
-                    }
-
-                    if(!_originY && (int)_originalHighlight.y >= pos.y())
-                    {
-                        _selection.h = _originalHighlight.y - pos.y();
-                        _selection.y = pos.y();
-                    }
-                    else if(!_originY)
-                    {
-                        _selection.h = pos.y() - _originalHighlight.y;
-                        _selection.y = _originalHighlight.y;
-                    }
-                }
-                if(_sourceHighlight != NULL) _sourceHighlight->update(_selection);
+                this->selectionResize(pos);
             }
             else
             {
                 if(_mode == MODE_SELECT) {
-                    _sourceHighlight = NULL;
-                    if(_pixelClicked.x() < pos.x())
-                    {
-                        _selection.w = pos.x() - _pixelClicked.x();
-                        _selection.x = _pixelClicked.x();
-                    }
-                    else
-                    {
-                        _selection.x = pos.x();
-                        _selection.w = _pixelClicked.x() - pos.x();
-                    }
-
-                    if(_pixelClicked.y() < pos.y())
-                    {
-                        _selection.y = _pixelClicked.y();
-                        _selection.h = pos.y() - _pixelClicked.y();
-                    }
-                    else
-                    {
-                        _selection.y = pos.y();
-                        _selection.h = _pixelClicked.y() - pos.y();
-                    }
+                    this->selectionMake(pos);
                 }
                 else if( (_downPos - pos).manhattanLength() > 8){
                     emit startDrag();
                     _mouseButtonPressed = false;
                 }
             }
-            _highlight->setRect(_selection.x, _selection.y, _selection.w, _selection.h);
-        }
-    }
+            //_highlight->setRect(_selection.x, _selection.y, _selection.w, _selection.h);
+            _rubberBand->setGeometry(_select);
+        }*/
+    //}
+    
 }
 
+void StandardImageView::wheelEvent(QWheelEvent* event) {
+    event->ignore();
+}   
+/*
 void StandardImageView::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
     QPoint pos = event->pos().toPoint();
@@ -266,27 +326,23 @@ void StandardImageView::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
         this->setCursor(mouseOverHighlight(pos.x(), pos.y()));
     }
 }
-
+*/
 Qt::CursorShape StandardImageView::mouseOverHighlight(int x, int y)
 {
-    const QRectF& rect = _highlight->rect();
-    bool nearLeft = ( abs(x - rect.left()) <= 2 );
-    bool nearRight = ( abs(x - rect.right()) <= 2 );
-    bool nearTop = ( abs(y - rect.top()) <= 2 );
-    bool nearBottom = ( abs(y - rect.bottom()) <= 2 );
-    bool inX = ( x >= rect.left()-2 ) && ( x <= rect.right()+2 );
-    bool inY = ( y >= rect.top()-2 ) && ( y <= rect.bottom()+2 );
+    bool inX = ( x >= _select.left()-2 ) && ( x <= _select.right()+2 );
+    bool inY = ( y >= _select.top()-2 ) && ( y <= _select.bottom()+2 );
+    bool nearLeft = inY && ( abs(x - _select.left()) <= 2 );
+    bool nearRight = inY && ( abs(x - _select.right()) <= 2 );
+    bool nearTop = inX && ( abs(y - _select.top()) <= 2 );
+    bool nearBottom = inX && ( abs(y - _select.bottom()) <= 2 );
   
     Qt::CursorShape res;
-    if(_ctrlPressed && (nearLeft || nearRight || nearTop || nearBottom) ) res = Qt::SizeAllCursor;
+    if(_ctrlDown && (nearLeft || nearRight || nearTop || nearBottom) ) res = Qt::SizeAllCursor;
     else if( (nearLeft && nearTop) || (nearRight && nearBottom) ) res = Qt::SizeFDiagCursor;
     else if( (nearLeft && nearBottom) || (nearRight && nearTop) ) res = Qt::SizeBDiagCursor;
-    else if(inY && (nearLeft || nearRight)) res = Qt::SizeHorCursor;
-    else if(inX && (nearTop || nearBottom)) res = Qt::SizeVerCursor;
+    else if(nearLeft || nearRight) res = Qt::SizeHorCursor;
+    else if(nearTop || nearBottom) res = Qt::SizeVerCursor;
     else res = Qt::ArrowCursor;
-  
-    _move = (res == Qt::SizeAllCursor);
-    _resize = (res != Qt::ArrowCursor);
     
     _originX = nearLeft;
     _originY = nearTop;
@@ -294,76 +350,80 @@ Qt::CursorShape StandardImageView::mouseOverHighlight(int x, int y)
     return res;
 }
 
-void StandardImageView::ctrlPressed()
+void StandardImageView::scale(double scale) {
+    _imgWidget->setFixedSize(_image->getWidth()*scale, _image->getHeight()*scale);
+}
+
+void StandardImageView::ctrlPressed(bool isDown)
 {
-	_ctrlPressed = !_ctrlPressed;
+	_ctrlDown = isDown;
 }
 
 void StandardImageView::showHighlightRect(imagein::Rectangle rect, ImageWindow* source)
 {
-	_highlight->setRect(((int)rect.x), ((int)rect.y), ((int)rect.w), ((int)rect.h));
-  _originalHighlight = rect;
+    _select.setRect(((int)rect.x), ((int)rect.y), ((int)rect.w), ((int)rect.h));
+    _rubberBand->setGeometry(_select);
+    _oldSelect = _select;
   
-  _selection.x = (int)rect.x;
-  _selection.y = (int)rect.y;
-  _selection.w = (int)rect.w;
-  _selection.h = (int)rect.h;
-  
-  _vLine = (_originalHighlight.w == 0 && _originalHighlight.h == _image->getHeight());
-  _hLine = (_originalHighlight.h == 0 && _originalHighlight.w == _image->getWidth());
-  
-  AlternativeImageView* view = source->getView();
-  if(view != NULL && (_sourceHighlight = dynamic_cast<GenericHistogramView*>(view))) {}
-  else _sourceHighlight = NULL;
+    _vLine = (_oldSelect.width() == 0 && _oldSelect.height() == (int)_image->getHeight());
+    _hLine = (_oldSelect.height() == 0 && _oldSelect.width() == (int)_image->getWidth());
+    
+    AlternativeImageView* view = source->getView();
+    if(view != NULL && (_selectSrc = dynamic_cast<GenericHistogramView*>(view))) {}
+    else _selectSrc = NULL;
 }
-/*
+
 void StandardImageView::selectAll()
 {
-  _sourceHighlight = NULL;
-  _selection.x = 0;
-  _selection.y = 0;
-  _selection.w = _image->getWidth();
-  _selection.h = _image->getHeight();
-  
-  _highlight->setRect(_selection.x, _selection.y, _selection.w, _selection.h);  
-}*/
-
-void StandardImageView::toggleSelection() {
-    _selectionOn = !_selectionOn;
-    std::cout << "Selection " <<  (_selectionOn ? "on" : "false") << std::endl;
+    _selectSrc = NULL;
+    _select = QRect(0, 0, (int)_image->getWidth(), (int)_image->getHeight());
+    _rubberBand->setGeometry(_select);
+    _rubberBand->show();
 }
+
+void StandardImageView::switchMode(Mode mode) { 
+    _mode = mode; 
+    if(_mode == MODE_MOUSE) {
+        this->selectAll();
+        _rubberBand->hide();
+    }
+}
+
 
 
 void StandardImageView::setImage(imagein::Image* image)
 {
-  _selection = Rectangle(0, 0, image->getWidth(), image->getHeight());
-  _visibleArea = Rectangle(0, 0, image->getWidth(), image->getHeight());
-  
-  _sourceHighlight = NULL;
-  _originalHighlight = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
-  _resize = false;
-  _originX = false;
-  _originY = false;
-  _vLine = false;
-  _hLine = false;
-  
-  _pixelClicked = QPoint(-1, -1);
-  
-  //QImage im(getQImage(image));
+    _select.setRect(0, 0, image->getWidth(), image->getHeight());
+    //_visibleArea = Rectangle(0, 0, image->getWidth(), image->getHeight());
 
-  //Qt ne peut pas afficher les QImage directement, on en fait un QPixmap...
-  //_pixmap_img = new QPixmap();
-    this->setPixmap(QPixmap::fromImage(convertImage(this->getImage())));
-    
-  //this->setPixmap(_pixmap_img);
-	//_scene->addItem(this);
-	
-	_highlight->setRect(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
-	
-	//_scene->addItem(_highlight);
-	//_view->setScene(_scene);
-  
-  _image = image;
+    _selectSrc = NULL;
+    _oldSelect = _select;
+    _originX = false;
+    _originY = false;
+    _vLine = false;
+    _hLine = false;
+
+    _downPos = QPoint(-1, -1);
+
+    //QImage im(getQImage(image));
+
+    //Qt ne peut pas afficher les QImage directement, on en fait un QPixmap...
+    //_pixmap_img = new QPixmap();
+    //this->setPixmap(QPixmap::fromImage(convertImage(this->getImage())));
+    _image = image;
+    delete _imgWidget;
+    _imgWidget = new ImgWidget(this, image);
+    //_pixmap.convertFromImage(convertImage(image));
+
+    //this->setPixmap(_pixmap_img);
+    //_scene->addItem(this);
+
+    //_highlight->setRect(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
+    _rubberBand->setGeometry(_select);
+
+    //_scene->addItem(_highlight);
+    //_view->setScene(_scene);
+
 }
 
 

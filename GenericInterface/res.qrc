@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+ <qresource>
+     <file>images/tool-rect-select.png</file>
+     <file>images/tool-smudge.png</file>
+     <file>images/tool-align.png</file>
+ </qresource>
+</RCC>

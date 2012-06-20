@@ -33,5 +33,6 @@
 *.Debug
 *.Release
 moc_*.cpp
+qrc_*.cpp
 GenericInterface/Makefile
 Applications/*/Makefile

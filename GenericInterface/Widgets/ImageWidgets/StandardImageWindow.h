@@ -141,7 +141,7 @@ public slots:
 
 signals:
     //! Signal emits when crtl key is pressed
-    void ctrlPressed();
+    void ctrlPressed(bool);
 
     /*!
      * \brief Signal emits when the highlight rect have to changes
@@ -166,13 +166,10 @@ protected:
     QPoint* _selectedPixel;
     QToolButton* _selectButton;
     QToolButton* _mouseButton;
+    QToolButton* _selectAllButton;
     bool _ctrlPressed;
     ImageContextMenu* _menu;
     double _zoomFactor;
-    
-    
-	QGraphicsScene* _scene;
-    QGraphicsView* _view;
 
     void init();
     void initStatusBar();
