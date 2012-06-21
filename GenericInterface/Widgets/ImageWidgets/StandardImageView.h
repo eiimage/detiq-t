@@ -60,6 +60,7 @@ namespace genericinterface
         ImgWidget(QWidget* parent, const imagein::Image* img);
         inline QPixmap pixmap() const { return _pixmap; }
         virtual QSize sizeHint() const { return this->size(); }
+        inline double scale() const { return static_cast<double>(_pixmap.width()) / static_cast<double>(this->width()); }
       protected:
         void paintEvent (QPaintEvent* event );
         QPixmap _pixmap;
@@ -92,7 +93,9 @@ namespace genericinterface
     inline QPixmap pixmap() const { return _imgWidget->pixmap(); }
         
 		//! Returns the selection rectangle
-    inline imagein::Rectangle getRectangle() const { return imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()); }
+    inline imagein::Rectangle getRectangle() const { 
+        return imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()); 
+    }
     
     inline void setSelectSrc(GenericHistogramView* src) { _selectSrc = src; }
         
@@ -162,7 +165,7 @@ namespace genericinterface
     
     void initMenu();
     void showImage();
-    Qt::CursorShape mouseOverHighlight(int x, int y);
+    Qt::CursorShape mouseOverHighlight(QPoint pos);
     void mousePressEvent(QMouseEvent * event);
     void mouseReleaseEvent(QMouseEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
@@ -171,6 +174,14 @@ namespace genericinterface
     void selectionMove(QPoint);
     void selectionResize(QPoint);
     void selectionMake(QPoint);
+    inline void redrawSelect() {
+        _rubberBand->setGeometry(QRect(
+            _select.x()*_imgWidget->width()/_imgWidget->pixmap().width(), 
+            _select.y()*_imgWidget->height()/_imgWidget->pixmap().height(), 
+            _select.width()*_imgWidget->width()/_imgWidget->pixmap().width(), 
+            _select.height()*_imgWidget->height()/_imgWidget->pixmap().height()
+        ));
+    }
   };
 }
 
