@@ -22,10 +22,10 @@
 using namespace genericinterface;
 using namespace imagein;
 
-GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection): AlternativeImageView(image), _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection)
+GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection): _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection)
 {
 	_qwtPlot = new QwtPlot();
-	init();
+	init(image);
 }
 
 GenericHistogramView::~GenericHistogramView()
@@ -35,23 +35,24 @@ GenericHistogramView::~GenericHistogramView()
 	delete _rightPicker;
 }
 
-void GenericHistogramView::init()
+void GenericHistogramView::init(const imagein::Image* image)
 {
   this->setMouseTracking(true); //Switch on mouse tracking (no need to press button)
 
   _qwtPlot->setTitle("Histogram");
   
-  _qwtPlot->setCanvasBackground(QColor(Qt::gray));
+  _qwtPlot->setCanvasBackground(QColor(255,255,255));
   _qwtPlot->plotLayout()->setAlignCanvasToScales(true);
 
   _qwtPlot->setAxisTitle(QwtPlot::yLeft, "Number of specimen");
   _qwtPlot->setAxisTitle(QwtPlot::xBottom, "Pixel value");
+  _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, 256);
 
 	QwtLegend* legend = new QwtLegend();
   legend->setItemMode(QwtLegend::CheckableItem);
   _qwtPlot->insertLegend(legend, QwtPlot::RightLegend);
 
-  populate();
+  populate(image);
   
   _qwtPlot->canvas()->setMouseTracking(true);
   
@@ -92,7 +93,7 @@ void GenericHistogramView::init()
   _qwtPlot->setAutoReplot(true);
 }
 
-void GenericHistogramView::populate()
+void GenericHistogramView::populate(const imagein::Image* image)
 {
   QwtPlotGrid* grid = new QwtPlotGrid();
   grid->enableX(false);
@@ -102,30 +103,30 @@ void GenericHistogramView::populate()
   grid->setMajPen(QPen(Qt::black, 0, Qt::DotLine));
   grid->attach(_qwtPlot);
 
-	for(unsigned int i = 0; i < _image->getNbChannels(); ++i)
+	for(unsigned int i = 0; i < image->getNbChannels(); ++i)
 	{
-		imagein::Array<unsigned int>* histogram;
+		/*imagein::Array<unsigned int>* histogram;
 		if(_projection)
-			histogram = new imagein::ProjectionHistogram(*_image, _value, _horizontal, _rectangle, i);
+			histogram = new imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i);
 		else
-			histogram = new imagein::Histogram(*_image, i, _rectangle);
+			histogram = new imagein::Histogram(*image, i, _rectangle);*/
 		
-		int values[histogram->getWidth()];
+		/*int values[histogram->getWidth()];
 
 		for(unsigned int j = 0; j < histogram->getWidth(); ++j)
-			values[j] = (*histogram)[j];
+			values[j] = (*histogram)[j];*/
 		
 		GraphicalHistogram* graphicalHisto;
 		switch(i)
 		{
 			case 0:
-				if(_image->getNbChannels() == 1 || _image->getNbChannels() == 2)
+				if(image->getNbChannels() == 1 || image->getNbChannels() == 2)
 					graphicalHisto = new GraphicalHistogram("Black", Qt::black);
 				else
 					graphicalHisto = new GraphicalHistogram("Red", Qt::red);
 			break;
 			case 1:
-				if(_image->getNbChannels() == 1 || _image->getNbChannels() == 2)
+				if(image->getNbChannels() == 1 || image->getNbChannels() == 2)
 					graphicalHisto = new GraphicalHistogram("Alpha", Qt::white);
 				else
 					graphicalHisto = new GraphicalHistogram("Green", Qt::green);
@@ -139,7 +140,13 @@ void GenericHistogramView::populate()
 			default:
 				graphicalHisto = new GraphicalHistogram("Default", Qt::black);
 		}
-		graphicalHisto->setValues(sizeof(values) / sizeof(int), values);
+		//graphicalHisto->setValues(sizeof(values) / sizeof(int), values);
+		//graphicalHisto->setValues(histogram);
+        
+		if(_projection)
+            graphicalHisto->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
+		else
+            graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
 		if(_horizontal)
 			graphicalHisto->setOrientation(Qt::Horizontal);
 		graphicalHisto->attach(_qwtPlot);
@@ -147,26 +154,31 @@ void GenericHistogramView::populate()
 	}
 }
 
-void GenericHistogramView::update(imagein::Rectangle rect)
+void GenericHistogramView::update(const imagein::Image* image, imagein::Rectangle rect)
 {
   _rectangle = rect;
   
   emit(updateApplicationArea(rect));
   
-  for(unsigned int i = 0; i < _image->getNbChannels(); ++i)
+  for(unsigned int i = 0; i < image->getNbChannels(); ++i)
 	{
-		imagein::Array<unsigned int>* histogram;
+		/*const imagein::Array<unsigned int>& histogram;
 		if(_projection)
-			histogram = new imagein::ProjectionHistogram(*_image, _value, _horizontal, _rectangle, i);
+			histogram = imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i);
 		else
-			histogram = new imagein::Histogram(*_image, i, _rectangle);
+			histogram = imagein::Histogram(*image, i, _rectangle);
+            */
 		
-		int values[histogram->getWidth()];
+		/*int values[histogram->getWidth()];
 
 		for(unsigned int j = 0; j < histogram->getWidth(); ++j)
 			values[j] = (*histogram)[j];
 		
-		_graphicalHistos[i]->setValues(sizeof(values) / sizeof(int), values);
+		_graphicalHistos[i]->setValues(sizeof(values) / sizeof(int), values);*/
+		if(_projection)
+            _graphicalHistos[i]->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
+		else
+            _graphicalHistos[i]->setValues(imagein::Histogram(*image, i, _rectangle));
 	}
 }
 
@@ -175,17 +187,44 @@ void GenericHistogramView::showItem(QwtPlotItem *item, bool on) const
   item->setVisible(on);
 }
 
+
+std::vector<int> GenericHistogramView::getValues(unsigned int index) const {
+    std::vector<int> values;
+    for(unsigned int i =0; i < _graphicalHistos.size(); ++i) {
+        const QwtSeriesData<QwtIntervalSample> *data = _graphicalHistos[i]->data();
+        if(index < data->size()) {
+            values.push_back(static_cast<int>(data->sample(index).value));
+        }
+    }
+    return values;
+}
+
 void GenericHistogramView::leftClick(const QPointF& pos) const
 {
-  emit(leftClickedValue((int)pos.x()));
+    if(pos.x() < 0) return;
+    unsigned int index = static_cast<unsigned int>(pos.toPoint().x());
+    std::vector<int> values = getValues(index);
+    if(values.size() == _graphicalHistos.size()) {
+        emit(leftClickedValue(index, values));
+    }
 }
 
 void GenericHistogramView::rightClick(const QPointF& pos) const
 {
-  emit(rightClickedValue((int)pos.x()));
+    if(pos.x() < 0) return;
+    unsigned int index = static_cast<unsigned int>(pos.toPoint().x());
+    std::vector<int> values = getValues(index);
+    if(values.size() == _graphicalHistos.size()) {
+        emit(rightClickedValue(index, values));
+    }
 }
 
 void GenericHistogramView::move(const QPointF& pos) const
 {
-	emit(hoveredValue((int)pos.x()));
+    if(pos.x() < 0) return;
+    unsigned int index = static_cast<unsigned int>(pos.toPoint().x());
+    std::vector<int> values = getValues(index);
+    if(values.size() == _graphicalHistos.size()) {
+        emit(hoveredValue(index, values));
+    }
 }

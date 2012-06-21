@@ -192,7 +192,7 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
 
     SubWindowController* swc = new SubWindowController(id, sw);
 
-    if(qobject_cast<ImageWindow*>(widget)) {
+    if(qobject_cast<GenericHistogramWindow*>(widget)) {
         QObject::connect(sw, SIGNAL(aboutToActivate()), widget, SLOT(activated()));
     }
     QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));

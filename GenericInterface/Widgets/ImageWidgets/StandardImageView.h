@@ -36,6 +36,7 @@
 #include "ImageContextMenu.h"
 #include "GenericHistogramView.h"
 #include "ImageWindow.h"
+#include "HistogramWindow.h"
 
 #include <Image.h>
 #include <Rectangle.h>
@@ -104,7 +105,7 @@ namespace genericinterface
 
 	public slots:
     void ctrlPressed(bool);
-    void showSelectRect(imagein::Rectangle rect, ImageWindow* source);
+    void showSelectRect(imagein::Rectangle rect, GenericHistogramView* source);
     void selectAll();
     void scale(double);
     virtual QSize sizeHint() const { return _imgWidget->size()+QSize(frameWidth()*2,frameWidth()*2); }

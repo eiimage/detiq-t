@@ -23,12 +23,12 @@ using namespace genericinterface;
 
 GraphicalHistogram::GraphicalHistogram(const QString& title, const QColor& color): QwtPlotHistogram(title)
 {
-    setStyle(QwtPlotHistogram::Columns);
+    setStyle(QwtPlotHistogram::Outline);
     
     QColor c = color;
-    c.setAlpha(180);
+    c.setAlpha(48);
     setBrush(QBrush(c));
-    setPen(QPen(Qt::black));
+    setPen(QPen(color));
 
     QwtColumnSymbol* symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     symbol->setFrameStyle(QwtColumnSymbol::Raised);
@@ -37,10 +37,10 @@ GraphicalHistogram::GraphicalHistogram(const QString& title, const QColor& color
     setSymbol(symbol);
 }
 
-void GraphicalHistogram::setValues(int numValues, int *values)
+void GraphicalHistogram::setValues(const imagein::Array<unsigned int>& values)
 {
-    QVector<QwtIntervalSample> samples(numValues);
-    for (int i = 0; i < numValues; i++)
+    QVector<QwtIntervalSample> samples(values.size());
+    for (int i = 0; i < values.size(); ++i)
     {
         QwtInterval interval(double(i), i + 1.0 );
         interval.setBorderFlags(QwtInterval::ExcludeMaximum);

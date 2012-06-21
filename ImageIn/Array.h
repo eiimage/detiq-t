@@ -44,6 +44,7 @@ namespace imagein
 
             //! Returns the size of the array.
             inline unsigned int getWidth() const { return _width; };
+            inline unsigned int size() const { return _width; };
             //! Access to the element at the given index.
             inline T operator[](unsigned int index) const { return _array[index]; };
             //! Constant access to the element at the given index.

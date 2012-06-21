@@ -52,7 +52,7 @@ namespace genericinterface
  * Creates and display a graphical histogram from an image and a rectangle.
  * This class manages via HistogramPicker the mouse events.
  */
-class GenericHistogramView : public AlternativeImageView
+class GenericHistogramView : public QWidget
 {
     Q_OBJECT
 
@@ -75,13 +75,14 @@ public:
      */
     virtual ~GenericHistogramView();
 
-    void update(imagein::Rectangle rect);
+    void update(const imagein::Image* image, imagein::Rectangle rect);
     
     //! Returns the image's histogram on the param channel
-    inline const imagein::Histogram* getHistogram(int channel) const { return new imagein::Histogram(*_image, channel, _rectangle); }
+    //inline const imagein::Histogram* getHistogram(int channel) const { return new imagein::Histogram(*_image, channel, _rectangle); }
 
     //! Returns the graphical histogram
     inline QwtPlot* getGraphicalHistogram() const { return _qwtPlot; }
+    inline imagein::Rectangle getApplicationArea() const { return _rectangle; }
 
 signals:
     /*!
@@ -89,21 +90,21 @@ signals:
      *
      * \param value Value selected
      */
-    void leftClickedValue(int value) const;
+    void leftClickedValue(unsigned int index, std::vector<int> values) const;
 
     /*!
      * \brief Signal emits when the mouse right button is clicked
      *
      * \param value Value selected
      */
-    void rightClickedValue(int value) const;
+    void rightClickedValue(unsigned int index, std::vector<int> values) const;
 
     /*!
      * \brief Signal emits when the mouse move over the histogram
      *
      * \param value Value hovered
      */
-    void hoveredValue(int value) const;
+    void hoveredValue(unsigned int index, std::vector<int> values) const;
     
     void updateApplicationArea(imagein::Rectangle rect) const;
 
@@ -122,11 +123,13 @@ protected:
     HistogramPicker* _leftPicker;
     HistogramPicker* _rightPicker;
     std::vector<GraphicalHistogram*> _graphicalHistos;
+    unsigned int nChannel;
+    std::vector<int> getValues(unsigned int index) const;
 
 private:
     bool _projection;
-    void init();
-    void populate();
+    void init(const imagein::Image*);
+    void populate(const imagein::Image*);
 };
 }
 

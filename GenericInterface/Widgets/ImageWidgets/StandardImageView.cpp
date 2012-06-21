@@ -27,7 +27,7 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QScrollArea
 {
     _mode = MODE_MOUSE;
     _selectMode = SELECTMODE_NONE;
-    _select = QRect(0, 0, _image->getWidth(), _image->getHeight());
+    _select = QRect(0, 0, 0, 0);
     _oldSelect = _select;
     _selectSrc = NULL;
     //_visibleArea = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
@@ -47,14 +47,14 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QScrollArea
     _downPos = QPoint(-1, -1);
     
     _imgWidget = new ImgWidget(this, image);
-    _imgWidget->setFixedSize(_select.size());
+    _imgWidget->setFixedSize(QSize(image->getWidth(), image->getHeight()));
     _imgWidget->setMouseTracking(true);
     this->setWidget(_imgWidget);
     this->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     
     _rubberBand = new QRubberBand(QRubberBand::Rectangle, _imgWidget);
     _rubberBand->setGeometry(_select);
-    _rubberBand->hide();
+    _rubberBand->show();
 /*
     initMenu();
 
@@ -188,7 +188,7 @@ void StandardImageView::selectionMove(QPoint pos) {
     int y = min( max(_oldSelect.y() + pos.y() - _downPos.y(), 0), (int)_image->getHeight() - _oldSelect.height() - 1);
     _select.moveTo(x, y);
     _rubberBand->setGeometry(_select);
-    if(_selectSrc != NULL) _selectSrc->update(imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
+    if(_selectSrc != NULL) _selectSrc->update(this->getImage(), imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
 }
 
 void StandardImageView::selectionResize(QPoint pos) {
@@ -220,7 +220,7 @@ void StandardImageView::selectionResize(QPoint pos) {
     _select = _select.normalized();
     _select &= _imgWidget->rect();
     _rubberBand->setGeometry(_select);
-    if(_selectSrc != NULL) _selectSrc->update(imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
+    if(_selectSrc != NULL) _selectSrc->update(this->getImage(), imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
 }
 
 void StandardImageView::selectionMake(QPoint pos) {
@@ -250,7 +250,6 @@ void StandardImageView::selectionMake(QPoint pos) {
     _select = _select.normalized();
     _select = _select.intersected(_imgWidget->rect());
     _rubberBand->setGeometry(_select);
-    _rubberBand->show();
 }
 
 
@@ -359,20 +358,16 @@ void StandardImageView::ctrlPressed(bool isDown)
 	_ctrlDown = isDown;
 }
 
-void StandardImageView::showSelectRect(imagein::Rectangle rect, ImageWindow* source)
+void StandardImageView::showSelectRect(imagein::Rectangle rect, GenericHistogramView* source)
 {
     _select.setRect(((int)rect.x), ((int)rect.y), ((int)rect.w), ((int)rect.h));
     _rubberBand->setGeometry(_select);
-    _rubberBand->show();
     _oldSelect = _select;
   
     _vLine = (_oldSelect.width() == 0 && _oldSelect.height() == (int)_image->getHeight());
     _hLine = (_oldSelect.height() == 0 && _oldSelect.width() == (int)_image->getWidth());
     
-    AlternativeImageView* view = source->getView();
-    if(view != NULL) {
-        _selectSrc = dynamic_cast<GenericHistogramView*>(view);
-    }
+    _selectSrc = source;
 }
 
 void StandardImageView::selectAll()
@@ -380,14 +375,14 @@ void StandardImageView::selectAll()
     _selectSrc = NULL;
     _select = QRect(0, 0, (int)_image->getWidth(), (int)_image->getHeight());
     _rubberBand->setGeometry(_select);
-    _rubberBand->show();
 }
 
 void StandardImageView::switchMode(Mode mode) { 
     _mode = mode; 
     if(_mode == MODE_MOUSE) {
-        this->selectAll();
-        _rubberBand->hide();
+        _selectSrc = NULL;
+        _select = QRect(0, 0, 0, 0);
+        _rubberBand->setGeometry(_select);
     }
 }
 

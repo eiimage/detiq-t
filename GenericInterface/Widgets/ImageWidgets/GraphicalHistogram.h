@@ -29,6 +29,8 @@
 #include <qwt_column_symbol.h>
 #include <qwt_series_data.h>
 
+#include "Array.h"
+
 namespace genericinterface
 {
 	/*!
@@ -55,7 +57,7 @@ namespace genericinterface
 		 * \param numValues Values number
 		 * \param values Table of values
 		 */
-		void setValues(int numValues, int* values);
+		void setValues(const imagein::Array<unsigned int>&);
 	};
 }
 

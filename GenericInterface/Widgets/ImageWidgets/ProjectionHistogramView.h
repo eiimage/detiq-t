@@ -51,12 +51,6 @@ namespace genericinterface
         
         //! Returns true if it's horizontal, else false
         inline bool isHorizontal() const { return _horizontal; }
-		
-	private slots:
-		void showItem(QwtPlotItem*, bool on) const;
-		void move(const QPointF&) const;
-		void leftClick(const QPointF&) const;
-		void rightClick(const QPointF&) const;
     };
 }
 
