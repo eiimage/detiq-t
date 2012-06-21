@@ -58,6 +58,7 @@ namespace genericinterface
       public:
         ImgWidget(QWidget* parent, const imagein::Image* img);
         inline QPixmap pixmap() const { return _pixmap; }
+        virtual QSize sizeHint() const { return this->size(); }
       protected:
         void paintEvent (QPaintEvent* event );
         QPixmap _pixmap;
@@ -106,6 +107,7 @@ namespace genericinterface
     void showSelectRect(imagein::Rectangle rect, ImageWindow* source);
     void selectAll();
     void scale(double);
+    virtual QSize sizeHint() const { return _imgWidget->size()+QSize(frameWidth()*2,frameWidth()*2); }
 		
 	signals:
 		/*!
