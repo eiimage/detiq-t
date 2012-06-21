@@ -175,7 +175,7 @@ void StandardImageView::mouseReleaseEvent(QMouseEvent * event)
     {
         _selectMode = SELECTMODE_NONE;
         QPoint pos = event->pos() - _imgWidget->geometry().topLeft();
-        if(_imgWidget->rect().contains(event->pos()) && pos == _downPos)
+        if(_imgWidget->rect().contains(pos) && pos == _downPos)
         {
             emit pixelClicked(pos.x(), pos.y());
         }
