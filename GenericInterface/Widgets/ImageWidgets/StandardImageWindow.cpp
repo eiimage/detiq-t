@@ -98,7 +98,7 @@ void StandardImageWindow::mousePressEvent(QMouseEvent *event) {
 }
 
 void StandardImageWindow::startDrag() {
-    QDrag *drag = new QDrag(this);
+    QDrag *drag = new QDrag(_gi);
     QMimeData *mimeData = new QMimeData();
     QByteArray encodedData;
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
@@ -114,7 +114,8 @@ void StandardImageWindow::startDrag() {
     drag->setPixmap(_imageView->pixmap().scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation));
     drag->setHotSpot(QPoint(drag->pixmap().width()/2, drag->pixmap().height()/2));
 
-    /*Qt::DropAction dropAction = */drag->exec();
+    drag->exec();
+    
 }
 
 void StandardImageWindow::mouseMoveEvent(QMouseEvent *event) {

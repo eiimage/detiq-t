@@ -23,6 +23,7 @@
 #include <QDockWidget>
 #include <QMdiSubWindow>
 #include <QMutex>
+#include <QMutexLocker>
 
 #include "Node.h"
 #include "../Widgets/ImageWidgets/StandardImageWindow.h"
@@ -81,7 +82,7 @@ namespace genericinterface
     NavigationDock* _nav;
     std::map<NodeId, Node*> _widgets;
     Qt::DockWidgetArea _navPos;
-    QMutex* _mutex;
+    mutable QMutex _mutex;
   };
 
 
