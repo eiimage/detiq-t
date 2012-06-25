@@ -24,6 +24,9 @@
 #include "GridView.h"
 #include "ImageViewer.h"
 #include "ZoomViewer.h"
+#include "StandardImageView.h"
+#include "PixelGrid.h"
+#include "ThumbnailView.h"
 
 using namespace imagein;
 using namespace genericinterface;
@@ -76,27 +79,34 @@ GridView::GridView(const imagein::Image* im, int dx, int dy)
   : AlternativeImageView(im)
 {
     _layout = new QHBoxLayout;
-    _viewer = new ImageViewer(im, dx, dy);
+    //_viewer = new ImageViewer(im, dx, dy);
 
     QVBoxLayout *layout = new QVBoxLayout();
-
-    QGraphicsView* view = new QGraphicsView;
-    view->setScene(_viewer);
+    layout->setSizeConstraint(QLayout::SetFixedSize);
+    //QGraphicsView* view = new QGraphicsView;
+    //view->setScene(_viewer);
 
     RadioPanel* panel = new RadioPanel(im->getNbChannels());
 
+    //layout->addWidget(view);
+    ThumbnailView* view = new ThumbnailView(this, im);
+    view->setFixedSize(320, 320*view->pixmap().height()/view->pixmap().width());
     layout->addWidget(view);
     layout->addWidget(panel);
     _layout->addLayout(layout);
 
-    ZoomViewer* zv = new ZoomViewer(im, ImageViewer::RECT_W, ImageViewer::RECT_H);
-    QGraphicsView* viewz = new QGraphicsView;
-    viewz->setScene(zv);
-    _layout->addWidget(viewz);
+    //ZoomViewer* zv = new ZoomViewer(im, ImageViewer::RECT_W, ImageViewer::RECT_H);
+    //QGraphicsView* viewz = new QGraphicsView;
+    //viewz->setScene(zv);
+    //_layout->addWidget(viewz);
+    PixelGrid* pixelGrid = new PixelGrid(im);
+    pixelGrid->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    _layout->addWidget(pixelGrid);
 
-    QObject::connect(panel, SIGNAL(activated(int)), zv, SLOT(channelChosen(int)));
+    QObject::connect(panel, SIGNAL(activated(int)), pixelGrid, SLOT(setChannel(int)));
 
-    QObject::connect(_viewer, SIGNAL(positionUpdated(int, int)), zv, SLOT(draw(int, int)));
+    QObject::connect(view, SIGNAL(positionChanged(QPoint)), pixelGrid, SLOT(setOffset(QPoint)));
+    QObject::connect(pixelGrid, SIGNAL(resized(QSize)), view, SLOT(setRectSize(QSize)));
 
     setLayout(_layout);
 }
