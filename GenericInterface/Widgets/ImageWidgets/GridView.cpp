@@ -90,7 +90,7 @@ GridView::GridView(const imagein::Image* im, int dx, int dy)
 
     //layout->addWidget(view);
     ThumbnailView* view = new ThumbnailView(this, im);
-    view->setFixedSize(320, 320*view->pixmap().height()/view->pixmap().width());
+    view->setFixedSize(256, 256*view->pixmap().height()/view->pixmap().width());
     layout->addWidget(view);
     layout->addWidget(panel);
     _layout->addLayout(layout);

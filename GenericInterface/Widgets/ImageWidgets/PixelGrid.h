@@ -37,6 +37,10 @@ namespace genericinterface
   Q_OBJECT
   public:
     PixelGrid(const imagein::Image* image);
+    /**
+    * @brief Size of one pixel (in pixel... loop !)
+    */
+    static const int PIXEL_S = 25;
 
   public slots:
     /**
@@ -47,7 +51,7 @@ namespace genericinterface
     */
     void setOffset(QPoint offset);
     void setChannel(int c);
-    virtual QSize sizeHint() const { return this->size(); }
+    virtual QSize sizeHint() const { return QSize(16*PIXEL_S, 16*PIXEL_S); }
 
   signals:
     void resized(QSize size);
@@ -57,10 +61,6 @@ namespace genericinterface
     void paintEvent (QPaintEvent* event );
     void resizeEvent(QResizeEvent* event);
 
-    /**
-    * @brief Size of one pixel (in pixel... loop !)
-    */
-    static const int PIXEL_S = 25;
     
     QPixmap _pixmap;
     const imagein::Image* _image;
