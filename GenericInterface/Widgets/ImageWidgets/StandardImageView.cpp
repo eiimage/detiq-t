@@ -27,7 +27,7 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QScrollArea
 {
     _mode = MODE_MOUSE;
     _selectMode = SELECTMODE_NONE;
-    _select = QRect(0, 0, 0, 0);
+    _select = QRect(0,0,image->getWidth(), image->getHeight());
     _oldSelect = _select;
     _selectSrc = NULL;
     //_visibleArea = Rectangle(0, 0, _image->getWidth(), _image->getHeight());
@@ -53,8 +53,8 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QScrollArea
     this->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     
     _rubberBand = new QRubberBand(QRubberBand::Rectangle, _imgWidget);
-    redrawSelect();
-    _rubberBand->show();
+    //redrawSelect();
+    _rubberBand->hide();
 /*
     initMenu();
 
@@ -419,7 +419,10 @@ void StandardImageView::switchMode(Mode mode) {
     _mode = mode; 
     if(_mode == MODE_MOUSE) {
         _selectSrc = NULL;
-        _select = QRect(0, 0, 0, 0);
+        _select = QRect(0, 0, _image->getWidth(), _image->getHeight());
+        _rubberBand->hide();
+    }
+    else if(_mode == MODE_SELECT) {
         redrawSelect();
     }
 }
@@ -454,7 +457,8 @@ void StandardImageView::setImage(imagein::Image* image)
     //_scene->addItem(this);
 
     //_highlight->setRect(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
-    redrawSelect();
+    //redrawSelect();
+    _rubberBand->hide();
 
     //_scene->addItem(_highlight);
     //_view->setScene(_scene);

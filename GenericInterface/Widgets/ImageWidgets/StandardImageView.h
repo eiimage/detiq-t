@@ -182,6 +182,7 @@ namespace genericinterface
             _select.width()*_imgWidget->width()/_imgWidget->pixmap().width(), 
             _select.height()*_imgWidget->height()/_imgWidget->pixmap().height()
         ));
+        _rubberBand->show();
     }
   };
 }
