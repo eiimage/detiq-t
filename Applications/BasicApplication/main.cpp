@@ -27,6 +27,8 @@ using namespace genericinterface;
 int main(int argc, char** argv)
 {
   QApplication app(argc, argv);
+  
+  app.setAttribute(Qt::AA_DontShowIconsInMenus, false);
 
   Log::configure(true, true, 0);
 

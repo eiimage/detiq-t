@@ -27,6 +27,19 @@
 
 using namespace genericinterface;
 
+void FileService::display (GenericInterface* gi)
+{
+    _open = gi->menu("&File")->addAction("&Open");
+    _open->setIcon(gi->style()->standardIcon(QStyle::SP_DialogOpenButton));
+    _open->setShortcut(QKeySequence::Open);
+    gi->toolBar("tools")->addAction(_open);
+    _saveAs = gi->menu("&File")->addAction("Save &As");
+    _saveAs->setIcon(gi->style()->standardIcon(QStyle::SP_DialogSaveButton));
+    _saveAs->setShortcut(QKeySequence::Save);
+    _saveAs->setEnabled(false);
+    gi->toolBar("tools")->addAction(_saveAs);
+}
+
 void FileService::connect (GenericInterface* gi)
 {
 	_gi = gi;
@@ -39,16 +52,6 @@ void FileService::connect (GenericInterface* gi)
     //connexion des changements d'images
 	WindowService* ws = dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE));
 	QObject::connect(ws, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(checkActionsValid(QMdiSubWindow*)));
-}
-
-void FileService::display (GenericInterface* gi)
-{
-    _open = gi->menu("&File")->addAction("&Open");
-    //_save = gi->menu("&File")->addAction("&Save");
-    _saveAs = gi->menu("&File")->addAction("Save &As");
-    
-    //_save->setEnabled(false);
-    _saveAs->setEnabled(false);
 }
 
 void FileService::save(const QString& path, const QString& ext)
@@ -85,13 +88,19 @@ void FileService::save(const QString& path, const QString& ext)
 
 void FileService::saveAs()
 {
+    QString path;
+	WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    ImageWindow* currentWindow = ws->getCurrentImageWindow();
+    if(currentWindow != NULL) {
+        path = currentWindow->getPath();
+    }
     QString selectedFilter;
-	QString path = QFileDialog::getSaveFileName(_gi, "Save a file", QString(), "Png image (*.png);;Bmp image (*.bmp);; Jpeg image(*.jpg)", &selectedFilter);
+	QString file = QFileDialog::getSaveFileName(_gi, "Save a file", path, "Png image (*.png);;Bmp image (*.bmp);; Jpeg image(*.jpg)", &selectedFilter);
 
 	QString ext = selectedFilter.right(5).left(4);
-	if(!path.contains('.')) path += ext;
 
-	if(path != "") {
+	if(file != "") {
+	    if(!file.contains('.')) file += ext;
 		this->save(path, ext);
 	}
 }
