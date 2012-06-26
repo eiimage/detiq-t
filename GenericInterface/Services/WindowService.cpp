@@ -262,19 +262,50 @@ void WindowService::moveToNode(StandardImageWindow* siw, int pos) {
     
     std::cout << "moveToNode::lock" << std::endl;
     QMutexLocker locker(&_mutex);
-    StandardImageWindow* newSiw = new StandardImageWindow(*siw);
-    
-    QList<QMdiSubWindow*> windows = _mdi->subWindowList();
-    
-    for (QList<QMdiSubWindow*>::iterator it = windows.begin(); it != windows.end(); ++it)
+
+    Node* node = NULL;
+    QMdiSubWindow* subWnd = NULL;
+    for(std::map<NodeId, Node*>::iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
     {
-        QMdiSubWindow* sw = *it;
-        if(validWindow(sw) && sw->widget() == siw) {
-            _mdi->removeSubWindow(sw);
-            sw->close();
+        Node* currentNode = it->second;
+        for(QList<QMdiSubWindow*>::iterator it = currentNode->windows.begin(); it != currentNode->windows.end(); ++it) {
+            if((*it)->widget() == siw) {
+                node = currentNode;
+                subWnd = *it;
+            }
         }
     }
-    addImage(newSiw->getImage(), newSiw, pos);
+
+    if(node != NULL) {
+        node->windows.removeAll(subWnd);
+        if(node->windows.empty()) {
+            int index = _nav->removeNode(node->getId());
+            _widgets.erase(node->getId());
+            std::cout << "erased node #" << index << " while droping on #" << pos << std::endl;
+            if(index < pos) --pos;
+            delete node;
+        }
+    }
+
+
+    Node* newNode = addNodeIfNeeded(siw->getImage(), siw->getImage(), siw->getPath(), pos);
+    newNode->windows << subWnd;
+    _nav->setActiveNode(newNode->getId());
+    _nav->update();
+
+    //StandardImageWindow* newSiw = new StandardImageWindow(*siw);
+    
+    //QList<QMdiSubWindow*> windows = _mdi->subWindowList();
+    
+    //for (QList<QMdiSubWindow*>::iterator it = windows.begin(); it != windows.end(); ++it)
+    //{
+        //QMdiSubWindow* sw = *it;
+        //if(validWindow(sw) && sw->widget() == siw) {
+            //_mdi->removeSubWindow(sw);
+            //sw->close();
+        //}
+    //}
+    //addImage(newSiw->getImage(), newSiw, pos);
 }
 
 bool WindowService::validWindow(QMdiSubWindow* sw) const {

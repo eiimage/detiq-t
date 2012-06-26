@@ -116,7 +116,7 @@ void NavigationDock::setActiveNode(NodeId id) {
     }
 }
 
-void NavigationDock::removeNode(NodeId id)
+int NavigationDock::removeNode(NodeId id)
 {
     /*for(int i = 0; i < _data.size(); ++i) {
         if(_data[i]->getId() == id) {
@@ -131,10 +131,11 @@ void NavigationDock::removeNode(NodeId id)
             const Node* node = data.value<const Node*>();
             if(node && node->getId() == id) {
                 _model->removeRow(i);
-                --i;
+                return i;
             }
         }
     }
+    return _model->rowCount();
 }
 
 void NavigationDock::showContextMenu(const QPoint& pos)
