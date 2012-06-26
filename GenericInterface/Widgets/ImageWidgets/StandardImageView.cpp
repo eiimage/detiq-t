@@ -114,7 +114,8 @@ void StandardImageView::ImgWidget::paintEvent (QPaintEvent* event ) {
 
 void StandardImageView::mousePressEvent(QMouseEvent * event)
 {
-    QPoint pos = (event->pos() - _imgWidget->geometry().topLeft())*_imgWidget->scale();
+    //QPoint pos = (event->pos() - _imgWidget->geometry().topLeft())*_imgWidget->scale();
+    QPoint pos = mapToPixmap(event->pos());
     //std::cout << "pos = (" << pos.x() << "," << pos.y() << ")" << std::endl;
     if(event->button() == Qt::LeftButton)
     {
@@ -186,7 +187,8 @@ void StandardImageView::mouseReleaseEvent(QMouseEvent * event)
     {
         _selectMode = SELECTMODE_NONE;
         _oldSelect = _select;
-        QPoint pos = (event->pos() - _imgWidget->geometry().topLeft())*_imgWidget->scale();
+        //QPoint pos = (event->pos() - _imgWidget->geometry().topLeft())*_imgWidget->scale();
+        QPoint pos = mapToPixmap(event->pos());
         if(_imgWidget->pixmap().rect().contains(pos) && pos == _downPos)
         {
             emit pixelClicked(pos.x(), pos.y());
@@ -297,7 +299,8 @@ void StandardImageView::selectionMake(QPoint pos) {
 
 void StandardImageView::mouseMoveEvent(QMouseEvent* event)
 {
-    QPoint pos = (event->pos() - _imgWidget->geometry().topLeft())*_imgWidget->scale();
+    //QPoint pos = (event->pos() - _imgWidget->geometry().topLeft())*_imgWidget->scale();
+    QPoint pos = mapToPixmap(event->pos());
     
     if(_imgWidget->rect().contains(pos))
     {
@@ -408,9 +411,22 @@ Qt::CursorShape StandardImageView::mouseOverHighlight(QPoint pos)
     return res;
 }
 
-void StandardImageView::scale(double scale) {
+void StandardImageView::scale(double scaleW, double scaleH) {
     if(_selectMode == SELECTMODE_NONE) {
-        _imgWidget->setFixedSize(_image->getWidth()*scale, _image->getHeight()*scale);
+
+        QPoint mousePos = mapToWidget(mapFromGlobal(QCursor::pos()));
+        QPoint pixelPos = _imgWidget->mapToPixmap(mousePos);
+
+        _imgWidget->setFixedSize(_image->getWidth()*scaleW, _image->getHeight()*scaleH);
+
+        QPoint offset = _imgWidget->mapFromPixmap(pixelPos) - mousePos;
+        QScrollBar* hsb = this->horizontalScrollBar();
+        QScrollBar* vsb = this->verticalScrollBar();
+        //std::cout << sb->minimum() << ":" << sb->value() << ":" << sb->maximum() << std::endl;
+        hsb->setValue(hsb->value() + offset.x());
+        vsb->setValue(vsb->value() + offset.y());
+        std::cout << offset.x() << ":" << offset.y() << std::endl;
+        
         redrawSelect();
     }
 }

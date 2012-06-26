@@ -60,7 +60,33 @@ namespace genericinterface
         ImgWidget(QWidget* parent, const imagein::Image* img);
         inline QPixmap pixmap() const { return _pixmap; }
         virtual QSize sizeHint() const { return this->size(); }
-        inline double scale() const { return static_cast<double>(_pixmap.width()) / static_cast<double>(this->width()); }
+        //inline double scale() const { return static_cast<double>(_pixmap.width()) / static_cast<double>(this->width()); }
+        inline QPoint mapToPixmap(QPoint p) {
+            const int x = std::floor( p.x() * pixmap().width() / width() );
+            const int y = std::floor( p.y() * pixmap().height() / height() );
+            return QPoint(x, y); 
+        }
+        inline QSize mapToPixmap(QSize s) {
+            const int w = std::floor( s.width() * pixmap().width() / width() );
+            const int h = std::floor( s.height() * pixmap().height() / height() );
+            return QSize(w, h); 
+        }
+        inline QPoint mapFromPixmap(QPoint p) {
+            const int x = std::floor( p.x() * width() / pixmap().width() );
+            const int y = std::floor( p.y() * height() / pixmap().height() );
+            return QPoint(x, y); 
+        }
+        inline QSize mapFromPixmap(QSize s) {
+            const int w = std::floor( s.width() * width() / pixmap().width() );
+            const int h = std::floor( s.height() * height() / pixmap().height() );
+            return QSize(w, h); 
+        }
+        inline QRect mapFromPixmap(QRect r) {
+            return QRect(mapFromPixmap(r.topLeft()), mapFromPixmap(r.size())); 
+        }
+        inline QRect mapToPixmap(QRect r) {
+            return QRect(mapToPixmap(r.topLeft()), mapToPixmap(r.size()));
+        }
       protected:
         void paintEvent (QPaintEvent* event );
         QPixmap _pixmap;
@@ -110,7 +136,7 @@ namespace genericinterface
     void ctrlPressed(bool);
     void showSelectRect(imagein::Rectangle rect, GenericHistogramView* source);
     void selectAll();
-    void scale(double);
+    void scale(double, double);
     virtual QSize sizeHint() const { return _imgWidget->size()+QSize(frameWidth()*2,frameWidth()*2); }
     
     void mousePressEvent(QMouseEvent * event);
@@ -176,13 +202,33 @@ namespace genericinterface
     void selectionResize(QPoint);
     void selectionMake(QPoint);
     inline void redrawSelect() {
-        _rubberBand->setGeometry(QRect(
-            _select.x()*_imgWidget->width()/_imgWidget->pixmap().width(), 
-            _select.y()*_imgWidget->height()/_imgWidget->pixmap().height(), 
-            _select.width()*_imgWidget->width()/_imgWidget->pixmap().width(), 
-            _select.height()*_imgWidget->height()/_imgWidget->pixmap().height()
-        ));
+        _rubberBand->setGeometry(_imgWidget->mapFromPixmap(_select));
         _rubberBand->show();
+    }
+
+    inline QPoint mapToWidget(QPoint p) {
+        return p - _imgWidget->geometry().topLeft();
+    }
+    inline QPoint mapFromWidget(QPoint p) {
+        return p + _imgWidget->geometry().topLeft();
+    }
+    inline QPoint mapToPixmap(QPoint p) {
+        return _imgWidget->mapToPixmap(mapToWidget(p)); 
+    }
+    inline QSize mapToPixmap(QSize s) {
+        return _imgWidget->mapToPixmap(s); 
+    }
+    inline QPoint mapFromPixmap(QPoint p) {
+        return mapFromWidget(_imgWidget->mapFromPixmap(p)); 
+    }
+    inline QSize mapFromPixmap(QSize s) {
+        return _imgWidget->mapFromPixmap(s); 
+    }
+    inline QRect mapFromPixmap(QRect r) {
+        return QRect(mapFromPixmap(r.topLeft()), mapFromPixmap(r.size())); 
+    }
+    inline QRect mapToPixmap(QRect r) {
+        return QRect(mapToPixmap(r.topLeft()), mapToPixmap(r.size()));
     }
   };
 }
