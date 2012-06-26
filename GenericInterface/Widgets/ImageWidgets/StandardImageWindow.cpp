@@ -90,11 +90,19 @@ StandardImageWindow::~StandardImageWindow()
 
 
 void StandardImageWindow::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton) {
+    //if (event->button() == Qt::LeftButton) {
+        //_imageView->mousePressEvent(event);   
+    //}
+    //ImageWindow::mousePressEvent(event);
+    event->ignore();
+}
 
-
-     }
-     ImageWindow::mousePressEvent(event);
+void StandardImageWindow::mouseReleaseEvent(QMouseEvent *event) {
+    //if (event->button() == Qt::LeftButton) {
+        //_imageView->mouseReleaseEvent(event);   
+    //}
+    //ImageWindow::mouseReleaseEvent(event);
+    event->ignore();
 }
 
 void StandardImageWindow::startDrag() {
@@ -120,7 +128,8 @@ void StandardImageWindow::startDrag() {
 
 void StandardImageWindow::mouseMoveEvent(QMouseEvent *event) {
     //std::cout << "mouseMoveEvent " << event->x() << ":" << event->y() << std::endl;
-     ImageWindow::mouseMoveEvent(event);
+     //ImageWindow::mouseMoveEvent(event);
+     event->ignore();
 }
 
 void StandardImageWindow::init()

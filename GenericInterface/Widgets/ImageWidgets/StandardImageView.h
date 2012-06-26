@@ -112,6 +112,12 @@ namespace genericinterface
     void selectAll();
     void scale(double);
     virtual QSize sizeHint() const { return _imgWidget->size()+QSize(frameWidth()*2,frameWidth()*2); }
+    
+    void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event);
+    void mouseMoveEvent(QMouseEvent * event);
+    void mouseDoubleClickEvent(QMouseEvent * event); 
+    void wheelEvent(QWheelEvent* event);
 		
 	signals:
 		/*!
@@ -166,11 +172,6 @@ namespace genericinterface
     void initMenu();
     void showImage();
     Qt::CursorShape mouseOverHighlight(QPoint pos);
-    void mousePressEvent(QMouseEvent * event);
-    void mouseReleaseEvent(QMouseEvent * event);
-    void mouseMoveEvent(QMouseEvent * event);
-    void mouseDoubleClickEvent(QMouseEvent * event); 
-    void wheelEvent(QWheelEvent* event);
     void selectionMove(QPoint);
     void selectionResize(QPoint);
     void selectionMake(QPoint);

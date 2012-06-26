@@ -118,6 +118,7 @@ public:
     AlternativeImageView* getView() { return NULL; }
     
     void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void zoom(int delta);
 

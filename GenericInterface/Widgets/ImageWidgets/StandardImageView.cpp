@@ -113,6 +113,7 @@ void StandardImageView::ImgWidget::paintEvent (QPaintEvent* event ) {
 void StandardImageView::mousePressEvent(QMouseEvent * event)
 {
     QPoint pos = (event->pos() - _imgWidget->geometry().topLeft())*_imgWidget->scale();
+    //std::cout << "pos = (" << pos.x() << "," << pos.y() << ")" << std::endl;
     if(event->button() == Qt::LeftButton)
     {
         _downPos = pos;
@@ -125,6 +126,7 @@ void StandardImageView::mousePressEvent(QMouseEvent * event)
             int posX = QCursor::pos().x();
             int posY = QCursor::pos().y();
             QRect rect = _rubberBand->geometry();
+            //QPoint p = event->globalPos() - mapToGlobal(_imgWidget->geometry().topLeft());
             QPoint p = event->pos() - _imgWidget->geometry().topLeft();
             
             int delta;
@@ -204,7 +206,7 @@ void StandardImageView::selectionResize(QPoint pos) {
             _select.setLeft(pos.x());
         }
         else {
-            _select.setRight(pos.x()-1);
+            _select.setRight(pos.x());
         }
     }
     
@@ -214,7 +216,7 @@ void StandardImageView::selectionResize(QPoint pos) {
             _select.setTop(pos.y());
         }
         else {
-            _select.setBottom(pos.y()-1);
+            _select.setBottom(pos.y());
         }
     }
     
@@ -234,7 +236,11 @@ void StandardImageView::selectionResize(QPoint pos) {
     
     
     //_select = _select.normalized();
-    _select &= _imgWidget->rect();
+    //_select &= _imgWidget->rect();
+    _select.setLeft(std::max(0, _select.left()));
+    _select.setRight(std::min((int)this->getImage()->getWidth()-1, _select.right()));
+    _select.setTop(std::max(0, _select.top()));
+    _select.setBottom(std::min((int)this->getImage()->getHeight()-1, _select.bottom()));
     redrawSelect();
     if(_selectSrc != NULL) _selectSrc->update(this->getImage(), imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
 }
