@@ -47,10 +47,11 @@ const QPixmap* ImageDelegate::getPixmap(const QModelIndex &index) const {
 
 QSize ImageDelegate::getItemSize(const QModelIndex &index) const {
     const QPixmap* pixmap = getPixmap(index);
+    QSize isize = _itemSize - QSize(16, 16);
     if(pixmap != NULL) {
         QSize size = pixmap->size();
-        size.scale(_itemSize, Qt::KeepAspectRatio);
-        return size;
+        size.scale(isize, Qt::KeepAspectRatio);
+        return size+QSize(16, 16);
     }
     return QSize();
 }

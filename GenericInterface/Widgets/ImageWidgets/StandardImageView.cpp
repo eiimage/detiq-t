@@ -17,6 +17,8 @@
  * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QScrollBar>
+
 #include "StandardImageView.h"
 
 using namespace genericinterface;
@@ -118,43 +120,48 @@ void StandardImageView::mousePressEvent(QMouseEvent * event)
     {
         _downPos = pos;
         _oldSelect = _select;
-        
-        if(_selectMode == SELECTMODE_NONE) {
-        
-            SelectMode newMode = _ctrlDown ? SELECTMODE_MOVE : SELECTMODE_RESIZE;
+       
+        if(_mode == MODE_SELECT) {
+            if(_selectMode == SELECTMODE_NONE) {
             
-            int posX = QCursor::pos().x();
-            int posY = QCursor::pos().y();
-            QRect rect = _rubberBand->geometry();
-            //QPoint p = event->globalPos() - mapToGlobal(_imgWidget->geometry().topLeft());
-            QPoint p = event->pos() - _imgWidget->geometry().topLeft();
-            
-            int delta;
-            std::cout << "_move" << std::endl;
-            
-            if( abs( delta = p.x() - rect.left() ) <= 2) {
-                posX -= delta;
-                _selectMode = newMode;
-            }
-            else if( abs( delta = p.x() - (rect.right()) ) <= 2) {
-                posX -= delta;
-                _selectMode = newMode;
-            }
+                SelectMode newMode = _ctrlDown ? SELECTMODE_MOVE : SELECTMODE_RESIZE;
+                
+                int posX = QCursor::pos().x();
+                int posY = QCursor::pos().y();
+                QRect rect = _rubberBand->geometry();
+                //QPoint p = event->globalPos() - mapToGlobal(_imgWidget->geometry().topLeft());
+                QPoint p = event->pos() - _imgWidget->geometry().topLeft();
+                
+                int delta;
+                std::cout << "_move" << std::endl;
+                
+                if( abs( delta = p.x() - rect.left() ) <= 2) {
+                    posX -= delta;
+                    _selectMode = newMode;
+                }
+                else if( abs( delta = p.x() - (rect.right()) ) <= 2) {
+                    posX -= delta;
+                    _selectMode = newMode;
+                }
 
-            if( abs( delta = p.y() - rect.top()) <= 2) {
-                posY -= delta;
-                _selectMode = newMode;
-            }
-            else if( abs( delta = p.y() - (rect.bottom())) <= 2) {
-                posY -= delta;
-                _selectMode = newMode;
-            }
+                if( abs( delta = p.y() - rect.top()) <= 2) {
+                    posY -= delta;
+                    _selectMode = newMode;
+                }
+                else if( abs( delta = p.y() - (rect.bottom())) <= 2) {
+                    posY -= delta;
+                    _selectMode = newMode;
+                }
 
-            QCursor::setPos(posX, posY);
+                QCursor::setPos(posX, posY);
+            }
+            
+            if(_mode == MODE_SELECT && _selectMode == SELECTMODE_NONE) {
+                _selectMode = SELECTMODE_MAKE;
+            }
         }
-        
-        if(_mode == MODE_SELECT && _selectMode == SELECTMODE_NONE) {
-            _selectMode = SELECTMODE_MAKE;
+        else if(_mode == MODE_MOUSE) {
+            this->setCursor(Qt::ClosedHandCursor);
         }
         
         
@@ -185,6 +192,9 @@ void StandardImageView::mouseReleaseEvent(QMouseEvent * event)
             emit pixelClicked(pos.x(), pos.y());
         }
         _downPos = QPoint(-1, -1);
+        if(_mode == MODE_MOUSE) {
+            this->setCursor(Qt::OpenHandCursor);
+        }
     }
 }
 
@@ -293,25 +303,39 @@ void StandardImageView::mouseMoveEvent(QMouseEvent* event)
     {
         emit pixelHovered(pos.x(), pos.y());
     }
-    
-     switch(_selectMode) {
-        case SELECTMODE_MOVE:
-        {
-            selectionMove(pos);
-            break;
+   
+    if(_mode == MODE_SELECT) {
+
+        switch(_selectMode) {
+            case SELECTMODE_MOVE:
+            {
+                selectionMove(pos);
+                break;
+            }
+            case SELECTMODE_RESIZE:
+            {
+                selectionResize(pos);
+                break;
+            }
+            case SELECTMODE_MAKE:
+            {
+                selectionMake(pos);
+                break;
+            }
+            default:
+                this->setCursor(mouseOverHighlight(event->pos()));
         }
-        case SELECTMODE_RESIZE:
-        {
-            selectionResize(pos);
-            break;
+    }
+    else if(_mode == MODE_MOUSE) {
+        if(event->buttons().testFlag(Qt::LeftButton)) {
+            QScrollBar* hsb = this->horizontalScrollBar();
+            QScrollBar* vsb = this->verticalScrollBar();
+            int offsetX = (pos.x()-_downPos.x())*_imgWidget->width()/_imgWidget->pixmap().width();
+            int offsetY = (pos.y()-_downPos.y())*_imgWidget->width()/_imgWidget->pixmap().width();
+            //std::cout << sb->minimum() << ":" << sb->value() << ":" << sb->maximum() << std::endl;
+            hsb->setValue(hsb->value() - offsetX);
+            vsb->setValue(vsb->value() - offsetY);
         }
-        case SELECTMODE_MAKE:
-        {
-            selectionMake(pos);
-            break;
-        }
-        default:
-            this->setCursor(mouseOverHighlight(event->pos()));
     }
         /*
         if(_mouseButtonPressed)
@@ -376,7 +400,7 @@ Qt::CursorShape StandardImageView::mouseOverHighlight(QPoint pos)
     else if( (nearLeft && nearBottom) || (nearRight && nearTop) ) res = Qt::SizeBDiagCursor;
     else if(nearLeft || nearRight) res = Qt::SizeHorCursor;
     else if(nearTop || nearBottom) res = Qt::SizeVerCursor;
-    else res = Qt::ArrowCursor;
+    else res = Qt::CrossCursor;
     
     _originX = nearLeft;
     _originY = nearTop;
