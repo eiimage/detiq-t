@@ -104,6 +104,10 @@ StandardImageView::ImgWidget::ImgWidget(QWidget* parent, const imagein::Image* i
     _pixmap.convertFromImage(convertImage(img));
 }
 
+void StandardImageView::ImgWidget::setImage(const imagein::Image* img) {
+    _pixmap.convertFromImage(convertImage(img));
+}
+
 void StandardImageView::ImgWidget::paintEvent (QPaintEvent* event ) {
     QPainter painter(this);
     //QSize size = _pixmap.size();
@@ -489,8 +493,11 @@ void StandardImageView::setImage(imagein::Image* image)
     //_pixmap_img = new QPixmap();
     //this->setPixmap(QPixmap::fromImage(convertImage(this->getImage())));
     _image = image;
-    delete _imgWidget;
-    _imgWidget = new ImgWidget(this, image);
+    //delete _imgWidget;
+    //_imgWidget = new ImgWidget(this, image);
+    _imgWidget->setImage(image);
+    _imgWidget->setFixedSize(QSize(image->getWidth(), image->getHeight()));
+    this->updateGeometry();
     //_pixmap.convertFromImage(convertImage(image));
 
     //this->setPixmap(_pixmap_img);
@@ -498,7 +505,7 @@ void StandardImageView::setImage(imagein::Image* image)
 
     //_highlight->setRect(((int)_selection.x), ((int)_selection.y), ((int)_selection.w), ((int)_selection.h));
     //redrawSelect();
-    _rubberBand->hide();
+    //_rubberBand->hide();
 
     //_scene->addItem(_highlight);
     //_view->setScene(_scene);

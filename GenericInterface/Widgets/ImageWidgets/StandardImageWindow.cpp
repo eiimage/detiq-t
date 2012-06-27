@@ -68,11 +68,15 @@ StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* g
     init();
 }
 
-StandardImageWindow::StandardImageWindow(const StandardImageWindow& siw) 
+StandardImageWindow::StandardImageWindow(const StandardImageWindow& siw, bool crop) 
     : ImageWindow(siw.getPath()), _gi(siw._gi) , _ctrlPressed(false)
 {
-    _image = new Image(*siw._image);
-
+    if(crop) {
+        _image = siw._image->crop(siw._imageView->getRectangle());
+    }
+    else {
+        _image = new Image(*siw._image);
+    }
     this->setWindowTitle(siw.windowTitle());
 
     init();
@@ -113,13 +117,18 @@ void StandardImageWindow::startDrag() {
     //Node *node = new Node(this->getImage(), this->getPath());
     uintptr_t ptr = reinterpret_cast<uintptr_t>(this);
     stream << ptr;
-    mimeData->setData("application/detiqt.genericinterface.stdimgwnd", encodedData);
-    
+    if(_imageView->mode() == StandardImageView::MODE_MOUSE) {
+        mimeData->setData("application/detiqt.genericinterface.stdimgwnd", encodedData);
+        drag->setPixmap(_imageView->pixmap().scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation));
+    }
+    else {
+        mimeData->setData("application/detiqt.genericinterface.stdimgwnd.copy", encodedData);
+        drag->setPixmap(_imageView->pixmap().copy(_imageView->select()).scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation));
+    }
     
     //QImage img = getQImage(this->getImage()).scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation);
      
     drag->setMimeData(mimeData);
-    drag->setPixmap(_imageView->pixmap().scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation));
     drag->setHotSpot(QPoint(drag->pixmap().width()/2, drag->pixmap().height()/2));
 
     drag->exec();
@@ -151,6 +160,10 @@ void StandardImageWindow::init()
 	_menu->addAction("Pixels Grid", this, SLOT(showPixelsGrid()));
 	_menu->addAction("Column Profile", this, SLOT(showColumnProfile()));
 	_menu->addAction("Line Profile", this, SLOT(showLineProfile()));
+    _menu->addSeparator();
+	_menu->addAction("Crop", this, SLOT(crop()));
+	_menu->addAction("Copy & crop", this, SLOT(copycrop()));
+
 	QObject::connect(_imageView, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
     
     _selectedPixel = new QPoint();
@@ -228,6 +241,23 @@ void StandardImageWindow::showPixelsGrid()
     grid->setWindowTitle(this->windowTitle() + QString::fromStdString(" - Pixels Grid"));
     WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
     ws->addWidget(ws->getNodeId(this), grid);
+}
+
+void StandardImageWindow::crop() {
+    const Image* oldImg = getImage();
+    Image* newImg = oldImg->crop(_imageView->getRectangle());
+    _imageView->setImage(newImg);
+    _image = newImg;
+    delete oldImg;
+    _imageView->update();
+    this->adjustSize();
+    this->updateGeometry();
+}
+
+void StandardImageWindow::copycrop() {
+    StandardImageWindow* newImgWnd = new StandardImageWindow(*this, true);
+    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    ws->addImage(ws->getNodeId(this), newImgWnd);
 }
 
 void StandardImageWindow::initStatusBar()

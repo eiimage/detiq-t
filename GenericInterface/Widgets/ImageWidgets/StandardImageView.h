@@ -58,6 +58,7 @@ namespace genericinterface
     class ImgWidget : public QWidget  {
       public:
         ImgWidget(QWidget* parent, const imagein::Image* img);
+        void setImage(const imagein::Image* img);
         inline QPixmap pixmap() const { return _pixmap; }
         virtual QSize sizeHint() const { return this->size(); }
         //inline double scale() const { return static_cast<double>(_pixmap.width()) / static_cast<double>(this->width()); }
@@ -122,7 +123,7 @@ namespace genericinterface
     inline imagein::Rectangle getRectangle() const { 
         return imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()); 
     }
-    
+   inline QRect select() const { return _select; } 
     inline void setSelectSrc(GenericHistogramView* src) { _selectSrc = src; }
         
 	/*	//! Returns the graphics view
@@ -131,13 +132,14 @@ namespace genericinterface
     
     
     void switchMode(Mode mode);
+    inline Mode mode() const { return _mode; }
 
 	public slots:
     void ctrlPressed(bool);
     void showSelectRect(imagein::Rectangle rect, GenericHistogramView* source);
     void selectAll();
     void scale(double, double);
-    virtual QSize sizeHint() const { return _imgWidget->size()+QSize(frameWidth()*2,frameWidth()*2); }
+    virtual QSize sizeHint() const { return pixmap().size()+QSize(frameWidth()*2,frameWidth()*2); }
     
     void mousePressEvent(QMouseEvent * event);
     void mouseReleaseEvent(QMouseEvent * event);

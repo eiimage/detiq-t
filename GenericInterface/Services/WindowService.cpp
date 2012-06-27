@@ -165,13 +165,13 @@ void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd, int pos)
     QMdiSubWindow* sw = _mdi->addSubWindow(imgWnd);
     node->windows << sw;
 
-    SubWindowController* swc = new SubWindowController(id, sw);
+    SubWindowController* swc = new SubWindowController(sw);
 
     QObject::connect(sw, SIGNAL(aboutToActivate()), imgWnd, SLOT(activated()));
 
     QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
-    QObject::connect(swc, SIGNAL(removeFromWindowsMap(NodeId, QMdiSubWindow*)), 
-                    this, SLOT(removeSubWindow(NodeId,QMdiSubWindow*)));
+    QObject::connect(swc, SIGNAL(removeFromWindowsMap(QMdiSubWindow*)), 
+                    this, SLOT(removeSubWindow(QMdiSubWindow*)));
 
     sw->show();
     _mdi->setActiveSubWindow(sw);
@@ -190,14 +190,14 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
     QMdiSubWindow* sw = _mdi->addSubWindow(widget);
     node->windows << sw;
 
-    SubWindowController* swc = new SubWindowController(id, sw);
+    SubWindowController* swc = new SubWindowController(sw);
 
     if(qobject_cast<GenericHistogramWindow*>(widget)) {
         QObject::connect(sw, SIGNAL(aboutToActivate()), widget, SLOT(activated()));
     }
     QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
-    QObject::connect(swc, SIGNAL(removeFromWindowsMap(NodeId, QMdiSubWindow*)), 
-                    this, SLOT(removeSubWindow(NodeId,QMdiSubWindow*)));
+    QObject::connect(swc, SIGNAL(removeFromWindowsMap(QMdiSubWindow*)), 
+                    this, SLOT(removeSubWindow(QMdiSubWindow*)));
 
     sw->show();
     _mdi->setActiveSubWindow(sw);
@@ -206,10 +206,11 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
     return true;
 }
 
-void WindowService::removeSubWindow(NodeId id, QMdiSubWindow* sw)
+void WindowService::removeSubWindow(QMdiSubWindow* sw)
 {
     std::cout << "removeSubWindow::lock" << std::endl;
     QMutexLocker locker(&_mutex);
+    NodeId id = findNodeId(sw);
     Node* node = findNode(id);
     if(node == NULL) return;
     
@@ -276,15 +277,17 @@ void WindowService::moveToNode(StandardImageWindow* siw, int pos) {
         }
     }
 
-    if(node != NULL) {
-        node->windows.removeAll(subWnd);
-        if(node->windows.empty()) {
-            int index = _nav->removeNode(node->getId());
-            _widgets.erase(node->getId());
-            std::cout << "erased node #" << index << " while droping on #" << pos << std::endl;
-            if(index < pos) --pos;
-            delete node;
-        }
+    if(node == NULL) {
+        return addImage(siw->getImage(), siw, pos);
+    }
+    
+    node->windows.removeAll(subWnd);
+    if(node->windows.empty()) {
+        int index = _nav->removeNode(node->getId());
+        _widgets.erase(node->getId());
+        std::cout << "erased node #" << index << " while droping on #" << pos << std::endl;
+        if(index < pos) --pos;
+        delete node;
     }
 
 
@@ -358,13 +361,13 @@ void WindowService::updateDisplay()
     
 }
 
-SubWindowController::SubWindowController(NodeId id, QMdiSubWindow* sw) : _id(id), _sw(sw)
+SubWindowController::SubWindowController(QMdiSubWindow* sw) : _sw(sw)
 {
     
 } 
 
 void SubWindowController::closeSubWindow()
 {
-    emit removeFromWindowsMap(_id, _sw);
+    emit removeFromWindowsMap(_sw);
     this->deleteLater();
 }

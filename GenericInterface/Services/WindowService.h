@@ -73,7 +73,7 @@ namespace genericinterface
     void subWindowActivated(QMdiSubWindow*);
 
   private slots:
-    void removeSubWindow(NodeId id, QMdiSubWindow* sw);
+    void removeSubWindow(QMdiSubWindow*);
     void swActivated(QMdiSubWindow*);
 	
   private:
@@ -90,16 +90,15 @@ namespace genericinterface
   {
       Q_OBJECT
   public:
-      SubWindowController(NodeId id, QMdiSubWindow* sw);
+      SubWindowController(QMdiSubWindow* sw);
 
   public slots:
       void closeSubWindow();
 
   signals:
-      void removeFromWindowsMap(NodeId id, QMdiSubWindow* sw);
+      void removeFromWindowsMap(QMdiSubWindow* sw);
 
   private:
-      NodeId _id;
       QMdiSubWindow* _sw;
   };
 }

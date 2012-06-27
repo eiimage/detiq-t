@@ -83,7 +83,7 @@ public:
      * \param image The image which is used
      */
     StandardImageWindow(const QString path, GenericInterface* gi, Image* image);
-    StandardImageWindow(const StandardImageWindow&);
+    StandardImageWindow(const StandardImageWindow&, bool crop = false);
 
 
     /*!
@@ -130,6 +130,8 @@ public slots:
     void showPixelsGrid();
     void showLineProfile();
     void showColumnProfile();
+    void crop();
+    void copycrop();
     
     void showHoveredPixelInformations(int x, int y) const;
     void showSelectedPixelInformations(int x, int y) const;

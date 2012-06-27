@@ -109,6 +109,7 @@ QStringList NodeListModel::mimeTypes() const {
     QStringList types;
     types << "application/detiqt.genericinterface.node";
     types << "application/detiqt.genericinterface.stdimgwnd";
+    types << "application/detiqt.genericinterface.stdimgwnd.copy";
     return types;
 }
 
@@ -132,13 +133,19 @@ QMimeData* NodeListModel::mimeData(const QModelIndexList& indexes ) const {
 bool NodeListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
     //std::cout << "NodeListModel::dropMimeData on row " << row << std::endl;
-    if (action == Qt::IgnoreAction)
+    if (action == Qt::IgnoreAction) {
         return true;
-    if (!data->hasFormat("application/detiqt.genericinterface.node")
-        && !data->hasFormat("application/detiqt.genericinterface.stdimgwnd"))
+    }
+    QString type = "application/detiqt.genericinterface.";
+    bool isNode = data->hasFormat(type + "node");
+    bool isStdimgwnd = data->hasFormat(type + "stdimgwnd") || data->hasFormat(type + "stdimgwnd.copy"); 
+    bool isCopy = data->hasFormat(type + "stdimgwnd.copy");
+    if (!isNode && !isStdimgwnd) {
         return false;
-    if (column > 0)
+    }
+    if (column > 0) {
         return false;
+    }
         
     int beginRow;
     if (row != -1)
@@ -148,8 +155,8 @@ bool NodeListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
     else
         beginRow = rowCount(QModelIndex());
         
-    if(data->hasFormat("application/detiqt.genericinterface.node")) {
-        QByteArray encodedData = data->data("application/detiqt.genericinterface.node");
+    if(isNode) {
+        QByteArray encodedData = data->data(type + "node");
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
         QList<QVariant> newNodes;
         int rows = 0;
@@ -169,14 +176,17 @@ bool NodeListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
             beginRow++;
         }
     }
-    else if(data->hasFormat("application/detiqt.genericinterface.stdimgwnd")){
-        QByteArray encodedData = data->data("application/detiqt.genericinterface.stdimgwnd");
+    else if(isStdimgwnd){
+        QByteArray encodedData = isCopy ? data->data(type + "stdimgwnd.copy") : data->data(type + "stdimgwnd");
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
         uintptr_t data;
         stream >> data;
         StandardImageWindow* siw = reinterpret_cast<StandardImageWindow*>(data);
         if(siw == NULL) {
             return false;
+        }
+        if(isCopy) {
+           siw = new StandardImageWindow(*siw, true); 
         }
         emit windowDropped(siw, beginRow);
     }
