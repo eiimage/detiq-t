@@ -86,10 +86,12 @@ NodeId WindowService::findNodeId(QMdiSubWindow* sw) const {
     
 void WindowService::swActivated(QMdiSubWindow* sw) {
     
+    QWidget* widget = sw ? sw->widget() : NULL;
+    emit activeWidgetChanged(widget);
+    
     NodeId id = findNodeId(sw);
     if(id != NodeId()) {
         _nav->setActiveNode(id);
-        emit subWindowActivated(sw);
     }
 }
 
@@ -156,6 +158,12 @@ Node* WindowService::addNodeIfNeeded(NodeId id, const Image* img, QString path, 
     return node;
 }
 
+void WindowService::signalMdiChange() const {
+    const QMdiSubWindow* sw = _mdi->currentSubWindow();
+    const QWidget* widget = sw ? sw->widget() : NULL;
+    emit activeWidgetChanged(widget);
+}
+
 void WindowService::addFile(const QString& path)
 {
     QMutexLocker locker(&_mutex);
@@ -191,6 +199,8 @@ void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd, int pos)
     _mdi->setActiveSubWindow(sw);
     sw->activateWindow();
     _nav->setActiveNode(id);
+    //signalMdiChange();
+
 }
 
 bool WindowService::addWidget(NodeId id, QWidget* widget)
@@ -218,6 +228,7 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
     _mdi->setActiveSubWindow(sw);
     sw->activateWindow();
     _nav->setActiveNode(id);
+    //signalMdiChange();
     return true;
 }
 
@@ -240,6 +251,7 @@ void WindowService::removeSubWindow(QMdiSubWindow* sw)
         //std::cout << "delete node" << std::endl;
         delete node;
     }
+    //signalMdiChange();
     //std::cout << "removeSubWindow::end" << std::endl;
     //this->updateDisplay();
 }

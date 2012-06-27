@@ -60,6 +60,7 @@ namespace genericinterface
     Node* addNodeIfNeeded(NodeId id, const Image* img, QString path, int pos = -1);
     bool validWindow(QMdiSubWindow* sw) const;
 	NodeId findNodeId(QMdiSubWindow* sw) const;
+    void signalMdiChange() const;
 
   public slots:
     void addFile(const QString& path);
@@ -70,7 +71,8 @@ namespace genericinterface
     void moveToNode(StandardImageWindow* siw, int pos = -1);
 
   signals:
-    void subWindowActivated(QMdiSubWindow*);
+    void activeWidgetChanged(const QWidget*) const;
+    
 
   private slots:
     void removeSubWindow(QMdiSubWindow*);

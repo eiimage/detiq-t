@@ -23,7 +23,11 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include "../GenericInterface.h"
+#include "../Service.h"
+
+namespace genericinterface {
+    class GenericInterface;
+}
 
 
 namespace genericinterface
@@ -38,7 +42,7 @@ namespace genericinterface
 		public slots:
 			void save(const QString& path = QString(), const QString& ext = QString());
 			void saveAs();
-	        void checkActionsValid(QMdiSubWindow* activeWindow);
+	        void checkActionsValid(const QWidget* activeWidget);
 		
 		private slots:
 			void chooseFile();

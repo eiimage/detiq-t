@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+#include "../GenericInterface.h"
 #include "FileService.h"
 #include "WindowService.h"
 
@@ -53,7 +53,7 @@ void FileService::connect (GenericInterface* gi)
 	
     //connexion des changements d'images
 	WindowService* ws = dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE));
-	QObject::connect(ws, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(checkActionsValid(QMdiSubWindow*)));
+	QObject::connect(ws, SIGNAL(activeWidgetChanged(const QWidget*)), this, SLOT(checkActionsValid(const QWidget*)));
 }
 
 void FileService::save(const QString& path, const QString& ext)
@@ -124,15 +124,14 @@ void FileService::chooseFile()
     }
 }
 
-void FileService::checkActionsValid(QMdiSubWindow* activeWindow)
+void FileService::checkActionsValid(const QWidget* activeWidget)
 {
-	StandardImageWindow* window = (activeWindow) ? dynamic_cast<StandardImageWindow*>(activeWindow->widget()) : NULL;
+    std::cout << "WindowService::activeWidgetChanged(" << reinterpret_cast<intptr_t>(activeWidget) << ")" << std::endl;
+	const StandardImageWindow* window = dynamic_cast<const StandardImageWindow*>(activeWidget);
 	if(window) {
-		//_save->setEnabled(true);
 		_saveAs->setEnabled(true);
 	}
 	else {
-		//_save->setEnabled(false);
 		_saveAs->setEnabled(false);
 	}
 }
