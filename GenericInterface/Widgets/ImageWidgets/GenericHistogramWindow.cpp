@@ -62,17 +62,17 @@ void GenericHistogramWindow::initStatusBar()
     font.setBold(true);
     _lImageName->setFont(font);*/
     
-    _lHoveredValue = new QLabel("Hovered: ");
+    _lHoveredValue = new QLabel(tr("Hovered") + " : ");
     font = _lHoveredValue->font();
     font.setPointSize(8);
     _lHoveredValue->setFont(font);
     
-    _lSelectedValue1 = new QLabel("Value1: ");
+    _lSelectedValue1 = new QLabel(tr("Value 1") + " : ");
     font = _lSelectedValue1->font();
     font.setPointSize(8);
     _lSelectedValue1->setFont(font);
     
-    _lSelectedValue2 = new QLabel("Value2: ");
+    _lSelectedValue2 = new QLabel(tr("Value 2") + " : ");
     font = _lSelectedValue2->font();
     font.setPointSize(8);
     _lSelectedValue2->setFont(font);
@@ -106,10 +106,7 @@ void GenericHistogramWindow::initStatusBar()
 
 void GenericHistogramWindow::showHoveredValue(unsigned int index, std::vector<int> values) const
 {
-	std::ostringstream oss;
-    oss << index;
-    std::string xs = oss.str();
-	_lHoveredValue->setText(QString::fromStdString("Hovered: " + xs + "\t") + formatValues(values));
+	_lHoveredValue->setText(tr("Hovered") + QString(" : %1\t").arg(index) + formatValues(values));
 }
 
 void GenericHistogramWindow::showLeftClickedValue(unsigned int index, std::vector<int> values) const
@@ -117,55 +114,29 @@ void GenericHistogramWindow::showLeftClickedValue(unsigned int index, std::vecto
 	std::ostringstream oss;
     oss << index;
     std::string xs = oss.str();
-	_lSelectedValue1->setText(QString::fromStdString("Value1: " + xs + "\t") + formatValues(values));
+	_lSelectedValue1->setText(tr("Value 1") + QString(" : %1\t").arg(index) + formatValues(values));
 }
 
 void GenericHistogramWindow::showRightClickedValue(unsigned int index, std::vector<int> values) const
 {
-	std::ostringstream oss;
-    oss << index;
-    std::string xs = oss.str();
-	_lSelectedValue2->setText(QString::fromStdString("Value2: " + xs + "\t") + formatValues(values));
+	_lSelectedValue2->setText(tr("Value 2") + QString(" : %1\t").arg(index) + formatValues(values));
 }
 
 QString GenericHistogramWindow::formatValues(std::vector<int> values) const
 {
 	std::ostringstream oss;
-	QString s = QString("");
+	QString res;
 
-  /*bool out = false;
-    if(value > 255)
-    out = true;*/
-  
-  for(unsigned int i = 0; i < values.size(); ++i)
-  {
-    //int n = /*out ?*/ 0 /*: (*(_view->getHistogram(i)))[value]*/;
-    oss.str("");
-    oss << values[i];
+    switch(values.size()) {
+        case 1 : res = tr("C: %1"); break;
+        case 2 : res = tr("C: %1, A: %2"); break;
+        case 3 : res = tr("R: %1, G: %2, B: %3"); break;
+        default: res = tr("R: %1, G: %2, B: %3, A: %4");
+    }
     
-    if(values.size() == 1)
-    {
-      if(i == 0)
-        s += QString::fromStdString(" C: " + oss.str());		
+    for(unsigned int i = 0; i<values.size() && i<4; ++i) {
+        res = res.arg(values[i]);
     }
-    else if(values.size() == 2)
-    {
-      if(i == 0)
-        s += QString::fromStdString(" C: " + oss.str());
-      else if(i == 1)
-        s += QString::fromStdString(" A: " + oss.str());			
-    }
-    else if(values.size() >= 3)
-    {
-      if(i == 0)
-        s += QString::fromStdString(" R: " + oss.str());
-      else if(i == 1)
-        s += QString::fromStdString(" G: " + oss.str());
-      else if(i == 2)
-        s += QString::fromStdString(" B: " + oss.str());
-      else if(i == 3)
-        s += QString::fromStdString(" A: " + oss.str());
-    }
-  }
-	return s;
+  
+	return res;
 }

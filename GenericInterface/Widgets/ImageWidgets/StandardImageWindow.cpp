@@ -31,25 +31,25 @@ StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* g
     : ImageWindow(path), _gi(gi), _ctrlPressed(false)
 {
     bool error = false;
-    std::string msg = "";
+    QString msg = "";
     try {
         _image = new Image(path.toStdString());
     }
     catch(const imagein::UnknownFormatException& e) {
         error = true;
-        msg = "Unknown file format !";
+        msg = tr("Unknown file format !");
     }
     catch(const imagein::ImageFileException& e) {
         error = true;
-        msg = e.getMsg();
+        msg = QString::fromStdString(e.getMsg());
     }
     catch(...) {
         error = true;
-        msg = "Unknown exception";
+        msg = tr("Unknown exception");
     }
     
     if(error) {
-        QMessageBox::critical(this, "Error while opening file", msg.c_str());
+        QMessageBox::critical(this, tr("Error while opening file"), msg);
         _image = new Image();
     }
     
@@ -154,15 +154,15 @@ void StandardImageWindow::init()
     
 	_menu = new ImageContextMenu(_imageView);
 	_imageView->setContextMenuPolicy(Qt::CustomContextMenu);
-	_menu->addAction("Histogram", this, SLOT(showHistogram()));
-	_menu->addAction("Horizontal Projection Histogram", this, SLOT(showHProjectionHistogram()));
-	_menu->addAction("Vertical Projection Histogram", this, SLOT(showVProjectionHistogram()));
-	_menu->addAction("Pixels Grid", this, SLOT(showPixelsGrid()));
-	_menu->addAction("Column Profile", this, SLOT(showColumnProfile()));
-	_menu->addAction("Line Profile", this, SLOT(showLineProfile()));
+	_menu->addAction(tr("Histogram"), this, SLOT(showHistogram()));
+	_menu->addAction(tr("Horizontal Projection Histogram"), this, SLOT(showHProjectionHistogram()));
+	_menu->addAction(tr("Vertical Projection Histogram"), this, SLOT(showVProjectionHistogram()));
+	_menu->addAction(tr("Pixels Grid"), this, SLOT(showPixelsGrid()));
+	_menu->addAction(tr("Column Profile"), this, SLOT(showColumnProfile()));
+	_menu->addAction(tr("Line Profile"), this, SLOT(showLineProfile()));
     _menu->addSeparator();
-	_menu->addAction("Crop", this, SLOT(crop()));
-	_menu->addAction("Copy & crop", this, SLOT(copycrop()));
+	_menu->addAction(tr("Crop"), this, SLOT(crop()));
+	_menu->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
 
 	QObject::connect(_imageView, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
     
@@ -200,7 +200,7 @@ void StandardImageWindow::showHistogram()
 void StandardImageWindow::showHProjectionHistogram()
 {
     bool ok;
-    int value = QInputDialog::getInt(this, "Select value", "What Value (0..255)?", 0, 0, 255, 1, &ok);
+    int value = QInputDialog::getInt(this, tr("Select value"), tr("Which value (0..255) ?"), 0, 0, 255, 1, &ok);
 
     if (ok)
     {
@@ -212,7 +212,7 @@ void StandardImageWindow::showHProjectionHistogram()
 void StandardImageWindow::showVProjectionHistogram()
 {
 	bool ok;
-	int value = QInputDialog::getInt(this, "Select value", "What Value (0..255)?", 0, 0, 255, 1, &ok);
+	int value = QInputDialog::getInt(this, tr("Select value"), tr("Which value (0..255) ?"), 0, 0, 255, 1, &ok);
 	
 	if(ok)
 	{
@@ -224,21 +224,21 @@ void StandardImageWindow::showVProjectionHistogram()
 void StandardImageWindow::showLineProfile()
 {
 	imagein::Rectangle rect(0, _selectedPixel->y(), _imageView->getImage()->getWidth(), 1);
-    RowWindow* histogramWnd = new RowWindow(_imageView->getImage(), rect, false, this->windowTitle() + " - Line Profile");
+    RowWindow* histogramWnd = new RowWindow(_imageView->getImage(), rect, false, this->windowTitle() + QString(" - ") + tr("Line Profile"));
     showGenericHistogram(histogramWnd);
 }
 
 void StandardImageWindow::showColumnProfile()
 {
 	imagein::Rectangle rect(_selectedPixel->x(), 0, 1, _imageView->getImage()->getHeight());
-    RowWindow* histogramWnd = new RowWindow(_imageView->getImage(), rect, true, this->windowTitle() + " - Line Profile");
+    RowWindow* histogramWnd = new RowWindow(_imageView->getImage(), rect, true, this->windowTitle() + QString(" - ")  + tr("Line Profile"));
     showGenericHistogram(histogramWnd);
 }
 
 void StandardImageWindow::showPixelsGrid()
 {
     GridWindow* grid = new GridWindow(_imageView->getImage());
-    grid->setWindowTitle(this->windowTitle() + QString::fromStdString(" - Pixels Grid"));
+    grid->setWindowTitle(this->windowTitle() + QString(" - ")  + tr("Pixels Grid"));
     WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
     ws->addWidget(ws->getNodeId(this), grid);
 }
@@ -262,77 +262,76 @@ void StandardImageWindow::copycrop() {
 
 void StandardImageWindow::initStatusBar()
 {
-  std::ostringstream oss;
-  oss << _imageView->pixmap().height();
-  std::string height = oss.str();
-  oss.str("");
-  oss << _imageView->pixmap().width();
-  std::string width = oss.str();
+  QString width = QString("%1").arg(_imageView->pixmap().width());
+  QString height = QString("%1").arg(_imageView->pixmap().height());
 	
   QFont font;
   _statusBar = new QStatusBar();
 
-  _lImageName = new QLabel(QString::fromStdString("Image: ") + ImageWindow::getTitleFromPath(_path));
+  _lImageName = new QLabel(tr("Image") + " : " + ImageWindow::getTitleFromPath(_path));
   font = _lImageName->font();
   font.setPointSize(8);
   font.setBold(true);
   _lImageName->setFont(font);
   
-  _lImageSize = new QLabel(QString::fromStdString("(" + width + " * " + height + ")"));
+  _lImageSize = new QLabel(QString("(%1x%2)").arg(width, height));
   font = _lImageSize->font();
   font.setPointSize(8);
   _lImageSize->setFont(font);
   
-  _lSelectedPixelInfo = new QLabel("Selected: ");
+  _lSelectedPixelInfo = new QLabel(tr("Selected") + " : ");
   font = _lSelectedPixelInfo->font();
   font.setPointSize(8);
   font.setBold(true);
   _lSelectedPixelInfo->setFont(font);
   
-  _lSelectedPixelPosition = new QLabel("");
+  _lSelectedPixelPosition = new QLabel(QString(""));
   font = _lSelectedPixelPosition->font();
   font.setPointSize(8);
   _lSelectedPixelPosition->setFont(font);
   
-  _lSelectedPixelColor = new QLabel("Color: ");
+  _lSelectedPixelColor = new QLabel(tr("Color") + " : ");
   font = _lSelectedPixelColor->font();
   font.setPointSize(8);
   _lSelectedPixelColor->setFont(font);
   
-  _lHoveredPixelInfo = new QLabel("Hovered: ");
+  _lHoveredPixelInfo = new QLabel(tr("Hovered") + " : ");
   font = _lHoveredPixelInfo->font();
   font.setBold(true);
   font.setPointSize(8);
   _lHoveredPixelInfo->setFont(font);
   
-  _lHoveredPixelPosition = new QLabel("");
+  _lHoveredPixelPosition = new QLabel(QString(""));
   font = _lHoveredPixelPosition->font();
   font.setPointSize(8);
   _lHoveredPixelPosition->setFont(font);
   
-  _lHoveredPixelColor = new QLabel("Color: ");
+  _lHoveredPixelColor = new QLabel(tr("Color") + " : ");
   font = _lHoveredPixelColor->font();
   font.setPointSize(8);
   _lHoveredPixelColor->setFont(font);
   
-  _lZoom = new QLabel("Zoom: 100%");
+  _lZoom = new QLabel(tr("Zoom") + " : 100%");
   font = _lZoom->font();
   font.setPointSize(8);
   _lZoom->setFont(font);
 
   _selectButton = new QToolButton(this);
+  _selectButton->setToolTip(tr("Selection mode"));
   _selectButton->setIcon(QIcon(":/images/tool-rect-select.png"));
   _selectButton->setCheckable(true);
   _selectButton->setAutoRaise(true);
   _selectButton->setIconSize (QSize(24, 24));
   
   _mouseButton = new QToolButton(this);
+  _mouseButton->setToolTip(tr("Hand mode"));
   _mouseButton->setIcon(QIcon(":/images/tool-smudge.png"));
   _mouseButton->setCheckable(true);
   _mouseButton->setAutoRaise(true);
   _mouseButton->setIconSize (QSize(24, 24));
   
   _selectAllButton = new QToolButton(this);
+  _selectAllButton->setToolTip(tr("Select all"));
   _selectAllButton->setIcon(QIcon(":/images/tool-align.png"));
   _selectAllButton->setCheckable(false);
   _selectAllButton->setAutoRaise(true);
@@ -418,47 +417,33 @@ void StandardImageWindow::showSelectedPixelInformations(int x, int y) const
 {
 	_selectedPixel->setX(x);
 	_selectedPixel->setY(y);
-	std::ostringstream oss;
-    oss << x;
-    std::string xs = oss.str();
-    oss.str("");
-    oss << y;
-    std::string ys = oss.str();
-	_lSelectedPixelPosition->setText(QString::fromStdString(xs + " * " + ys));
+	_lSelectedPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
 	
-	_lSelectedPixelColor->setText("Color:");
+	_lSelectedPixelColor->setText(tr("Color") + " : ");
 	const Image* im = _imageView->getImage();
 	for(unsigned int i = 0; i < im->getNbChannels(); i++)
 	{
-		oss.str("");
-        if(x>0 && y>0 && x<(int)im->getWidth() && y<(int)im->getHeight()) {
-            oss << (unsigned int) im->getPixel(x, y, i);
-        }
-		_lSelectedPixelColor->setText(_lSelectedPixelColor->text() + QString::fromStdString(" " + oss.str()));
+		try {
+            _lSelectedPixelColor->setText(_lSelectedPixelColor->text() + QString(" %1").arg(im->getPixel(x, y, i)) );
+		}
+		catch(std::out_of_range&) {
+		}
 	}
 }
 
 void StandardImageWindow::showHoveredPixelInformations(int x, int y) const
 {
-	std::ostringstream oss;
-    oss << x;
-    std::string xs = oss.str();
-    oss.str("");
-    oss << y;
-    std::string ys = oss.str();
-	_lHoveredPixelPosition->setText(QString::fromStdString(xs + " * " + ys));
+	_lHoveredPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
 	
-	_lHoveredPixelColor->setText("Color:");
+	_lHoveredPixelColor->setText(tr("Color") + " :");
 	const Image* im = _imageView->getImage();
 	for(unsigned int i = 0; i < im->getNbChannels(); i++)
 	{
-		oss.str("");
 		try {
-			oss << (unsigned int) im->getPixel(x, y, i);
+            _lHoveredPixelColor->setText(_lHoveredPixelColor->text() + QString(" %1").arg(im->getPixel(x, y, i)) );
 		}
 		catch(std::out_of_range&) {
 		}
-		_lHoveredPixelColor->setText(_lHoveredPixelColor->text() + QString::fromStdString(" " + oss.str()));
 	}
 }
 
@@ -489,10 +474,7 @@ void StandardImageWindow::zoom(int delta) {
 
 void StandardImageWindow::updateZoom(double z) const
 {
-	std::ostringstream oss;
-    oss << z;
-    std::string zs = oss.str();
-	_lZoom->setText(QString::fromStdString("Zoom: " + zs + "%"));
+	_lZoom->setText(tr("Zoom") + QString(" : %1\%").arg(z));
 }
 
 void StandardImageWindow::wheelEvent (QWheelEvent * event) {

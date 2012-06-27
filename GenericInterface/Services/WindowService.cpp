@@ -32,19 +32,19 @@ void WindowService::display(GenericInterface* gi)
 {
     _mdi = gi->initCentralWidget();
     _mdi->setActivationOrder(QMdiArea::CreationOrder);
-    _nav = new NavigationDock("Images", gi);
+    _nav = new NavigationDock(tr("Images"), gi);
     gi->addDockWidget(_navPos, _nav);
     
-    QAction* tile = gi->menu("&Window")->addAction("&Tile");
+    QAction* tile = gi->menu(tr("&Window"))->addAction(tr("&Tile windows"));
     tile->setIcon(QIcon(":/images/application-view-tile.png"));
     //tile->setShortcut(QKeySequence::Open);
-    gi->toolBar("tools")->addAction(tile);
+    gi->toolBar(tr("Tools"))->addAction(tile);
 	QObject::connect(tile, SIGNAL(triggered()), _mdi, SLOT(tileSubWindows()));
     
-    QAction* cascade = gi->menu("&Window")->addAction("&Cascade");
+    QAction* cascade = gi->menu(tr("&Window"))->addAction(tr("&Cascade windows"));
     cascade->setIcon(QIcon(":/images/application-cascade.png"));
     //tile->setShortcut(QKeySequence::Open);
-    gi->toolBar("tools")->addAction(cascade);
+    gi->toolBar(tr("Tools"))->addAction(cascade);
 	QObject::connect(cascade, SIGNAL(triggered()), _mdi, SLOT(cascadeSubWindows()));
 }
 
@@ -110,7 +110,7 @@ NodeId WindowService::getNodeId(QWidget* widget) const
 }
 
 Node* WindowService::findNode(NodeId id) {
-    std::cout << "findNode(id)::lock" << std::endl;
+    //std::cout << "findNode(id)::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     std::map<NodeId, Node*>::iterator it = _widgets.find(id);
     if(it == _widgets.end()) {
@@ -120,7 +120,7 @@ Node* WindowService::findNode(NodeId id) {
 }
 
 const Node* WindowService::getNode(NodeId id) const {
-    std::cout << "getNode(id)::lock" << std::endl;
+    //std::cout << "getNode(id)::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     std::map<NodeId, Node*>::const_iterator it = _widgets.find(id);
     if(it == _widgets.end()) {
@@ -130,7 +130,7 @@ const Node* WindowService::getNode(NodeId id) const {
 }
 
 const Node* WindowService::getNode(QWidget* widget) const {
-    std::cout << "getNode(widget)::lock" << std::endl;
+    //std::cout << "getNode(widget)::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     for(std::map<NodeId, Node*>::const_iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
     {
@@ -145,7 +145,7 @@ const Node* WindowService::getNode(QWidget* widget) const {
 }
 
 Node* WindowService::addNodeIfNeeded(NodeId id, const Image* img, QString path, int pos) {
-    std::cout << "addNodeIfNeeded::lock" << std::endl;
+    //std::cout << "addNodeIfNeeded::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     Node* node = findNode(id);
     if(node == NULL) {
@@ -171,12 +171,13 @@ void WindowService::addFile(const QString& path)
 
 void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd, int pos)
 {
-    std::cout << "addImage::lock" << std::endl;
+    //std::cout << "addImage::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     Node* node = addNodeIfNeeded(id, imgWnd->getImage(), imgWnd->getPath(), pos);
 
     QMdiSubWindow* sw = _mdi->addSubWindow(imgWnd);
     node->windows << sw;
+    sw->setWindowIcon(QIcon(":/images/applications-graphics-5.png"));
 
     SubWindowController* swc = new SubWindowController(sw);
 
@@ -202,6 +203,7 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
     
     QMdiSubWindow* sw = _mdi->addSubWindow(widget);
     node->windows << sw;
+    sw->setWindowIcon(QIcon(":/images/applications-utilities-2.png"));
 
     SubWindowController* swc = new SubWindowController(sw);
 
@@ -221,39 +223,41 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
 
 void WindowService::removeSubWindow(QMdiSubWindow* sw)
 {
-    std::cout << "removeSubWindow::lock" << std::endl;
+    //std::cout << "removeSubWindow::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     NodeId id = findNodeId(sw);
     Node* node = findNode(id);
     if(node == NULL) return;
     
-    std::cout << "node->windows.removeAll(" << sw << ")" << std::endl;
+    //std::cout << "node->windows.removeAll(" << sw << ")" << std::endl;
     node->windows.removeAll(sw);
 
     if (node->windows.empty()) {
-        std::cout << "remove node" << std::endl;
+        //std::cout << "remove node" << std::endl;
         _nav->removeNode(id);
-        std::cout << "erase node from widget map" << std::endl;
+        //std::cout << "erase node from widget map" << std::endl;
         _widgets.erase(id);
-        std::cout << "delete node" << std::endl;
+        //std::cout << "delete node" << std::endl;
         delete node;
     }
-    std::cout << "removeSubWindow::end" << std::endl;
+    //std::cout << "removeSubWindow::end" << std::endl;
     //this->updateDisplay();
 }
 
 void WindowService::removeId(NodeId id)
 {
-    std::cout << "removeId::lock" << std::endl;
+    //std::cout << "removeId::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     //std::cout << "removeId->" << std::endl;
     Node* node = findNode(id);
     if(node == NULL) return;
     
     if(node->windows.size() > 1) {
-        int answer = QMessageBox::question(_gi, "Attention", "You're going to close all the relative windows, are you sure you want to continue?", QMessageBox::Yes | QMessageBox::No);
+        int answer = QMessageBox::question(_gi, tr("Attention"), tr("You're going to close all the relative windows, are you sure you want to continue ?"), QMessageBox::Yes | QMessageBox::No);
         if(answer != QMessageBox::Yes) return;
     }
+
+    //std::cout << "closing " << node->windows.size() << " windows..." << std::endl;
     
     QList<QMdiSubWindow*> windows = node->windows;
     
@@ -274,7 +278,7 @@ void WindowService::removeId(NodeId id)
 
 void WindowService::moveToNode(StandardImageWindow* siw, int pos) {
     
-    std::cout << "moveToNode::lock" << std::endl;
+    //std::cout << "moveToNode::lock" << std::endl;
     QMutexLocker locker(&_mutex);
 
     Node* node = NULL;
@@ -298,7 +302,7 @@ void WindowService::moveToNode(StandardImageWindow* siw, int pos) {
     if(node->windows.empty()) {
         int index = _nav->removeNode(node->getId());
         _widgets.erase(node->getId());
-        std::cout << "erased node #" << index << " while droping on #" << pos << std::endl;
+        //std::cout << "erased node #" << index << " while droping on #" << pos << std::endl;
         if(index < pos) --pos;
         delete node;
     }
@@ -330,7 +334,7 @@ bool WindowService::validWindow(QMdiSubWindow* sw) const {
 
 void WindowService::updateDisplay()
 {
-    std::cout << "updateDisplay::lock" << std::endl;
+    //std::cout << "updateDisplay::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     const QList<NodeId>& selection = _nav->getSelection();
     

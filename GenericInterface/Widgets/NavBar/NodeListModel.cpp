@@ -64,12 +64,12 @@ bool NodeListModel::insertRows(int row, int count, const QModelIndex& parent) {
 
 bool NodeListModel::setData(const QModelIndex& index, const QVariant& value, int /*role*/) {
     if(index.row() < 0 || index.row() >= rowCount()) {
-        std::cout << "Set data out of bound" << std::endl;
+        //std::cout << "Set data out of bound" << std::endl;
         return false;
     }
     
     if(!value.canConvert<const Node*>()) {
-        std::cout << "Set data can't convert to const Node*" << std::endl;
+        //std::cout << "Set data can't convert to const Node*" << std::endl;
         return false;
     }
     

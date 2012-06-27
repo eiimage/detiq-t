@@ -53,9 +53,9 @@ RadioPanel::RadioPanel(int nb)
 
   if(nb == 3)
   {
-    names[0] = "R";
-    names[1] = "G";
-    names[2] = "B";
+    names[0] = tr("R");
+    names[1] = tr("G");
+    names[2] = tr("B");
   }
 
   QHBoxLayout* l = new QHBoxLayout();

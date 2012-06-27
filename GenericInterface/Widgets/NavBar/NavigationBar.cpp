@@ -46,14 +46,14 @@ NavigationBar::NavigationBar(QSize itemSize, Qt::Orientation orientation) : QLis
 }
 
 void NavigationBar::mousePressEvent(QMouseEvent* event) {
-    std::cout << "NavigationBar::mousePressEvent : " << event->x() << ':' << event->y() << std::endl;
+    //std::cout << "NavigationBar::mousePressEvent : " << event->x() << ':' << event->y() << std::endl;
     _mouseDown = true;
     _downPos = event->pos();
     QListView::mousePressEvent(event);
 }
 
 void NavigationBar::mouseReleaseEvent(QMouseEvent* event) {
-    std::cout << "NavigationBar::mouseReleaseEvent : " << event->x() << ':' << event->y() << std::endl;
+    //std::cout << "NavigationBar::mouseReleaseEvent : " << event->x() << ':' << event->y() << std::endl;
     
     if(_mouseDown) {
         QPoint upPos = event->pos();
@@ -99,14 +99,14 @@ QSize NavigationBar::sizeHint() const {
 }
 
 void NavigationBar::setOrientation(Qt::Orientation orientation) {
-    std::cout << "NavigationBar::setOrientation" << (orientation == Qt::Horizontal ? "Horizontal" : "Vertical") << std::endl;
+    //std::cout << "NavigationBar::setOrientation" << (orientation == Qt::Horizontal ? "Horizontal" : "Vertical") << std::endl;
     if(orientation == Qt::Horizontal) {
-        std::cout << "NavigationBar::setOrientation" << "Horizontal" << std::endl;
+        //std::cout << "NavigationBar::setOrientation" << "Horizontal" << std::endl;
         this->setFlow(LeftToRight);
         this->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred));
     }
     else {
-        std::cout << "NavigationBar::setOrientation" << "Vertical" << std::endl;
+        //std::cout << "NavigationBar::setOrientation" << "Vertical" << std::endl;
         this->setFlow(TopToBottom);
         this->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding));
     }

@@ -26,10 +26,10 @@ RowWindow::RowWindow(const imagein::Image* image, imagein::Rectangle rect, bool 
     : GenericHistogramWindow(new RowView(image, rect))
 {
     if(vertical) {
-        this->setWindowTitle(name + " - Column profile");
+        this->setWindowTitle(name + QString(" - ") + tr("Column profile"));
     }
     else {
-        this->setWindowTitle(name + " - Row profile");
+        this->setWindowTitle(name + QString(" - ") + tr("Row profile"));
     }
 }
 

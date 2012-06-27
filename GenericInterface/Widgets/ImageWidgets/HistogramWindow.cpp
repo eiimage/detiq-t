@@ -25,7 +25,7 @@ using namespace imagein;
 HistogramWindow::HistogramWindow(const Image* image, imagein::Rectangle rect, QString name)
     : GenericHistogramWindow(new HistogramView(image, rect))
 {
-    this->setWindowTitle(name + " - Histogram");
+    this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
 }
 
 HistogramWindow::~HistogramWindow()

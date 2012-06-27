@@ -31,7 +31,7 @@ ImageWindow::ImageWindow(QString path, Rectangle rect): QWidget(), _path(path)
 void ImageWindow::activated()
 {
     emit(selectRectChange(_applicationArea, this));
-    std::cout << "selectRectChange" << std::endl;
+    //std::cout << "selectRectChange" << std::endl;
 }
 
 void ImageWindow::setApplicationArea(imagein::Rectangle rect)

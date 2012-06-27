@@ -138,7 +138,7 @@ void StandardImageView::mousePressEvent(QMouseEvent * event)
                 QPoint p = event->pos() - _imgWidget->geometry().topLeft();
                 
                 int delta;
-                std::cout << "_move" << std::endl;
+                //std::cout << "_move" << std::endl;
                 
                 if( abs( delta = p.x() - rect.left() ) <= 2) {
                     posX -= delta;
@@ -171,7 +171,7 @@ void StandardImageView::mousePressEvent(QMouseEvent * event)
         
         
     }
-    std::cout << "selectMode = " << (_selectMode==SELECTMODE_MAKE ? "SELECTMODE_MAKE" : (_selectMode==SELECTMODE_MOVE ? "SELECTMODE_MOVE" : (_selectMode==SELECTMODE_RESIZE ? "SELECTMODE_RESIZE" : "SELECTMODE_NONE"))) << std::endl;
+    //std::cout << "selectMode = " << (_selectMode==SELECTMODE_MAKE ? "SELECTMODE_MAKE" : (_selectMode==SELECTMODE_MOVE ? "SELECTMODE_MOVE" : (_selectMode==SELECTMODE_RESIZE ? "SELECTMODE_RESIZE" : "SELECTMODE_NONE"))) << std::endl;
 }
 
 void StandardImageView::mouseDoubleClickEvent(QMouseEvent * event) {
@@ -186,7 +186,7 @@ void StandardImageView::mouseDoubleClickEvent(QMouseEvent * event) {
 
 void StandardImageView::mouseReleaseEvent(QMouseEvent * event)
 {
-    std::cout << "mouseReleaseEvent" << std::endl;
+    //std::cout << "mouseReleaseEvent" << std::endl;
     if(event->button() == Qt::LeftButton)
     {
         _selectMode = SELECTMODE_NONE;
@@ -429,7 +429,7 @@ void StandardImageView::scale(double scaleW, double scaleH) {
         //std::cout << sb->minimum() << ":" << sb->value() << ":" << sb->maximum() << std::endl;
         hsb->setValue(hsb->value() + offset.x());
         vsb->setValue(vsb->value() + offset.y());
-        std::cout << offset.x() << ":" << offset.y() << std::endl;
+        //std::cout << offset.x() << ":" << offset.y() << std::endl;
         
         redrawSelect();
     }
@@ -498,6 +498,9 @@ void StandardImageView::setImage(imagein::Image* image)
     _imgWidget->setImage(image);
     _imgWidget->setFixedSize(QSize(image->getWidth(), image->getHeight()));
     this->updateGeometry();
+    if(_mode == MODE_SELECT) {
+        redrawSelect();
+    }
     //_pixmap.convertFromImage(convertImage(image));
 
     //this->setPixmap(_pixmap_img);

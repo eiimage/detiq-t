@@ -29,17 +29,17 @@ using namespace genericinterface;
 
 void FileService::display (GenericInterface* gi)
 {
-    gi->toolBar("tools")->setIconSize(QSize(16,16));
+    gi->toolBar("Tools")->setIconSize(QSize(16,16));
     
-    _open = gi->menu("&File")->addAction("&Open");
+    _open = gi->menu(tr("&File"))->addAction(tr("&Open"));
     _open->setIcon(gi->style()->standardIcon(QStyle::SP_DialogOpenButton));
     _open->setShortcut(QKeySequence::Open);
-    gi->toolBar("tools")->addAction(_open);
-    _saveAs = gi->menu("&File")->addAction("Save &As");
+    gi->toolBar(tr("Tools"))->addAction(_open);
+    _saveAs = gi->menu(tr("&File"))->addAction(tr("Save &As"));
     _saveAs->setIcon(gi->style()->standardIcon(QStyle::SP_DialogSaveButton));
     _saveAs->setShortcut(QKeySequence::Save);
     _saveAs->setEnabled(false);
-    gi->toolBar("tools")->addAction(_saveAs);
+    gi->toolBar(tr("Tools"))->addAction(_saveAs);
 }
 
 void FileService::connect (GenericInterface* gi)
@@ -78,12 +78,12 @@ void FileService::save(const QString& path, const QString& ext)
 					}
                 }
                 else {
-                    QMessageBox::critical(_gi, "Bad object type", "Only images can be saved at the moment.");
+                    QMessageBox::critical(_gi, tr("Bad object type"), tr("Only images can be saved to a file."));
                 }
             }
         }
         catch(const char* s) {
-                QMessageBox::information(_gi, "plop", s);
+                QMessageBox::information(_gi, tr("Unknown exception"), s);
         }
 	}
 }
@@ -97,7 +97,7 @@ void FileService::saveAs()
         path = currentWindow->getPath();
     }
     QString selectedFilter;
-	QString file = QFileDialog::getSaveFileName(_gi, "Save a file", path, "Png image (*.png);;Bmp image (*.bmp);; Jpeg image(*.jpg)", &selectedFilter);
+	QString file = QFileDialog::getSaveFileName(_gi, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)"), &selectedFilter);
 
 	QString ext = selectedFilter.right(5).left(4);
 
@@ -115,7 +115,7 @@ void FileService::chooseFile()
     if(currentWindow != NULL) {
         path = currentWindow->getPath();
     }
-    QStringList files = QFileDialog::getOpenFileNames(_gi, "Open a file", path, "Images (*.png *.bmp *.jpg *.jpeg)");
+    QStringList files = QFileDialog::getOpenFileNames(_gi, tr("Open a file"), path, tr("Images (*.png *.bmp *.jpg *.jpeg)"));
     
     foreach(QString file, files) {
         if(file != "") {

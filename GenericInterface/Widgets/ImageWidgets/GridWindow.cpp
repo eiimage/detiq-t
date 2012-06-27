@@ -27,7 +27,7 @@
 using namespace imagein;
 using namespace genericinterface;
 
-GridWindow::GridWindow(const imagein::Image* img) : ImageWindow("")
+GridWindow::GridWindow(const imagein::Image* img) : ImageWindow(tr(""))
 {
   QVBoxLayout* box = new QVBoxLayout;
 

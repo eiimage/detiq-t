@@ -18,6 +18,7 @@
 */
 
 #include <QApplication>
+#include <QTranslator>
 
 #include <GenericInterface.h>
 #include "BasicAlgorithmService.h"

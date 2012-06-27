@@ -42,7 +42,7 @@ NavigationDock::NavigationDock(const QString & title, QWidget * parent, Qt::Wind
     _contextMenu = new QMenu(this);
 
     /* Context Menu */
-    _contextMenu->addAction("Close all image from the selection", this, SLOT(closeSelection()));
+    _contextMenu->addAction(tr("Close all image from the selection"), this, SLOT(closeSelection()));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
 

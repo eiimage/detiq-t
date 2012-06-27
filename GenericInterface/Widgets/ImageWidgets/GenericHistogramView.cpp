@@ -39,13 +39,13 @@ void GenericHistogramView::init(const imagein::Image* image)
 {
   this->setMouseTracking(true); //Switch on mouse tracking (no need to press button)
 
-  _qwtPlot->setTitle("Histogram");
+  _qwtPlot->setTitle(tr("Histogram"));
   
   _qwtPlot->setCanvasBackground(QColor(255,255,255));
   _qwtPlot->plotLayout()->setAlignCanvasToScales(true);
 
-  _qwtPlot->setAxisTitle(QwtPlot::yLeft, "Number of specimen");
-  _qwtPlot->setAxisTitle(QwtPlot::xBottom, "Pixel value");
+  _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Number of specimen"));
+  _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Pixel value"));
   _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, 256);
 
 	QwtLegend* legend = new QwtLegend();
@@ -121,24 +121,24 @@ void GenericHistogramView::populate(const imagein::Image* image)
 		{
 			case 0:
 				if(image->getNbChannels() == 1 || image->getNbChannels() == 2)
-					graphicalHisto = new GraphicalHistogram("Black", Qt::black);
+					graphicalHisto = new GraphicalHistogram(tr("Black"), Qt::black);
 				else
-					graphicalHisto = new GraphicalHistogram("Red", Qt::red);
+					graphicalHisto = new GraphicalHistogram(tr("Red"), Qt::red);
 			break;
 			case 1:
 				if(image->getNbChannels() == 1 || image->getNbChannels() == 2)
-					graphicalHisto = new GraphicalHistogram("Alpha", Qt::white);
+					graphicalHisto = new GraphicalHistogram(tr("Alpha"), Qt::white);
 				else
-					graphicalHisto = new GraphicalHistogram("Green", Qt::green);
+					graphicalHisto = new GraphicalHistogram(tr("Green"), Qt::green);
 			break;
 			case 2:
-				graphicalHisto = new GraphicalHistogram("Blue", Qt::blue);
+				graphicalHisto = new GraphicalHistogram(tr("Blue"), Qt::blue);
 			break;
 			case 3:
-				graphicalHisto = new GraphicalHistogram("Alpha", Qt::black);
+				graphicalHisto = new GraphicalHistogram(tr("Alpha"), Qt::black);
 			break;
 			default:
-				graphicalHisto = new GraphicalHistogram("Default", Qt::black);
+				graphicalHisto = new GraphicalHistogram(tr("Channel"), Qt::black);
 		}
 		//graphicalHisto->setValues(sizeof(values) / sizeof(int), values);
 		//graphicalHisto->setValues(histogram);

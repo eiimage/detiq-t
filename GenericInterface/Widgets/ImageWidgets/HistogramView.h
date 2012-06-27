@@ -31,7 +31,8 @@ namespace genericinterface
      * This class manages via HistogramPicker the mouse events.
      */
     class HistogramView : public GenericHistogramView
-    {	
+    {
+    Q_OBJECT
     public:
 		/*!
 		 * \brief Default constructor

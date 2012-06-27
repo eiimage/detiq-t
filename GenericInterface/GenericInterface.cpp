@@ -31,6 +31,8 @@ GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _n
     addService(WINDOW_SERVICE, new WindowService(navPos));
     addService(UTILITY_SERVICE, new UtilityService);
 
+    this->setWindowIcon(QIcon(":/images/image-x-generic.png"));
+
     if (name != "")
         setWindowTitle(name);
 }
@@ -95,10 +97,9 @@ int GenericInterface::addNewService(Service* s)
     catch (ServiceConnectionException e)
     {
       Log::info(e.what());
-      QMessageBox::critical(this, "IntÃ©gritÃ© de la fenÃªtre", "L'ajout d'un nouveau service ne s'est pas "
-                                                            "dÃ©roulÃ©e correctement, il est possible qu'elle "
-                                                            "ne prÃ©sente pas toutes les fonctionnalitÃ©s "
-                                                            "attendues");
+      QMessageBox::critical(this, 
+      tr("Interface's integrity compromised"),
+      tr("An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations."));
     }
     
 	return id;
@@ -137,10 +138,9 @@ void GenericInterface::run(bool shw)
 
   if (fail)
   {
-    QMessageBox::critical(this, "IntÃ©gritÃ© de la fenÃªtre", "La construction de l'application ne s'est pas "
-                                                            "dÃ©roulÃ©e correctement, il est possible qu'elle "
-                                                            "ne prÃ©sente pas toutes les fonctionnalitÃ©s "
-                                                            "attendues");
+      QMessageBox::critical(this, 
+      tr("Interface's integrity compromised"),
+      tr("An error occurred in the addition of a service. The interface may not offer all the expected features. See the log file for more informations."));
   }
 
   // Now that everything is added and connected, we add the last elements
@@ -176,9 +176,9 @@ QMenu* GenericInterface::menu(QString name)
     }
     else
     {
-        if(_menus.find("&Window") != _menus.end()) {
+        if(_menus.find(tr("&Window")) != _menus.end()) {
             res = new QMenu(name, this);
-            menuBar()->insertMenu(_menus["&Window"]->menuAction(), res);
+            menuBar()->insertMenu(_menus[tr("&Window")]->menuAction(), res);
         }
         else {
             res = menuBar()->addMenu(name);
@@ -209,7 +209,7 @@ QToolBar* GenericInterface::toolBar(QString name)
 void GenericInterface::finalizeInterface()
 {
   // Add the Exit action
-  QAction* actionExit = this->menu("&File")->addAction("&Exit");
+  QAction* actionExit = this->menu(tr("&File"))->addAction(tr("&Exit"));
   QObject::connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
   /*QAction* actionQt = this->menu("?")->addAction("About Qt");

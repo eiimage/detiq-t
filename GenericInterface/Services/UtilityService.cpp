@@ -27,11 +27,11 @@ void UtilityService::display(GenericInterface* gi)
 	_gi = gi;
 
 	//ajout des actions dans le menu show
-	_showMenu = _gi->menu("&Show");
-	_showHistogram = _showMenu->addAction("Histogram");
-	_showHProjectionHistogram = _showMenu->addAction("Horizontal projection histogram");
-	_showVProjectionHistogram = _showMenu->addAction("Vertical projection histogram");
-	_showPixelsGrid = _showMenu->addAction("Pixels grid");
+	_showMenu = _gi->menu(tr("&Show"));
+	_showHistogram = _showMenu->addAction(tr("Histogram"));
+	_showHProjectionHistogram = _showMenu->addAction(tr("Horizontal projection histogram"));
+	_showVProjectionHistogram = _showMenu->addAction(tr("Vertical projection histogram"));
+	_showPixelsGrid = _showMenu->addAction(tr("Pixels grid"));
 	
 	_showHistogram->setEnabled(false);
 	_showHProjectionHistogram->setEnabled(false);

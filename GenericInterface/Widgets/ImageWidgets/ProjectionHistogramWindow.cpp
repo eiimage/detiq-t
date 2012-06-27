@@ -26,9 +26,9 @@ ProjectionHistogramWindow::ProjectionHistogramWindow(const imagein::Image* image
     : GenericHistogramWindow(new ProjectionHistogramView(image, rect, value, horizontal))
 {
 	if(horizontal)
-        this->setWindowTitle(name + " - Horizontal Projection Histogram");
+        this->setWindowTitle(name + QString(" - ") + tr("Horizontal Projection Histogram"));
 	else
-        this->setWindowTitle(name + " - Vertical Projection Histogram");
+        this->setWindowTitle(name + QString(" - ") + tr("Vertical Projection Histogram"));
 }
 
 ProjectionHistogramWindow::~ProjectionHistogramWindow()

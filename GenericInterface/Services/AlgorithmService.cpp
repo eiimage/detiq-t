@@ -34,7 +34,7 @@ AlgorithmService::AlgorithmService()
 
 void AlgorithmService::display(GenericInterface* gi)
 {
-  _toolBar = gi->toolBar("Algorithm");
+  _toolBar = gi->toolBar(tr("Algorithm"));
 }
 
 void AlgorithmService::connect(GenericInterface* gi)

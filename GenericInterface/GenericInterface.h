@@ -59,11 +59,12 @@ namespace genericinterface
 {
   class GenericInterface : public QMainWindow
   {
+    Q_OBJECT
 	public:
 	
 	enum { FILE_SERVICE = 0, WINDOW_SERVICE, UTILITY_SERVICE }; 
 
-    GenericInterface(QString name = "", Qt::DockWidgetArea navPos = Qt::LeftDockWidgetArea);
+    GenericInterface(QString name = tr(""), Qt::DockWidgetArea navPos = Qt::LeftDockWidgetArea);
 
     /**
     * @brief Add a new service to the generic interface and returns its id

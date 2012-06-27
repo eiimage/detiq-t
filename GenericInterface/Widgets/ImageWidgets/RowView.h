@@ -32,6 +32,7 @@ namespace genericinterface
      */
     class RowView : public GenericHistogramView
     {
+    Q_OBJECT
     public:
 		/*!
 		 * \brief Default constructor
