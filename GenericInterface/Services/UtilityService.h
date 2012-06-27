@@ -42,7 +42,7 @@ namespace genericinterface
 			void showVProjectionHistogram();
 			void showPixelsGrid();
 			
-			void checkActionsValid(QMdiSubWindow* activeWindow);
+			void checkActionsValid(const QWidget* activeWidget);
 		signals:
 
 		private:

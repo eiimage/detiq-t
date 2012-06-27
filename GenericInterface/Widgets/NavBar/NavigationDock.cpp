@@ -60,7 +60,7 @@ NavigationDock::NavigationDock(const QString & title, QWidget * parent, Qt::Wind
     _view = new NavigationBar(itemSize, Qt::Horizontal);
     QObject::connect(_view, SIGNAL(itemClicked(const QModelIndex&, QPoint, QPoint)), this, SLOT(itemClicked(const QModelIndex&, QPoint, QPoint)));
     //QObject::connect(_view, SIGNAL(removeNode(NodeId)), this, SIGNAL(removeId(NodeId)));
-    QObject::connect(_view, SIGNAL(resized()), this, SLOT(listResized));
+    QObject::connect(_view, SIGNAL(resized()), this, SLOT(listResized()));
     
     //this->setFixedWidth(100);
     //_view->setFixedWidth(96);

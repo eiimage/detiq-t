@@ -49,7 +49,7 @@ void UtilityService::connect(GenericInterface* gi)
 	
 	//connexion des changements d'images
 	WindowService* ws = dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE));
-	QObject::connect(ws, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(checkActionsValid(QMdiSubWindow*)));
+	QObject::connect(ws, SIGNAL(activeWidgetChanged(const QWidget*)), this, SLOT(checkActionsValid(const QWidget*)));
 }
 
 void UtilityService::showHistogram()
@@ -92,9 +92,9 @@ void UtilityService::showPixelsGrid()
 	}
 }
 
-void UtilityService::checkActionsValid(QMdiSubWindow* activeWindow)
+void UtilityService::checkActionsValid(const QWidget* activeWidget)
 {
-	StandardImageWindow* window = (activeWindow) ? dynamic_cast<StandardImageWindow*>(activeWindow->widget()) : NULL;
+	const StandardImageWindow* window = dynamic_cast<const StandardImageWindow*>(activeWidget);
 	if(window) {
 		_showHistogram->setEnabled(true);
 		_showHProjectionHistogram->setEnabled(true);
