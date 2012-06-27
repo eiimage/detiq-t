@@ -31,8 +31,21 @@ WindowService::WindowService(Qt::DockWidgetArea navPos) : _navPos(navPos),  _mut
 void WindowService::display(GenericInterface* gi)
 {
     _mdi = gi->initCentralWidget();
+    _mdi->setActivationOrder(QMdiArea::CreationOrder);
     _nav = new NavigationDock("Images", gi);
     gi->addDockWidget(_navPos, _nav);
+    
+    QAction* tile = gi->menu("&Window")->addAction("&Tile");
+    tile->setIcon(QIcon(":/images/application-view-tile.png"));
+    //tile->setShortcut(QKeySequence::Open);
+    gi->toolBar("tools")->addAction(tile);
+	QObject::connect(tile, SIGNAL(triggered()), _mdi, SLOT(tileSubWindows()));
+    
+    QAction* cascade = gi->menu("&Window")->addAction("&Cascade");
+    cascade->setIcon(QIcon(":/images/application-cascade.png"));
+    //tile->setShortcut(QKeySequence::Open);
+    gi->toolBar("tools")->addAction(cascade);
+	QObject::connect(cascade, SIGNAL(triggered()), _mdi, SLOT(cascadeSubWindows()));
 }
 
 void WindowService::connect(GenericInterface* gi)

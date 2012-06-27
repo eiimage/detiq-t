@@ -61,7 +61,7 @@ namespace genericinterface
   {
 	public:
 	
-	enum { WINDOW_SERVICE, FILE_SERVICE, UTILITY_SERVICE }; 
+	enum { FILE_SERVICE = 0, WINDOW_SERVICE, UTILITY_SERVICE }; 
 
     GenericInterface(QString name = "", Qt::DockWidgetArea navPos = Qt::LeftDockWidgetArea);
 
@@ -73,8 +73,8 @@ namespace genericinterface
     * gives a set of minimalist services, identify by an integer :</p>
     *
     * <ul>
-    *   <li> WindowService : 0 (WINDOW_SERVICE)
-    *   <li> FileService : 1 (FILE_SERVICE)
+    *   <li> FileService : 0 (FILE_SERVICE)
+    *   <li> WindowService : 1 (WINDOW_SERVICE)
     *   <li> UtilityService : 2 (UTILITY_SERVICE)
     * </ul>
     *

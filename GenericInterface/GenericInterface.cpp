@@ -27,8 +27,8 @@ inline void initResource_res() { Q_INIT_RESOURCE(res); }
 GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _nbServices(3)
 {
     initResource_res();
-    addService(WINDOW_SERVICE, new WindowService(navPos));
     addService(FILE_SERVICE, new FileService);
+    addService(WINDOW_SERVICE, new WindowService(navPos));
     addService(UTILITY_SERVICE, new UtilityService);
 
     if (name != "")
@@ -176,7 +176,13 @@ QMenu* GenericInterface::menu(QString name)
     }
     else
     {
-        res = menuBar()->addMenu(name);
+        if(_menus.find("&Window") != _menus.end()) {
+            res = new QMenu(name, this);
+            menuBar()->insertMenu(_menus["&Window"]->menuAction(), res);
+        }
+        else {
+            res = menuBar()->addMenu(name);
+        }
         _menus[name] = res;
     }
 

@@ -29,6 +29,8 @@ using namespace genericinterface;
 
 void FileService::display (GenericInterface* gi)
 {
+    gi->toolBar("tools")->setIconSize(QSize(16,16));
+    
     _open = gi->menu("&File")->addAction("&Open");
     _open->setIcon(gi->style()->standardIcon(QStyle::SP_DialogOpenButton));
     _open->setShortcut(QKeySequence::Open);
