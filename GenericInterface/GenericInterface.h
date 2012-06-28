@@ -32,6 +32,7 @@
 #include <QToolBar>
 #include <QString>
 #include <QApplication>
+#include <QSettings>
 
 namespace genericinterface
 {
@@ -159,6 +160,8 @@ namespace genericinterface
     */
     virtual QToolBar* toolBar(QString name);
 
+    inline QSettings* settings() { return _settings; }
+
 
   protected:
     /**
@@ -167,6 +170,7 @@ namespace genericinterface
     std::map<int, Service*> _services;
     std::map<QString, QMenu*> _menus;
     std::map<QString, QToolBar*> _toolBars;
+    QSettings* _settings;
 	
 	int _nbServices;
 	

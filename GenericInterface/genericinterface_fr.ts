@@ -54,6 +54,10 @@
         <source>Images (*.png *.bmp *.jpg *.jpeg)</source>
         <translation>Images (*.png *.bmp *.jpg *.jpeg)</translation>
     </message>
+    <message>
+        <source>&amp;%1 %2</source>
+        <translation>&amp;%1 %2</translation>
+    </message>
 </context>
 <context>
     <name>genericinterface::GenericHistogramView</name>
@@ -144,7 +148,7 @@
     </message>
     <message>
         <source>&amp;Window</source>
-        <translation>&amp;Fenêtre</translation>
+        <translation>Fe&amp;nêtre</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -345,7 +349,7 @@
     </message>
     <message>
         <source>&amp;Window</source>
-        <translation>&amp;Fenêtre</translation>
+        <translation>Fe&amp;nêtre</translation>
     </message>
     <message>
         <source>&amp;Tile windows</source>

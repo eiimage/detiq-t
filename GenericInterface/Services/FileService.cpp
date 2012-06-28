@@ -30,6 +30,8 @@ using namespace genericinterface;
 
 void FileService::display (GenericInterface* gi)
 {
+
+    _gi = gi;
     gi->toolBar("Tools")->setIconSize(QSize(16,16));
     
     _open = gi->menu(tr("&File"))->addAction(tr("&Open"));
@@ -128,8 +130,7 @@ void FileService::saveAs()
 
 void FileService::loadFiles(const QStringList &filenames) {
     
-    QSettings settings("DETIQ-T", "GenericInterface");
-    QStringList recentFiles = settings.value("recentFileList").toStringList();
+    QStringList recentFiles = _gi->settings()->value("recentFileList").toStringList();
 
     foreach(QString filename, filenames) {
         if(filename != "") {
@@ -141,13 +142,12 @@ void FileService::loadFiles(const QStringList &filenames) {
         }
     }
     
-    settings.setValue("recentFileList", recentFiles);
+    _gi->settings()->setValue("recentFileList", recentFiles);
     updateRecentFileActions();
 }
 
 void FileService::updateRecentFileActions() {
-    QSettings settings("DETIQ-T", "GenericInterface");
-    QStringList recentFiles = settings.value("recentFileList").toStringList();
+    QStringList recentFiles = _gi->settings()->value("recentFileList").toStringList();
 
     int numRecentFiles = qMin(recentFiles.size(), (int)MaxRecentFiles);
 

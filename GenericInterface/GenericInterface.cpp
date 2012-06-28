@@ -27,6 +27,13 @@ inline void initResource_res() { Q_INIT_RESOURCE(res); }
 GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _nbServices(3)
 {
     initResource_res();
+
+    QString org = QCoreApplication::organizationName();
+    if(org.isEmpty()) org = "detiq-t";
+    QString app = QCoreApplication::applicationName();
+    if(app.isEmpty()) app = "genericinterface";
+    _settings = new QSettings(org, app);
+
     addService(FILE_SERVICE, new FileService);
     addService(WINDOW_SERVICE, new WindowService(navPos));
     addService(UTILITY_SERVICE, new UtilityService);

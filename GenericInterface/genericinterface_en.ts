@@ -12,59 +12,66 @@
 <context>
     <name>genericinterface::FileService</name>
     <message>
-        <location filename="Services/FileService.cpp" line="34"/>
-        <location filename="Services/FileService.cpp" line="38"/>
+        <location filename="Services/FileService.cpp" line="37"/>
+        <location filename="Services/FileService.cpp" line="41"/>
+        <location filename="Services/FileService.cpp" line="47"/>
+        <location filename="Services/FileService.cpp" line="52"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="34"/>
+        <location filename="Services/FileService.cpp" line="37"/>
         <source>&amp;Open</source>
         <translation>&amp;Open</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="37"/>
-        <location filename="Services/FileService.cpp" line="42"/>
+        <location filename="Services/FileService.cpp" line="40"/>
+        <location filename="Services/FileService.cpp" line="45"/>
         <source>Tools</source>
         <translation>Tools</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="38"/>
+        <location filename="Services/FileService.cpp" line="41"/>
         <source>Save &amp;As</source>
         <translation>Save &amp;As</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="81"/>
+        <location filename="Services/FileService.cpp" line="102"/>
         <source>Bad object type</source>
         <translation>Bad object type</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="81"/>
+        <location filename="Services/FileService.cpp" line="102"/>
         <source>Only images can be saved to a file.</source>
         <translation>Only images can be saved to a file.</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="86"/>
+        <location filename="Services/FileService.cpp" line="107"/>
         <source>Unknown exception</source>
         <translation>Unknown exception</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="100"/>
+        <location filename="Services/FileService.cpp" line="121"/>
         <source>Save a file</source>
         <translation>Save a file</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="100"/>
+        <location filename="Services/FileService.cpp" line="121"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)</source>
         <translation>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="118"/>
+        <location filename="Services/FileService.cpp" line="155"/>
+        <source>&amp;%1 %2</source>
+        <translation>&amp;%1 %2</translation>
+    </message>
+    <message>
+        <location filename="Services/FileService.cpp" line="175"/>
         <source>Open a file</source>
         <translation>Open a file</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="118"/>
+        <location filename="Services/FileService.cpp" line="175"/>
         <source>Images (*.png *.bmp *.jpg *.jpeg)</source>
         <translation>Images (*.png *.bmp *.jpg *.jpeg)</translation>
     </message>
@@ -165,33 +172,34 @@
 <context>
     <name>genericinterface::GenericInterface</name>
     <message>
-        <location filename="GenericInterface.cpp" line="101"/>
-        <location filename="GenericInterface.cpp" line="142"/>
+        <location filename="GenericInterface.cpp" line="108"/>
+        <location filename="GenericInterface.cpp" line="149"/>
         <source>Interface&apos;s integrity compromised</source>
         <translation>Interface&apos;s integrity compromised</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="102"/>
+        <location filename="GenericInterface.cpp" line="109"/>
         <source>An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations.</source>
         <translation>An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations.</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="143"/>
+        <location filename="GenericInterface.cpp" line="150"/>
         <source>An error occurred in the addition of a service. The interface may not offer all the expected features. See the log file for more informations.</source>
         <translation>An error occurred in the addition of a service. The interface may not offer all the expected features. See the log file for more informations.</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="179"/>
+        <location filename="GenericInterface.cpp" line="186"/>
         <source>&amp;Window</source>
         <translation>&amp;Window</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="212"/>
+        <location filename="GenericInterface.cpp" line="219"/>
+        <location filename="GenericInterface.cpp" line="220"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="212"/>
+        <location filename="GenericInterface.cpp" line="220"/>
         <source>&amp;Exit</source>
         <translation>&amp;Exit</translation>
     </message>
@@ -365,8 +373,8 @@
     <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="293"/>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="309"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="422"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="438"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="423"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="439"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>
@@ -377,7 +385,7 @@
     </message>
     <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="314"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="477"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="478"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
@@ -392,7 +400,7 @@
         <translation>Hand mode</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="334"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="335"/>
         <source>Select all</source>
         <translation>Select all</translation>
     </message>
@@ -455,12 +463,12 @@
         <translation>&amp;Cascade windows</translation>
     </message>
     <message>
-        <location filename="Services/WindowService.cpp" line="256"/>
+        <location filename="Services/WindowService.cpp" line="268"/>
         <source>Attention</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="Services/WindowService.cpp" line="256"/>
+        <location filename="Services/WindowService.cpp" line="268"/>
         <source>You&apos;re going to close all the relative windows, are you sure you want to continue ?</source>
         <translation>You&apos;re going to close all the relative windows, are you sure you want to continue ?</translation>
     </message>
