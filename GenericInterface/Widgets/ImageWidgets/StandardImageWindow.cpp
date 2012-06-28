@@ -452,7 +452,7 @@ void StandardImageWindow::zoom(int delta) {
     //double wOrigin = _imageView->pixmap().width();
     //double hOrigin = _imageView->pixmap().height();
     const double coef = 1.4142135623730950488016887242096980785696718753769480;
-    if(delta < 0 && _imageView->sizeHint().width() > 16) //Zoom out
+    if(delta < 0 && _imageView->widget()->width() > 16) //Zoom out
     {
         _zoomFactor /= coef;
     }
