@@ -329,6 +329,7 @@ void StandardImageWindow::initStatusBar()
   _mouseButton->setCheckable(true);
   _mouseButton->setAutoRaise(true);
   _mouseButton->setIconSize (QSize(24, 24));
+  _mouseButton->setChecked(true);
   
   _selectAllButton = new QToolButton(this);
   _selectAllButton->setToolTip(tr("Select all"));
