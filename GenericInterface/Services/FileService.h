@@ -46,16 +46,24 @@ namespace genericinterface
 		
 		private slots:
 			void chooseFile();
+            void openRecentFile();
 
 		signals:
 			void fileChosen(const QString& path);
 
 		private:
+
+            void loadFiles(const QStringList &fileNames);
+            void updateRecentFileActions();
+
 			QAction* _open;
 			QAction* _save;
 			QAction* _saveAs;
 
 			GenericInterface* _gi;
+            enum { MaxRecentFiles = 5 };
+            QAction *recentFileActs[MaxRecentFiles];
+            QAction* separatorAct;
 	};
 }
 

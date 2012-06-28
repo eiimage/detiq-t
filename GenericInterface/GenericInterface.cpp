@@ -209,6 +209,7 @@ QToolBar* GenericInterface::toolBar(QString name)
 void GenericInterface::finalizeInterface()
 {
   // Add the Exit action
+  this->menu(tr("&File"))->addSeparator();
   QAction* actionExit = this->menu(tr("&File"))->addAction(tr("&Exit"));
   QObject::connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
 

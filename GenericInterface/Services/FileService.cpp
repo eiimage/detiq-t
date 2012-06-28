@@ -24,6 +24,7 @@
 
 #include <QMessageBox>
 #include <QDebug>
+#include <QSettings>
 
 using namespace genericinterface;
 
@@ -40,6 +41,21 @@ void FileService::display (GenericInterface* gi)
     _saveAs->setShortcut(QKeySequence::Save);
     _saveAs->setEnabled(false);
     gi->toolBar(tr("Tools"))->addAction(_saveAs);
+
+    separatorAct = gi->menu(tr("&File"))->addSeparator();
+    for (int i = 0; i < MaxRecentFiles; ++i) {
+        recentFileActs[i] = new QAction(this);
+        recentFileActs[i]->setVisible(false);
+        recentFileActs[i]->setShortcut(QKeySequence(QString("Ctrl+%1").arg(i+1)));
+        gi->menu(tr("&File"))->addAction(recentFileActs[i]);
+    }
+   
+    //gi->menu(tr("&File"))->addSeparator();
+    //_open = gi->menu(tr("&File"))->addAction(tr("E&xit"));
+    //_open->setIcon(gi->style()->standardIcon(QStyle::SP_DialogCloseButton));
+    //_open->setShortcut(QKeySequence::Quit);
+
+    updateRecentFileActions();
 }
 
 void FileService::connect (GenericInterface* gi)
@@ -48,6 +64,9 @@ void FileService::connect (GenericInterface* gi)
 	QObject::connect(_open, SIGNAL(triggered()), this, SLOT(chooseFile()));
 	//QObject::connect(_save, SIGNAL(triggered()), this, SLOT(save()));
 	QObject::connect(_saveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
+    for (int i = 0; i < MaxRecentFiles; ++i) {
+        QObject::connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    }
   
 	QObject::connect(this, SIGNAL(fileChosen(const QString&)), dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE)), SLOT(addFile(const QString&)));
 	
@@ -107,6 +126,44 @@ void FileService::saveAs()
 	}
 }
 
+void FileService::loadFiles(const QStringList &filenames) {
+    
+    QSettings settings("DETIQ-T", "GenericInterface");
+    QStringList recentFiles = settings.value("recentFileList").toStringList();
+
+    foreach(QString filename, filenames) {
+        if(filename != "") {
+            recentFiles.removeAll(filename);
+            recentFiles.prepend(filename);
+            while (recentFiles.size() > MaxRecentFiles)
+                recentFiles.removeLast();
+            emit fileChosen(filename);
+        }
+    }
+    
+    settings.setValue("recentFileList", recentFiles);
+    updateRecentFileActions();
+}
+
+void FileService::updateRecentFileActions() {
+    QSettings settings("DETIQ-T", "GenericInterface");
+    QStringList recentFiles = settings.value("recentFileList").toStringList();
+
+    int numRecentFiles = qMin(recentFiles.size(), (int)MaxRecentFiles);
+
+    for (int i = 0; i < numRecentFiles; ++i) {
+        QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(recentFiles[i]).fileName());
+        recentFileActs[i]->setText(text);
+        recentFileActs[i]->setData(recentFiles[i]);
+        recentFileActs[i]->setVisible(true);
+    }
+    
+    for (int j = numRecentFiles; j < MaxRecentFiles; ++j)
+        recentFileActs[j]->setVisible(false);
+
+    separatorAct->setVisible(numRecentFiles > 0);
+}
+
 void FileService::chooseFile()
 {
     QString path;
@@ -115,14 +172,18 @@ void FileService::chooseFile()
     if(currentWindow != NULL) {
         path = currentWindow->getPath();
     }
-    QStringList files = QFileDialog::getOpenFileNames(_gi, tr("Open a file"), path, tr("Images (*.png *.bmp *.jpg *.jpeg)"));
-    
-    foreach(QString file, files) {
-        if(file != "") {
-            emit fileChosen(file);
-        }
+    QStringList filenames = QFileDialog::getOpenFileNames(_gi, tr("Open a file"), path, tr("Images (*.png *.bmp *.jpg *.jpeg)"));
+    loadFiles(filenames);
+}
+
+void FileService::openRecentFile()
+{
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action) {
+        loadFiles(QStringList(action->data().toString()));
     }
 }
+
 
 void FileService::checkActionsValid(const QWidget* activeWidget)
 {
