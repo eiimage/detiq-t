@@ -462,12 +462,13 @@ void StandardImageView::selectAll()
 void StandardImageView::switchMode(Mode mode) { 
     _mode = mode; 
     if(_mode == MODE_MOUSE) {
-        _selectSrc = NULL;
-        _select = QRect(0, 0, _image->getWidth(), _image->getHeight());
+        //_selectSrc = NULL;
+        //_select = QRect(0, 0, _image->getWidth(), _image->getHeight());
         _rubberBand->hide();
     }
     else if(_mode == MODE_SELECT) {
-        redrawSelect();
+        _rubberBand->show();
+        //redrawSelect();
     }
 }
 
