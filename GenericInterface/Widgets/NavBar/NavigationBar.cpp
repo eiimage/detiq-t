@@ -28,7 +28,7 @@ NavigationBar::NavigationBar(QSize itemSize, Qt::Orientation orientation) : QLis
 {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     
-    setSelectionMode(QAbstractItemView::SingleSelection);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     setDragEnabled(true);
     viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
@@ -55,6 +55,7 @@ void NavigationBar::mousePressEvent(QMouseEvent* event) {
 void NavigationBar::mouseReleaseEvent(QMouseEvent* event) {
     //std::cout << "NavigationBar::mouseReleaseEvent : " << event->x() << ':' << event->y() << std::endl;
     
+    QListView::mouseReleaseEvent(event);
     if(_mouseDown) {
         QPoint upPos = event->pos();
         QModelIndex downIndex = this->indexAt(_downPos);
@@ -65,7 +66,6 @@ void NavigationBar::mouseReleaseEvent(QMouseEvent* event) {
         }
     }
     
-    QListView::mouseReleaseEvent(event);
 }
 
 QSize NavigationBar::sizeHintForIndex(const QModelIndex& index) const {

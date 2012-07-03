@@ -91,7 +91,7 @@ void WindowService::swActivated(QMdiSubWindow* sw) {
     
     NodeId id = findNodeId(sw);
     if(id != NodeId()) {
-        _nav->setActiveNode(id);
+        //_nav->setActiveNode(id);
     }
 }
 
@@ -350,6 +350,7 @@ void WindowService::updateDisplay()
     QMutexLocker locker(&_mutex);
     const QList<NodeId>& selection = _nav->getSelection();
     
+    QMdiSubWindow* activeWindow = _mdi->currentSubWindow();
     QMdiSubWindow* firstValidWindow = NULL;
     
     for(std::map<NodeId, Node*>::iterator it = _widgets.begin(); it != _widgets.end(); ++it) {
@@ -361,7 +362,7 @@ void WindowService::updateDisplay()
         if(selection.indexOf(id) >= 0) {
             for (QList<QMdiSubWindow*>::iterator jt = windows.begin(); jt != windows.end(); ++jt) {
                 if(validWindow((*jt))) {
-                    if(firstValidWindow == NULL) firstValidWindow = *jt;
+                    if(firstValidWindow == NULL || *jt == activeWindow) firstValidWindow = *jt;
                     (*jt)->showNormal();
                 }
             }
