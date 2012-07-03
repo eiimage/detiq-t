@@ -55,7 +55,7 @@ StandardImageView::StandardImageView(QWidget* parent, Image* image): QScrollArea
     this->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     
     _rubberBand = new QRubberBand(QRubberBand::Rectangle, _imgWidget);
-    //redrawSelect();
+    redrawSelect();
     _rubberBand->hide();
 /*
     initMenu();
