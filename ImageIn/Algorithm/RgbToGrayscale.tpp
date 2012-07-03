@@ -22,7 +22,7 @@
 namespace imagein {
 	namespace algorithm {
 		template<typename D>
-        Image_t<D>* RgbToGrayscale_t<D>::algorithm(const std::vector<const Image_t<D>*>& imgs)
+        GrayscaleImage_t<D>* RgbToGrayscale_t<D>::algorithm(const std::vector<const Image_t<D>*>& imgs)
 		{
             const Image_t<D>* img = dynamic_cast<const Image_t<D>*>(imgs.at(0));
             if (img->getNbChannels() >= 3)

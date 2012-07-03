@@ -48,7 +48,7 @@ namespace imagein
          * \tparam D the depth of the input and output image
          */
         template <typename D>
-        class RgbToGrayscale_t : public Algorithm_t<Image_t<D>, 1>
+        class RgbToGrayscale_t : public Algorithm_t<GrayscaleImage_t<D>, 1>
         {
             public:
 				
@@ -68,7 +68,7 @@ namespace imagein
                  * see the documentation of GenericAlgorithm_t, SpecificAlgorithm_t and Algorithm_t for
                  * informations on the Algorithm interface.
                  */
-                Image_t<D>* algorithm(const std::vector<const Image_t<D>*>& imgs);
+                GrayscaleImage_t<D>* algorithm(const std::vector<const Image_t<D>*>& imgs);
             
             private:
 				

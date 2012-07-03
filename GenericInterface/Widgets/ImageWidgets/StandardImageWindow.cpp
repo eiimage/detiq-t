@@ -20,12 +20,16 @@
 #include "StandardImageWindow.h"
 #include "UnknownFormatException.h"
 
+#include "Algorithm/RgbToGrayscale.h"
+#include "Algorithm/Otsu.h"
+
 #include <QPushButton>
 #include <QMessageBox>
 
 using namespace genericinterface;
 using namespace imagein;
 using namespace std;
+using namespace imagein::algorithm;
 
 StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* gi)
     : ImageWindow(path), _gi(gi), _ctrlPressed(false)
@@ -163,6 +167,9 @@ void StandardImageWindow::init()
     _menu->addSeparator();
 	_menu->addAction(tr("Crop"), this, SLOT(crop()));
 	_menu->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
+    _menu->addSeparator();
+	_menu->addAction(tr("Convert to grayscale"), this, SLOT(convertToGrayscale()));
+	_menu->addAction(tr("Convert to binary"), this, SLOT(convertToBinary()));
 
 	QObject::connect(_imageView, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
     
@@ -256,6 +263,35 @@ void StandardImageWindow::crop() {
 
 void StandardImageWindow::copycrop() {
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, true);
+    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    ws->addImage(ws->getNodeId(this), newImgWnd);
+}
+
+void StandardImageWindow::convertToGrayscale() {
+    GrayscaleImage* newImage = RgbToGrayscale()(Converter<RgbImage>::convert(*this->getImage()));
+    StandardImageWindow* newImgWnd = new StandardImageWindow(*this, true);
+    newImgWnd->setImage(newImage);
+
+    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    ws->addImage(ws->getNodeId(this), newImgWnd);
+}
+
+void StandardImageWindow::convertToBinary() {
+    GrayscaleImage* newImage = Otsu()(Converter<GrayscaleImage>::convert(*this->getImage()));
+    StandardImageWindow* newImgWnd = new StandardImageWindow(*this, true);
+    newImgWnd->setImage(newImage);
+
+    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    ws->addImage(ws->getNodeId(this), newImgWnd);
+}
+
+
+template<class I>
+void StandardImageWindow::convert() {
+    I* newImage = Converter<I>::convert(*this->getImage());
+    StandardImageWindow* newImgWnd = new StandardImageWindow(*this, true);
+    newImgWnd->setImage(newImage);
+
     WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
     ws->addImage(ws->getNodeId(this), newImgWnd);
 }

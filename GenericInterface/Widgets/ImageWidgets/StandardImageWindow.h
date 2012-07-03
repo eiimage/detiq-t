@@ -50,6 +50,8 @@
 #include <Rectangle.h>
 #include <Histogram.h>
 
+#include <Converter.h>
+
 
 namespace genericinterface
 {
@@ -132,6 +134,9 @@ public slots:
     void showColumnProfile();
     void crop();
     void copycrop();
+
+    void convertToGrayscale();
+    void convertToBinary();
     
     void showHoveredPixelInformations(int x, int y) const;
     void showSelectedPixelInformations(int x, int y) const;
@@ -178,6 +183,9 @@ protected:
     void keyReleaseEvent(QKeyEvent* event);
     void wheelEvent (QWheelEvent * event);
     void showGenericHistogram(GenericHistogramWindow* histogramWnd);
+
+    template<class C>
+    void convert();
 };
 }
 
