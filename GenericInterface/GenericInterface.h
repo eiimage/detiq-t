@@ -86,7 +86,8 @@ namespace genericinterface
 	* @return id the identifier of the service
     */
 	int addService(Service* s);
-	int addNewService(Service* s);
+	//int addNewService(Service* s);
+    bool removeService(Service* s);
 	
     /**
     * @brief Change the id service to a custom one.
@@ -173,6 +174,7 @@ namespace genericinterface
     QSettings* _settings;
 	
 	int _nbServices;
+    bool _running;
 	
 	/**
     * @brief Add a new service to the generic interface

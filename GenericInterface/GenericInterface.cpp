@@ -24,7 +24,7 @@ using namespace genericinterface;
 
 inline void initResource_res() { Q_INIT_RESOURCE(res); }
 
-GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _nbServices(3)
+GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _nbServices(3), _running(false)
 {
     initResource_res();
 
@@ -46,9 +46,42 @@ GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _n
 
 int GenericInterface::addService(Service* s)
 {
-	int id = this->_nbServices++;
+    for(map<int, Service*>::iterator it = _services.begin(); it != _services.end(); ++it) {
+        if(it->second == s) {
+            Log::info("GenericInterface::addService() : Service already present !");
+            return it->first;
+        }
+    }
+	
+    int id = this->_nbServices++;
 	this->addService(id, s);
+
+    if(_running) {
+        try
+        {
+          s->display(this);
+          s->connect(this);
+        }
+        catch (ServiceConnectionException e)
+        {
+          Log::info(e.what());
+          QMessageBox::critical(this, 
+          tr("Interface's integrity compromised"),
+          tr("An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations."));
+        }
+    }
 	return id;
+    
+}
+
+bool GenericInterface::removeService(Service* s) {
+    for(map<int, Service*>::iterator it = _services.begin(); it != _services.end(); ++it) {
+        if(it->second == s) {
+            _services.erase(it);
+            return true;
+        }
+    }
+    return false;
 }
 
 void GenericInterface::addService(int id, Service* s) throw (BadIdException)
@@ -92,28 +125,13 @@ FileService* GenericInterface::fileService()
     return fs;
 }
 
-int GenericInterface::addNewService(Service* s)
-{
-	int id = this->_nbServices++;
-    _services[id] = s;
-    try
-    {
-      s->display(this);
-      s->connect(this);
-    }
-    catch (ServiceConnectionException e)
-    {
-      Log::info(e.what());
-      QMessageBox::critical(this, 
-      tr("Interface's integrity compromised"),
-      tr("An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations."));
-    }
-    
-	return id;
-}
-
 void GenericInterface::run(bool shw)
 {
+
+  if(_running) {
+      Log::info("GenericInterface::run() : Already running !");
+  }
+
   bool fail(false);
 
   // Call the method display() of all the services
@@ -154,6 +172,7 @@ void GenericInterface::run(bool shw)
   this->finalizeInterface();
 
   if (shw) this->show();
+  _running = true;
 }
 
 QMdiArea* GenericInterface::initCentralWidget()
