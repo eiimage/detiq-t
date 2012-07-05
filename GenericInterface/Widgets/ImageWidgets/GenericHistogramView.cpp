@@ -61,22 +61,29 @@ void GenericHistogramView::init(const imagein::Image* image)
   else
   _principalPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
   _principalPicker->setStateMachine(new QwtPickerDragPointMachine());
-  _principalPicker->setTrackerPen(QColor(Qt::white));
+  _principalPicker->setTrackerPen(QColor(Qt::black));
   _principalPicker->setRubberBandPen(QColor(Qt::yellow));
   
-  _leftPicker = new HistogramPicker(_qwtPlot->canvas());
+  _leftPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
   _leftPicker->setStateMachine(new QwtPickerDragPointMachine());
+  _leftPicker->setRubberBand(QwtPlotPicker::VLineRubberBand);
+  _leftPicker->setRubberBandPen(QColor(Qt::yellow));
   
-  _rightPicker = new HistogramPicker(_qwtPlot->canvas());
+  _rightPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
   _rightPicker->setStateMachine(new QwtPickerDragPointMachine());
   _rightPicker->setRubberBand(QwtPlotPicker::VLineRubberBand);
   _rightPicker->setRubberBandPen(QColor(Qt::yellow));
-	_rightPicker->setMousePattern(QwtPicker::MouseSelect1, Qt::RightButton);
+  _rightPicker->setMousePattern(QwtPicker::MouseSelect1, Qt::RightButton);
 
   connect(_qwtPlot, SIGNAL(legendChecked(QwtPlotItem*, bool)), this, SLOT(showItem(QwtPlotItem*, bool)));
   connect(_rightPicker, SIGNAL(selected(const QPointF&)), this, SLOT(rightClick(const QPointF&)));
   connect(_leftPicker, SIGNAL(selected(const QPointF&)), this, SLOT(leftClick(const QPointF&)));
   connect(_principalPicker, SIGNAL(moved(const QPointF&)), this, SLOT(move(const QPointF&)));
+  
+  connect(_leftPicker, SIGNAL(selected(const QPointF&)), this, SIGNAL(leftSelected(const QPointF&)));
+  connect(_rightPicker, SIGNAL(selected(const QPointF&)), this, SIGNAL(rightSelected(const QPointF&)));
+  connect(_leftPicker, SIGNAL(moved(const QPointF&)), this, SIGNAL(leftMoved(const QPointF&)));
+  connect(_rightPicker, SIGNAL(moved(const QPointF&)), this, SIGNAL(rightMoved(const QPointF&)));
 
   _qwtPlot->replot(); // creating the legend items
 

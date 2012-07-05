@@ -108,6 +108,11 @@ signals:
     
     void updateApplicationArea(imagein::Rectangle rect) const;
 
+    void leftMoved(const QPointF&) const;
+    void rightMoved(const QPointF&) const;
+    void leftSelected(const QPointF&) const;
+    void rightSelected(const QPointF&) const;
+
 private slots:
     void showItem(QwtPlotItem*, bool on) const;
     void move(const QPointF&) const;
