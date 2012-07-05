@@ -22,6 +22,7 @@
 #include <QListIterator>
 #include <QErrorMessage>
 
+using namespace std;
 using namespace genericinterface;
 using namespace imagein;
 WindowService::WindowService(Qt::DockWidgetArea navPos) : _navPos(navPos),  _mutex(QMutex::Recursive) {
@@ -71,6 +72,18 @@ ImageWindow* WindowService::getCurrentImageWindow()
         qDebug ("No current window !");
         return NULL;
     }
+}
+
+std::vector<StandardImageWindow*> WindowService::getImageWindows() {
+    vector<StandardImageWindow*> result;
+    QList<QMdiSubWindow*> windows = _mdi->subWindowList();
+    foreach(QMdiSubWindow* sw, windows) {
+        StandardImageWindow* siw = dynamic_cast<StandardImageWindow*>(sw->widget());
+        if(siw != NULL) {
+            result.push_back(siw);
+        }
+    }
+    return result;
 }
 
 NodeId WindowService::findNodeId(QMdiSubWindow* sw) const {

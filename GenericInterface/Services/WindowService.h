@@ -20,6 +20,8 @@
 #ifndef QTINTERFACE_WINDOWSERVICE_H
 #define QTINTERFACE_WINDOWSERVICE_H
 
+#include <vector>
+
 #include <QDockWidget>
 #include <QMdiSubWindow>
 #include <QMutex>
@@ -50,6 +52,7 @@ namespace genericinterface
     * @brief Returns the current subwindow if it is an ImageWindow.
     */
     ImageWindow* getCurrentImageWindow();
+    std::vector<StandardImageWindow*> getImageWindows();
 
 	NodeId getNodeId(QWidget* widget) const;
 	const Node* getNode(NodeId id) const;
