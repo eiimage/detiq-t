@@ -190,12 +190,31 @@ void WindowService::addFile(const QString& path)
     }
 }
 
+bool WindowService::windowTitleExists(const QString& title) {
+    foreach(QMdiSubWindow* sw, _mdi->subWindowList()) {
+        if(sw->windowTitle() == title) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void WindowService::checkWindowTitle(QWidget *widget) {
+    QString title = widget->windowTitle();
+    if(!windowTitleExists(title)) return;
+    title = title + " - %1";
+    int i;
+    for(i = 0; windowTitleExists(title.arg(i)); ++i);
+    widget->setWindowTitle(title.arg(i));
+}
+
 void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd, int pos)
 {
     //std::cout << "addImage::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     Node* node = addNodeIfNeeded(id, imgWnd->getImage(), imgWnd->getPath(), pos);
 
+    checkWindowTitle(imgWnd);
     QMdiSubWindow* sw = _mdi->addSubWindow(imgWnd);
     node->windows << sw;
     sw->setWindowIcon(QIcon(":/images/applications-graphics-5.png"));
@@ -224,6 +243,7 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
         return false;
     }
     
+    checkWindowTitle(widget);
     QMdiSubWindow* sw = _mdi->addSubWindow(widget);
     node->windows << sw;
     sw->setWindowIcon(QIcon(":/images/applications-utilities-2.png"));

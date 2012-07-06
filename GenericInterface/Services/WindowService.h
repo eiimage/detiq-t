@@ -64,6 +64,8 @@ namespace genericinterface
     bool validWindow(QMdiSubWindow* sw) const;
 	NodeId findNodeId(QMdiSubWindow* sw) const;
     void signalMdiChange() const;
+    bool windowTitleExists(const QString& title);
+    void checkWindowTitle(QWidget* widget);
 
   public slots:
     void addFile(const QString& path);
