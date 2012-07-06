@@ -34,6 +34,16 @@ imagein::Image_t<D>::Image_t(unsigned int width = 0, unsigned int height = 0, un
     }
 }
 
+template <typename D>
+imagein::Image_t<D>::Image_t(unsigned int width, unsigned int height, unsigned int nChannels, D value)
+ : _width(width), _height(height), _nChannels(nChannels)
+{
+    _mat = new D[width * height * nChannels];
+    for(iterator it = begin(); it < end(); ++it) {
+        *it = value;
+    }
+}
+
 
 template <typename D>
 imagein::Image_t<D>::Image_t(std::string filename)
