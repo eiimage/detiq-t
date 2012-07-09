@@ -180,6 +180,17 @@ namespace imagein
              */
             virtual Image_t<D>* crop(const Rectangle& rect) const;
 
+            depth_t min(unsigned int channel) const;
+            depth_t max(unsigned int channel) const;
+            double mean(unsigned int channel) const;
+            double deviation(unsigned int channel, double mean) const;
+            inline double deviation(unsigned int channel) const { return deviation(channel, mean()); }
+            depth_t min() const;
+            depth_t max() const;
+            double mean() const;
+            double deviation(double mean) const;
+            double deviation() const { return deviation(mean()); }
+
         protected:
             void crop(const Rectangle& rect, D* mat) const;
 

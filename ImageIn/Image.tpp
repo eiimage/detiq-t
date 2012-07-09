@@ -21,8 +21,9 @@
 
 #include "ImageFile.h"
 #include "ImageFileAbsFactory.h"
-
+#include <limits>
 #include <stdexcept>
+#include <cmath>
 
 template <typename D>
 imagein::Image_t<D>::Image_t(unsigned int width = 0, unsigned int height = 0, unsigned int nChannels=0, const D* data=NULL)
@@ -183,4 +184,94 @@ void imagein::Image_t<D>::crop(const imagein::Rectangle& rect, D* mat) const
             channelNo = 0;
         }
     }
+}
+
+template <typename D>
+D imagein::Image_t<D>::min(unsigned int channel) const {
+    D min = std::numeric_limits<D>::max();
+    for(unsigned int j = 0; j < getHeight(); ++j) {
+        for(unsigned int i = 0; i < getWidth(); ++i) {
+            const D value = getPixel(i, j, channel);
+            if(value < min) min = value;
+        }
+    }
+    return min;
+}
+
+template <typename D>
+D imagein::Image_t<D>::max(unsigned int channel) const {
+    D max = std::numeric_limits<D>::min();
+    for(unsigned int j = 0; j < getHeight(); ++j) {
+        for(unsigned int i = 0; i < getWidth(); ++i) {
+            const D value = getPixel(i, j, channel);
+            if(value > max) max = value;
+        }
+    }
+    return max;
+}
+
+template <typename D>
+double imagein::Image_t<D>::mean(unsigned int channel) const {
+    double mean = 0;
+    for(unsigned int j = 0; j < getHeight(); ++j) {
+        for(unsigned int i = 0; i < getWidth(); ++i) {
+            mean += getPixel(i, j, channel);
+        }
+    }
+    return (mean / (getWidth()*getHeight()) );
+}
+
+template <typename D>
+double imagein::Image_t<D>::deviation(unsigned int channel, double mean) const {
+    double deviation = 0;
+    for(unsigned int j = 0; j < getHeight(); ++j) {
+        for(unsigned int i = 0; i < getWidth(); ++i) {
+            int delta = getPixel(i, j, channel) - mean;
+            deviation += delta*delta;
+        }
+    }
+    return sqrt(deviation / (getWidth()*getHeight()) );
+}
+
+template <typename D>
+D imagein::Image_t<D>::min() const {
+    D min = std::numeric_limits<D>::max();
+    for(unsigned int c = 0; c < getNbChannels(); ++c) {
+        const D value = min(c);
+        if(value < min) min = value;
+    }
+    return min;
+}
+
+template <typename D>
+D imagein::Image_t<D>::max() const {
+    D max = std::numeric_limits<D>::max();
+    for(unsigned int c = 0; c < getNbChannels(); ++c) {
+        const D value = max(c);
+        if(value > max) max = value;
+    }
+    return max;
+}
+
+template <typename D>
+double imagein::Image_t<D>::mean() const {
+    double mean = 0;
+    for(unsigned int c = 0; c < getNbChannels(); ++c) {
+        mean += this->mean(c);
+    }
+    return (mean / getNbChannels());
+}
+
+template <typename D>
+double imagein::Image_t<D>::deviation(double mean) const {
+    double deviation = 0;
+    for(unsigned int c = 0; c < getNbChannels(); ++c) {
+        for(unsigned int j = 0; j < getHeight(); ++j) {
+            for(unsigned int i = 0; i < getWidth(); ++i) {
+                int delta = getPixel(i, j, c) - mean;
+                deviation += delta*delta;
+            }
+        }
+    }
+    return sqrt(deviation / size());
 }

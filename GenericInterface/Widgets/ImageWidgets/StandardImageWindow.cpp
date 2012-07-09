@@ -314,7 +314,25 @@ void StandardImageWindow::initStatusBar()
   font = _lImageSize->font();
   font.setPointSize(8);
   _lImageSize->setFont(font);
-  
+
+  QString stats("min : %1\t max : %2\t mean : %3\t standard deviation : %4");
+  QString min="", max="", mean="", dev="";
+  for(unsigned int c = 0; c < getImage()->getNbChannels(); ++c) {
+        min += QString("%1").arg(getImage()->min(c));
+        max += QString("%1").arg(getImage()->max(c));
+        mean += QString("%1").arg(getImage()->mean(c), 0, 'f', 1);
+        dev += QString("%1").arg(getImage()->deviation(c), 0, 'f', 1);
+        if(c < getImage()->getNbChannels()-1)  {
+            min+=" "; max+=" "; mean+=" "; dev+=" ";
+        }
+  }
+  stats = stats.arg(min).arg(max).arg(mean).arg(dev);
+
+  QLabel* lStats = new QLabel(stats);
+  font = lStats->font();
+  font.setPointSize(8);
+  lStats->setFont(font);
+
   _lSelectedPixelInfo = new QLabel(tr("Selected") + " : ");
   font = _lSelectedPixelInfo->font();
   font.setPointSize(8);
@@ -390,7 +408,7 @@ void StandardImageWindow::initStatusBar()
   QWidget* widgetImage = new QWidget();
 	layoutImage->addWidget(_lImageName);
   layoutImage->addWidget(_lImageSize);
-	layoutImage->addSpacing(30);
+    layoutImage->addSpacing(30);
 	layoutImage->addWidget(_lZoom);
 	layoutImage->addSpacing(30);
     layoutImage->setSpacing(0);
@@ -400,6 +418,10 @@ void StandardImageWindow::initStatusBar()
 	layoutImage->addSpacing(8);
   widgetImage->setLayout(layoutImage);
   layout->addWidget(widgetImage);
+
+  QHBoxLayout* layoutStats = new QHBoxLayout();
+  layoutStats->addWidget(lStats);
+  layout->addLayout(layoutStats);
 	
 	QHBoxLayout* layoutSelectedPixel = new QHBoxLayout();
 	layoutSelectedPixel->setContentsMargins(0, 0, 0, 0);
