@@ -275,3 +275,25 @@ double imagein::Image_t<D>::deviation(double mean) const {
     }
     return sqrt(deviation / size());
 }
+
+template<typename D>
+void imagein::Image_t<D>::normalize(double dstMin, double dstMax) {
+   double actualMin = static_cast<double>(this->min());
+   double actualMax = static_cast<double>(this->max());
+   double offset = dstMin - actualMin;
+   double ratio = (dstMax - dstMin) / (actualMax - actualMin);
+   std::cout << actualMax << ":" << actualMin << std::endl;
+   std::cout << dstMax << ":" << dstMin << std::endl;
+   std::cout << ratio << std::endl;
+    for(unsigned int c = 0; c < getNbChannels(); ++c) {
+        for(unsigned int j = 0; j < getHeight(); ++j) {
+            for(unsigned int i = 0; i < getWidth(); ++i) {
+                double value = getPixel(i, j, c);
+                value = value * ratio + offset;
+                value = std::max(static_cast<double>(std::numeric_limits<D>::min()), value);
+                value = std::min(static_cast<double>(std::numeric_limits<D>::max()), value);
+                setPixel(i, j, c, static_cast<D>(value));
+            }
+        }
+    }
+}
