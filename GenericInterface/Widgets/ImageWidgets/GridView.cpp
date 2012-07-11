@@ -24,7 +24,7 @@
 #include "GridView.h"
 #include "ImageViewer.h"
 #include "ZoomViewer.h"
-#include "StandardImageView.h"
+#include "ImageView.h"
 #include "PixelGrid.h"
 #include "ThumbnailView.h"
 
@@ -76,9 +76,8 @@ void RadioPanel::rcvActivated(int a)
 }
 
 GridView::GridView(const imagein::Image* im, int dx, int dy)
-  : AlternativeImageView(im)
 {
-    _layout = new QHBoxLayout;
+    _layout = new QHBoxLayout(this);
     //_viewer = new ImageViewer(im, dx, dy);
 
     QVBoxLayout *layout = new QVBoxLayout();
@@ -108,5 +107,4 @@ GridView::GridView(const imagein::Image* im, int dx, int dy)
     QObject::connect(view, SIGNAL(positionChanged(QPoint)), pixelGrid, SLOT(setOffset(QPoint)));
     QObject::connect(pixelGrid, SIGNAL(resized(QSize)), view, SLOT(setRectSize(QSize)));
 
-    setLayout(_layout);
 }

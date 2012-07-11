@@ -20,12 +20,13 @@
 #include <iostream>
 
 #include <QToolTip>
+#include <QHelpEvent>
+#include <QEvent>
 #include <QAbstractItemView>
 
 #include <Image.h>
 
 #include "ImageDelegate.h"
-#include "../ImageWidgets/StandardImageView.h"
 #include "NodeListModel.h"
 #include "../../Services/Node.h"
 

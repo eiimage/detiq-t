@@ -237,7 +237,7 @@ template <typename D>
 D imagein::Image_t<D>::min() const {
     D min = std::numeric_limits<D>::max();
     for(unsigned int c = 0; c < getNbChannels(); ++c) {
-        const D value = min(c);
+        const D value = this->min(c);
         if(value < min) min = value;
     }
     return min;
@@ -245,9 +245,9 @@ D imagein::Image_t<D>::min() const {
 
 template <typename D>
 D imagein::Image_t<D>::max() const {
-    D max = std::numeric_limits<D>::max();
+    D max = std::numeric_limits<D>::min();
     for(unsigned int c = 0; c < getNbChannels(); ++c) {
-        const D value = max(c);
+        const D value = this->max(c);
         if(value > max) max = value;
     }
     return max;

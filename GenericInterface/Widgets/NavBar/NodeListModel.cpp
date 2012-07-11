@@ -21,7 +21,8 @@
 
 #include "../ImageWidgets/StandardImageWindow.h"
 #include "NodeListModel.h"
-
+#include <Image.h>
+using namespace imagein;
 using namespace genericinterface;
 
 NodeListModel::NodeListModel(QObject *parent) : QAbstractListModel(parent)
@@ -186,7 +187,8 @@ bool NodeListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
             return false;
         }
         if(isCopy) {
-           siw = new StandardImageWindow(*siw, true); 
+            Image* newImg = siw->getImage()->crop(siw->selection());
+           siw = new StandardImageWindow(*siw, newImg);
         }
         emit windowDropped(siw, beginRow);
     }

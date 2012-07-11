@@ -24,7 +24,7 @@
 #include <QPixmap>
 #include <QImage>
 #include <Image.h>
-#include "StandardImageView.h"
+#include "ImageView.h"
 
 /**
 * @brief A better pixel grid.

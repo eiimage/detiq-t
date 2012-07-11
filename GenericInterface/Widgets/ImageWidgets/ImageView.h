@@ -35,63 +35,24 @@
 
 #include "ImageContextMenu.h"
 #include "GenericHistogramView.h"
-#include "ImageWindow.h"
 #include "HistogramWindow.h"
+#include "ImageWidget.h"
 
 #include <Image.h>
 #include <Rectangle.h>
 
 namespace genericinterface
 {
-  QImage convertImage(const imagein::Image* image);
   /*!
    * \brief Display an image from imagein
    *
    * Display an image from imagein and manages mouse events
    */
-  class StandardImageView : public QScrollArea
+  class ImageView : public QScrollArea
   {
   Q_OBJECT
 
   public:
-  
-    class ImgWidget : public QWidget  {
-      public:
-        ImgWidget(QWidget* parent, const imagein::Image* img);
-        void setImage(const imagein::Image* img);
-        inline QPixmap pixmap() const { return _pixmap; }
-        virtual QSize sizeHint() const { return this->size(); }
-        //inline double scale() const { return static_cast<double>(_pixmap.width()) / static_cast<double>(this->width()); }
-        inline QPoint mapToPixmap(QPoint p) const {
-            const int x = std::floor( p.x() * pixmap().width() / width() );
-            const int y = std::floor( p.y() * pixmap().height() / height() );
-            return QPoint(x, y); 
-        }
-        inline QSize mapToPixmap(QSize s) const {
-            const int w = std::floor( s.width() * pixmap().width() / width() );
-            const int h = std::floor( s.height() * pixmap().height() / height() );
-            return QSize(w, h); 
-        }
-        inline QPoint mapFromPixmap(QPoint p) const {
-            const int x = std::floor( p.x() * width() / pixmap().width() );
-            const int y = std::floor( p.y() * height() / pixmap().height() );
-            return QPoint(x, y); 
-        }
-        inline QSize mapFromPixmap(QSize s) const {
-            const int w = std::floor( s.width() * width() / pixmap().width() );
-            const int h = std::floor( s.height() * height() / pixmap().height() );
-            return QSize(w, h); 
-        }
-        inline QRect mapFromPixmap(QRect r) const {
-            return QRect(mapFromPixmap(r.topLeft()), mapFromPixmap(r.size())); 
-        }
-        inline QRect mapToPixmap(QRect r) const {
-            return QRect(mapToPixmap(r.topLeft()), mapToPixmap(r.size()));
-        }
-      protected:
-        void paintEvent (QPaintEvent* event );
-        QPixmap _pixmap;
-    };
   
     enum Mode {MODE_MOUSE, MODE_SELECT};
     enum SelectMode {SELECTMODE_NONE, SELECTMODE_MAKE, SELECTMODE_RESIZE, SELECTMODE_MOVE};
@@ -103,22 +64,18 @@ namespace genericinterface
 		 * \param parent The parent widget
 		 * \param image The image to display
 		 */
-    StandardImageView(QWidget* parent, imagein::Image* image);
-        
-		/*!
-		 * \brief StandardImageView destructor.
-		 */
-		virtual ~StandardImageView();
+    ImageView(QWidget* parent, const imagein::Image* image = NULL);
+
+    /*!
+     * \brief StandardImageView destructor.
+     */
+    virtual ~ImageView();
     
-    void setImage(imagein::Image* image);
+    void setImage(const imagein::Image* image);
     
-		//! Returns the image
-    inline const imagein::Image* getImage() const { return _image; }
-        
 		//! Returns the pixmap
-    //inline const QPixmap* getPixmap() const { return _pixmap_img; }
     inline QPixmap pixmap() const { return _imgWidget->pixmap(); }
-    inline const ImgWidget* widget() { return _imgWidget; }
+    inline const ImageWidget* widget() { return _imgWidget; }
         
 		//! Returns the selection rectangle
     inline imagein::Rectangle getRectangle() const { 
@@ -127,16 +84,11 @@ namespace genericinterface
    inline QRect select() const { return _select; } 
     inline void setSelectSrc(GenericHistogramView* src) { _selectSrc = src; }
         
-	/*	//! Returns the graphics view
-    inline QGraphicsView* getGraphicsView() const { return _view; }*/
-    //inline QGraphicsRectItem* getHighlightItem() { return _highlight; }
-    
-    
     void switchMode(Mode mode);
     inline Mode mode() const { return _mode; }
 
-	public slots:
-    void ctrlPressed(bool);
+    public slots:
+
     void showSelectRect(imagein::Rectangle rect, GenericHistogramView* source);
     void selectAll();
     void scale(double, double);
@@ -164,28 +116,17 @@ namespace genericinterface
 		 * \param y Y coordinate of mouse
 		 */
 		void pixelHovered(int x, int y) const;
-		
-		/*!
-		 * \brief Signal emits when zoom is changed
-		 * 
-		 * \param z The zoom factor
-		 */
-		//void zoomChanged(double z) const;
         
         void startDrag();
-    
+        void updateSrc(GenericHistogramView*, imagein::Rectangle);
+
   protected:
     QWidget* _parent;
-    //QGraphicsScene* _scene;
-    //QGraphicsView* _view;
-    //QGraphicsRectItem* _highlight;
-    
-    imagein::Image* _image;
-    ImgWidget* _imgWidget;
+
+    ImageWidget* _imgWidget;
     QRect _select;
     QRect _oldSelect;
     GenericHistogramView* _selectSrc;
-    //imagein::Rectangle _visibleArea;
     
     bool _ctrlDown;
     SelectMode _selectMode;
@@ -198,15 +139,12 @@ namespace genericinterface
     
     Mode _mode;
     
-    void initMenu();
-    void showImage();
-    Qt::CursorShape mouseOverHighlight(QPoint pos);
+    Qt::CursorShape mouseOverHighlight(QMouseEvent*);
     void selectionMove(QPoint);
     void selectionResize(QPoint);
     void selectionMake(QPoint);
     inline void redrawSelect() {
         _rubberBand->setGeometry(_imgWidget->mapFromPixmap(_select));
-        //_rubberBand->show();
     }
 
     inline QPoint mapToWidget(QPoint p) const {

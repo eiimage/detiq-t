@@ -1,3 +1,5 @@
+#include <QMouseEvent>
+
 #include "ThumbnailView.h"
 
 using namespace std;
@@ -6,7 +8,7 @@ using namespace imagein;
 
 
 ThumbnailView::ThumbnailView(QWidget* parent, const Image* image) 
-  : StandardImageView::ImgWidget(parent, image), _rubberBand(QRubberBand::Rectangle, this) {
+  : ImageWidget(parent, image), _rubberBand(QRubberBand::Rectangle, this) {
     this->setMouseTracking(false);
     _rubberBand.show();
 }

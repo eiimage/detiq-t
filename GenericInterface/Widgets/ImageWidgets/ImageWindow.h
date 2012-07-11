@@ -20,19 +20,33 @@
 #ifndef IMAGEWINDOW_H
 #define IMAGEWINDOW_H
 
+
 #include <QWidget>
 #include <QLabel>
-#include <QStatusBar>
 #include <QString>
-#include <iostream>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QScrollArea>
+#include <QFont>
+#include <QKeyEvent>
+#include <QPoint>
+#include <QInputDialog>
+#include <QToolButton>
+#include <QStatusBar>
+
 #include <sstream>
+#include <iostream>
+#include <list>
 
 #include <Rectangle.h>
 
-#include "AlternativeImageView.h"
+#include <Image.h>
+#include "ImageView.h"
 
 namespace genericinterface
 {
+
+class GenericInterface;
 /*!
    * \brief Inherited class by all Windows
    *
@@ -40,12 +54,7 @@ namespace genericinterface
    */
 class ImageWindow : public QWidget
 {
-        Q_OBJECT
-    protected:
-        imagein::Rectangle _applicationArea;
-        QStatusBar* _statusBar;
-        QString _path;
-
+    Q_OBJECT
     public:
         /*!
          * \brief Default constructor.
@@ -55,7 +64,9 @@ class ImageWindow : public QWidget
          * \param source The source window
          * \param rect The application area (Rectangle used for Histogram, Algorithm...)
          */
-        ImageWindow(QString path, imagein::Rectangle rect = imagein::Rectangle());
+        ImageWindow(QString path, GenericInterface* gi, const imagein::Image* image = NULL, imagein::Rectangle rect = imagein::Rectangle());
+
+        ~ImageWindow();
 
         /*!
          * \brief Returns the title from a path.
@@ -69,14 +80,38 @@ class ImageWindow : public QWidget
         QString getName() const { return getTitleFromPath(_path); }
 
         /*!
-         * \brief Returns the view in the window.
+         * \brief Returns the displayable Image contained in the window.
          *
          */
-        virtual AlternativeImageView* getView()=0;
+        inline const imagein::Image* getDisplayImage() { return _displayImg; }
+
+        /*!
+         * \brief Returns the Rectangle which is the current image's selection on the window.
+         *
+         */
+        const imagein::Rectangle selection() { return _imageView->getRectangle(); }
+        inline QMenu* menu() { return _menu; }
+        inline QPoint selectedPixel() { return _selectedPixel; }
+
+        inline ImageView* view() { return _imageView; }
+
+        void zoom(int delta);
+
 
     public slots:
         void activated();
         void setApplicationArea(const imagein::Rectangle rect);
+        void startDrag();
+        void updateZoom(double z) const;
+        void toggleMouseMode(bool);
+        void toggleSelectMode(bool);
+
+        virtual void crop() = 0;
+        virtual void copycrop() = 0;
+
+        virtual void pixelClicked(int x, int y);
+        virtual void pixelHovered(int x, int y);
+
 
     signals:
         /*!
@@ -85,7 +120,44 @@ class ImageWindow : public QWidget
          * \param rect Rectangle to display on the source window
          */
         void selectRectChange(imagein::Rectangle rect, ImageWindow* source);
-    };
+
+        /*!
+         * \brief Signal emits when the highlight rect have to changes
+         *
+         * \param rect The rectangle to display
+         */
+        void highlightRectChange(imagein::Rectangle rect, ImageWindow* source);
+
+    protected:
+        void setDisplayImage(const Image* displayImg);
+
+        imagein::Rectangle _applicationArea;
+        QString _path;
+        GenericInterface* _gi;
+        const imagein::Image* _displayImg;
+        ImageView* _imageView;
+
+        ImageContextMenu* _menu;
+
+        QWidget* _statusBar;
+        QLabel* _lImageSize;
+        QLabel* _lImageName;
+        QLabel* _lZoom;
+        QPoint _selectedPixel;
+        QToolButton* _selectButton;
+        QToolButton* _mouseButton;
+        QToolButton* _selectAllButton;
+
+        void initStatusBar();
+
+        double _zoomFactor;
+
+        void wheelEvent (QWheelEvent * event);
+
+        virtual void showHoveredPixelInformations(int x, int y) const = 0;
+        virtual void showSelectedPixelInformations(int x, int y) const = 0;
+};
+
 }
 
 #endif // IMAGEWINDOW_H

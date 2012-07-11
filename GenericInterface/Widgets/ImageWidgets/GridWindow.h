@@ -37,7 +37,7 @@ namespace genericinterface
   * It helps the user to understand what a pixel is: a simple square of color.
   * The values of channels are displaying too, directly on the square
   */
-  class GridWindow : public ImageWindow
+  class GridWindow : public QScrollArea
   {
   public:
     /**

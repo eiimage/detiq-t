@@ -28,11 +28,11 @@
 #include <QPixmap>
 
 #include <Image.h>
+#include "../Widgets/ImageWidgets/ImageWidget.h"
 
 
 namespace genericinterface
 {
-    QImage convertImage(const imagein::Image* image);
     struct NodeId {
       public:
         inline NodeId(const imagein::Image* id = NULL) : _id(id) {}
@@ -46,7 +46,7 @@ namespace genericinterface
     
     struct Node {
         inline Node() : image(NULL), path("") {}
-        inline Node(const imagein::Image* img, QString path_) : image(img), path(path_), pixmap(QPixmap::fromImage(convertImage(img))) {}
+        inline Node(const imagein::Image* img, QString path_) : image(img), path(path_), pixmap(QPixmap::fromImage(ImageWidget::convertImage(img))) {}
         inline Node(QPixmap pixmap_, const imagein::Image* img, QString path_) : image(img), path(path_), pixmap(pixmap_) {}
         NodeId getId() const { return image; }
         inline bool isValid() { return image != NULL;}

@@ -24,6 +24,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "ImageViewer.h"
+#include "ImageWidget.h"
 
 using namespace genericinterface;
 using namespace std;
@@ -58,7 +59,7 @@ ImageViewer::ImageViewer (const imagein::Image* img, int x, int y) : QGraphicsSc
 void ImageViewer::init(const imagein::Image* img, int x, int y)
 {
   /* Get info about the image */
-  QPixmap pixmap = QPixmap::fromImage(convertImage(img));
+  QPixmap pixmap = QPixmap::fromImage(ImageWidget::convertImage(img));
   QSize size = pixmap.size();
 
   int height = size.height();

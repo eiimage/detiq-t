@@ -22,6 +22,7 @@
 
 #include <vector>
 #include <string>
+#include <limits>
 
 #include "mystdint.h"
 
@@ -190,6 +191,8 @@ namespace imagein
             double mean() const;
             double deviation(double mean) const;
             double deviation() const { return deviation(mean()); }
+            void normalize(double min = static_cast<double>(std::numeric_limits<D>::min()),
+                           double max = static_cast<double>(std::numeric_limits<D>::max()));
 
         protected:
             void crop(const Rectangle& rect, D* mat) const;

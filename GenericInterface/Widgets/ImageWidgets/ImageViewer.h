@@ -24,7 +24,7 @@
 #include <QGraphicsPixmapItem>
 #include <QString>
 #include <Image.h>
-#include "StandardImageView.h"
+#include "ImageView.h"
 
 
 /**

@@ -1,12 +1,13 @@
 #ifndef THUMBNAILVIEW_H
 #define THUMBNAILVIEW_H
 
-#include "StandardImageView.h"
+#include "ImageWidget.h"
+#include <QRubberBand>
 
 
 namespace genericinterface 
 {
-  class ThumbnailView : public StandardImageView::ImgWidget 
+  class ThumbnailView : public ImageWidget
   {
     Q_OBJECT
 

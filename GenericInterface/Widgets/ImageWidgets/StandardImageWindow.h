@@ -20,34 +20,13 @@
 #ifndef STANDARDIMAGEWINDOW_H
 #define STANDARDIMAGEWINDOW_H
 
-#include <QWidget>
-#include <QString>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QScrollArea>
-#include <QFont>
-#include <QKeyEvent>
-#include <QPoint>
-#include <QInputDialog>
-#include <QToolButton>
-
-#include <sstream>
-#include <iostream>
-#include <list>
-
 #include "ImageWindow.h"
 #include "RowWindow.h"
 #include "HistogramWindow.h"
 #include "ProjectionHistogramWindow.h"
-#include "StandardImageView.h"
-#include "AlternativeImageView.h"
 #include "GridWindow.h"
 #include "GraphicalHistogram.h"
 
-#include "../../GenericInterface.h"
-
-#include <Image.h>
-#include <Rectangle.h>
 #include <Histogram.h>
 
 #include <Converter.h>
@@ -85,7 +64,7 @@ public:
      * \param image The image which is used
      */
     StandardImageWindow(const QString path, GenericInterface* gi, Image* image);
-    StandardImageWindow(const StandardImageWindow&, bool crop = false);
+    StandardImageWindow(const StandardImageWindow&, imagein::Image* img = NULL);
 
 
     /*!
@@ -95,34 +74,18 @@ public:
      */
     virtual ~StandardImageWindow();
 
-    /*!
-     * \brief Returns the Image contained in the window.
-     *
-     */
-    const imagein::Image* getImage();
+//    /*!
+//     * \brief Changes the Image contained in the window.
+//     *
+//     * \param image The image we want to put in the window.
+//     */
+//    void setImage(Image* image);
 
     /*!
-     * \brief Changes the Image contained in the window.
-     *
-     * \param image The image we want to put in the window.
-     */
-    void setImage(Image* image);
-
-    /*!
-     * \brief Returns the Rectangle which is the current image's selection on the window.
+     * \brief Returns the real Image contained in the window.
      *
      */
-    imagein::Rectangle getSelection();
-
-    inline StandardImageView* getStandardView() { return _imageView; }
-
-
-    AlternativeImageView* getView() { return NULL; }
-    
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void zoom(int delta);
+    inline const imagein::Image* getImage() { return _image; }
 
 
 public slots:
@@ -132,60 +95,33 @@ public slots:
     void showPixelsGrid();
     void showLineProfile();
     void showColumnProfile();
-    void crop();
-    void copycrop();
 
     void convertToGrayscale();
     void convertToBinary();
-    
-    void showHoveredPixelInformations(int x, int y) const;
-    void showSelectedPixelInformations(int x, int y) const;
-    void updateZoom(double z) const;
-    void toggleMouseMode(bool);
-    void toggleSelectMode(bool);
-    void startDrag();
+
+    virtual void crop();
+    virtual void copycrop();
+
+    virtual void showHoveredPixelInformations(int x, int y) const;
+    virtual void showSelectedPixelInformations(int x, int y) const;
+
+    virtual void updateSrc(GenericHistogramView*, imagein::Rectangle);
 
 signals:
-    //! Signal emits when crtl key is pressed
-    void ctrlPressed(bool);
-
-    /*!
-     * \brief Signal emits when the highlight rect have to changes
-     *
-     * \param rect The rectangle to display
-     */
-    void highlightRectChange(imagein::Rectangle rect, ImageWindow* source);
     
 protected:
-    GenericInterface* _gi;
-    imagein::Image* _image;
-    StandardImageView* _imageView;
-    QLabel* _lImageSize;
-    QLabel* _lImageName;
+    const imagein::Image* _image;
+
+    void init();
+    void updateStatusBar();
+    void showGenericHistogram(GenericHistogramWindow* histogramWnd);
+
     QLabel* _lHoveredPixelInfo;
     QLabel* _lHoveredPixelPosition;
     QLabel* _lHoveredPixelColor;
     QLabel* _lSelectedPixelInfo;
     QLabel* _lSelectedPixelPosition;
     QLabel* _lSelectedPixelColor;
-    QLabel* _lZoom;
-    QPoint* _selectedPixel;
-    QToolButton* _selectButton;
-    QToolButton* _mouseButton;
-    QToolButton* _selectAllButton;
-    bool _ctrlPressed;
-    ImageContextMenu* _menu;
-    double _zoomFactor;
-
-    void init();
-    void initStatusBar();
-    void keyPressEvent(QKeyEvent* event);
-    void keyReleaseEvent(QKeyEvent* event);
-    void wheelEvent (QWheelEvent * event);
-    void showGenericHistogram(GenericHistogramWindow* histogramWnd);
-
-    template<class C>
-    void convert();
 };
 }
 

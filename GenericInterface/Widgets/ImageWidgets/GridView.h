@@ -62,7 +62,7 @@ namespace genericinterface
   * pixel. It deals with the events of the mouse and
   * the keyboard
   */
-  class GridView : public AlternativeImageView
+  class GridView : public QWidget
   {
   public:
     /**

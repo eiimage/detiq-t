@@ -52,7 +52,7 @@ void AlgorithmService::applyAlgorithm(GenericAlgorithm_t<Image::depth_t>* algo)
     if (siw != NULL)
     {
         const Image* whole_image = siw->getImage();
-        const Image* im = whole_image->crop(siw->getSelection());
+        const Image* im = whole_image->crop(siw->selection());
 
         Image* im_res = (*algo)(im);
         //im_res = Converter<Image>::makeDisplayable(*im_res);

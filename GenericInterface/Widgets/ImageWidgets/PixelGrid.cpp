@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Benoit Averty, Samuel Babin, Matthieu Bergere, Thomas Letan, Sacha Percot-Tétu, Florian Teyssier
+ * Copyright 2011-2012 Benoit Averty, Samuel Babin, Matthieu Bergere, Thomas Letan, Sacha Percot-TÃ©tu, Florian Teyssier
  * 
  * This file is part of DETIQ-T.
  * 
@@ -20,13 +20,14 @@
 #include <QPainter>
 
 #include "PixelGrid.h"
+#include "ImageWidget.h"
 
 using namespace std;
 using namespace genericinterface;
 using namespace imagein;
 
 PixelGrid::PixelGrid(const imagein::Image* image) : _image(image), _offset(0,0), _channel(0)  {
-    _pixmap.convertFromImage(convertImage(_image));
+    _pixmap.convertFromImage(ImageWidget::convertImage(_image));
 }
 
 void PixelGrid::setOffset(QPoint offset) {

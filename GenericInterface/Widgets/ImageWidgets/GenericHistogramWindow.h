@@ -25,9 +25,9 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QFont>
+#include <QStatusBar>
 #include <sstream>
 
-#include "ImageWindow.h"
 #include "HistogramView.h"
 
 #include <Image.h>

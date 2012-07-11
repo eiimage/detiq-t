@@ -27,7 +27,7 @@
 using namespace imagein;
 using namespace genericinterface;
 
-GridWindow::GridWindow(const imagein::Image* img) : ImageWindow(tr(""))
+GridWindow::GridWindow(const imagein::Image* img) : QScrollArea()
 {
   QVBoxLayout* box = new QVBoxLayout;
 
