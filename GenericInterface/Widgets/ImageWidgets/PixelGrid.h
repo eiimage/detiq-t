@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Benoit Averty, Samuel Babin, Matthieu Bergere, Thomas Letan, Sacha Percot-Tétu, Florian Teyssier
+ * Copyright 2011-2012 Benoit Averty, Samuel Babin, Matthieu Bergere, Thomas Letan, Sacha Percot-TÃ©tu, Florian Teyssier
  * 
  * This file is part of DETIQ-T.
  * 

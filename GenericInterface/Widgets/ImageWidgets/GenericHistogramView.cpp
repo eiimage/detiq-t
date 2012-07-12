@@ -17,7 +17,20 @@
  * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <qpen.h>
+#include <qwt_plot.h>
+#include <qwt_plot_layout.h>
+#include <qwt_plot_grid.h>
+#include <qwt_picker_machine.h>
+#include <qwt_plot_histogram.h>
+#include <qwt_legend.h>
+#include <qwt_legend_item.h>
+#include <qwt_column_symbol.h>
+#include <qwt_series_data.h>
+
 #include "GenericHistogramView.h"
+#include "HistogramPicker.h"
+#include "GraphicalHistogram.h"
 
 using namespace genericinterface;
 using namespace imagein;

@@ -18,6 +18,7 @@
 */
 
 #include "ProjectionHistogramView.h"
+#include <qwt_plot.h>
 
 using namespace genericinterface;
 using namespace imagein;

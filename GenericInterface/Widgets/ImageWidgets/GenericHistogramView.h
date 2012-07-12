@@ -22,16 +22,6 @@
 
 #include <QMouseEvent>
 
-#include <qpen.h>
-#include <qwt_plot.h>
-#include <qwt_plot_layout.h>
-#include <qwt_plot_grid.h>
-#include <qwt_picker_machine.h>
-#include <qwt_plot_histogram.h>
-#include <qwt_legend.h>
-#include <qwt_legend_item.h>
-#include <qwt_column_symbol.h>
-#include <qwt_series_data.h>
 #include <stdlib.h>
 #include <vector>
 
@@ -40,12 +30,15 @@
 #include <Histogram.h>
 #include <ProjectionHistogram.h>
 
-#include "HistogramPicker.h"
-#include "GraphicalHistogram.h"
 #include "AlternativeImageView.h"
+
+class QwtPlot;
+class QwtPlotItem;
 
 namespace genericinterface
 {
+class GraphicalHistogram;
+class HistogramPicker;
 /*!
  * \brief Create and display a graphical histogram
  *

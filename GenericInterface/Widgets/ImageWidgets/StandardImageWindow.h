@@ -25,7 +25,6 @@
 #include "HistogramWindow.h"
 #include "ProjectionHistogramWindow.h"
 #include "GridWindow.h"
-#include "GraphicalHistogram.h"
 
 #include <Histogram.h>
 
