@@ -34,10 +34,11 @@
 
 namespace genericinterface
 {
+class GraphicalHistogram;
 /*!
- * \brief Contains the StandardImageWindow
+ * \brief Store and display a standard Image (ie Image_t<unsigned char>)
  *
- * Creates and display the StandardImageWindow, and update the status bar.
+ * Creates and display the ImageView, and update the status bar.
  */
 class StandardImageWindow : public ImageWindow
 {
@@ -85,7 +86,7 @@ public:
      * \brief Returns the real Image contained in the window.
      *
      */
-    inline const imagein::Image* getImage() { return _image; }
+    inline const imagein::Image* getImage() const { return _image; }
 
 
 public slots:

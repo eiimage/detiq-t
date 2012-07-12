@@ -35,13 +35,15 @@ namespace genericinterface
 {
     struct NodeId {
       public:
-        inline NodeId(const imagein::Image* id = NULL) : _id(id) {}
+        inline NodeId() : _id(0) {}
+        template<typename D>
+        inline NodeId(const imagein::Image_t<D>* id) : _id(reinterpret_cast<uintptr_t>(id)) {}
         inline bool operator==(const NodeId& other) { return _id==other._id; }
         inline bool operator!=(const NodeId& other) { return _id!=other._id; }
         inline bool operator<(const NodeId& other) const { return _id<other._id; }
-        inline bool isValid() { return _id != NULL;}
+        inline bool isValid() { return _id != 0;}
       private:
-        const imagein::Image* _id;    
+        uintptr_t _id;
     };
     
     struct Node {

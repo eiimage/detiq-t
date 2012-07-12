@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+#include "GenericInterface.h"
 #include "StandardImageWindow.h"
 #include "UnknownFormatException.h"
+#include "GraphicalHistogram.h"
 
 #include "Algorithm/RgbToGrayscale.h"
 #include "Algorithm/Otsu.h"

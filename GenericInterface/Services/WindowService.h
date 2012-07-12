@@ -52,7 +52,7 @@ namespace genericinterface
     * @brief Returns the current subwindow if it is an ImageWindow.
     */
     ImageWindow* getCurrentImageWindow();
-    std::vector<StandardImageWindow*> getImageWindows();
+    std::vector<ImageWindow*> getImageWindows();
 
 	NodeId getNodeId(QWidget* widget) const;
 	const Node* getNode(NodeId id) const;
@@ -69,7 +69,7 @@ namespace genericinterface
 
   public slots:
     void addFile(const QString& path);
-    void addImage(NodeId id, StandardImageWindow* image, int pos = -1);
+    void addImage(NodeId id, ImageWindow* image, int pos = -1);
     bool addWidget(NodeId id, QWidget* widget);
     void updateDisplay();
     void removeId(NodeId id);

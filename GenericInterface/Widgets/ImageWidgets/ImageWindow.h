@@ -83,7 +83,7 @@ class ImageWindow : public QWidget
          * \brief Returns the displayable Image contained in the window.
          *
          */
-        inline const imagein::Image* getDisplayImage() { return _displayImg; }
+        inline const imagein::Image* getDisplayImage() const { return _displayImg; }
 
         /*!
          * \brief Returns the Rectangle which is the current image's selection on the window.

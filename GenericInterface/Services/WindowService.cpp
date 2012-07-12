@@ -74,11 +74,11 @@ ImageWindow* WindowService::getCurrentImageWindow()
     }
 }
 
-std::vector<StandardImageWindow*> WindowService::getImageWindows() {
-    vector<StandardImageWindow*> result;
+std::vector<ImageWindow*> WindowService::getImageWindows() {
+    vector<ImageWindow*> result;
     QList<QMdiSubWindow*> windows = _mdi->subWindowList();
     foreach(QMdiSubWindow* sw, windows) {
-        StandardImageWindow* siw = dynamic_cast<StandardImageWindow*>(sw->widget());
+        ImageWindow* siw = dynamic_cast<ImageWindow*>(sw->widget());
         if(siw != NULL) {
             result.push_back(siw);
         }
@@ -208,11 +208,11 @@ void WindowService::checkWindowTitle(QWidget *widget) {
     widget->setWindowTitle(title.arg(i));
 }
 
-void WindowService::addImage(NodeId id, StandardImageWindow* imgWnd, int pos)
+void WindowService::addImage(NodeId id, ImageWindow* imgWnd, int pos)
 {
     //std::cout << "addImage::lock" << std::endl;
     QMutexLocker locker(&_mutex);
-    Node* node = addNodeIfNeeded(id, imgWnd->getImage(), imgWnd->getPath(), pos);
+    Node* node = addNodeIfNeeded(id, imgWnd->getDisplayImage(), imgWnd->getPath(), pos);
 
     checkWindowTitle(imgWnd);
     QMdiSubWindow* sw = _mdi->addSubWindow(imgWnd);
@@ -327,13 +327,16 @@ void WindowService::moveToNode(StandardImageWindow* siw, int pos) {
     QMutexLocker locker(&_mutex);
 
     Node* node = NULL;
+    NodeId id;
     QMdiSubWindow* subWnd = NULL;
     for(std::map<NodeId, Node*>::iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
     {
         Node* currentNode = it->second;
+        NodeId currentId = it->first;
         for(QList<QMdiSubWindow*>::iterator it = currentNode->windows.begin(); it != currentNode->windows.end(); ++it) {
             if((*it)->widget() == siw) {
                 node = currentNode;
+                id = currentId;
                 subWnd = *it;
             }
         }
@@ -345,17 +348,18 @@ void WindowService::moveToNode(StandardImageWindow* siw, int pos) {
     
     node->windows.removeAll(subWnd);
     if(node->windows.empty()) {
-        int index = _nav->removeNode(node->getId());
-        _widgets.erase(node->getId());
+        int index = _nav->removeNode(id);
+        _widgets.erase(id);
         //std::cout << "erased node #" << index << " while droping on #" << pos << std::endl;
         if(index < pos) --pos;
         delete node;
     }
 
 
-    Node* newNode = addNodeIfNeeded(siw->getImage(), siw->getImage(), siw->getPath(), pos);
+    NodeId newId(siw->getImage());
+    Node* newNode = addNodeIfNeeded(newId, siw->getImage(), siw->getPath(), pos);
     newNode->windows << subWnd;
-    _nav->setActiveNode(newNode->getId());
+    _nav->setActiveNode(newId);
     _nav->update();
 
     //StandardImageWindow* newSiw = new StandardImageWindow(*siw);

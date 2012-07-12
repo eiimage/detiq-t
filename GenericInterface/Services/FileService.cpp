@@ -86,16 +86,16 @@ void FileService::save(const QString& path, const QString& ext)
         try {
             WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
             if(ws != NULL) {
-                StandardImageWindow* imw = dynamic_cast<StandardImageWindow*>(ws->getCurrentImageWindow());
+                ImageWindow* imw = dynamic_cast<ImageWindow*>(ws->getCurrentImageWindow());
                 if(imw != NULL) {
 					try {
-						imw->getImage()->save(path.toStdString()); 
+                        imw->getDisplayImage()->save(path.toStdString());
 					}
 					catch(const UnknownFormatException& e) {
 						if(ext == "")
 							throw e;
 						
-						imw->getImage()->save((path+ext).toStdString()); 
+                        imw->getDisplayImage()->save((path+ext).toStdString());
 					}
                 }
                 else {
@@ -188,7 +188,7 @@ void FileService::openRecentFile()
 void FileService::checkActionsValid(const QWidget* activeWidget)
 {
     std::cout << "WindowService::activeWidgetChanged(" << reinterpret_cast<intptr_t>(activeWidget) << ")" << std::endl;
-	const StandardImageWindow* window = dynamic_cast<const StandardImageWindow*>(activeWidget);
+    const ImageWindow* window = dynamic_cast<const ImageWindow*>(activeWidget);
 	if(window) {
 		_saveAs->setEnabled(true);
 	}

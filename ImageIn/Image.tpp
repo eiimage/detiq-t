@@ -289,7 +289,7 @@ void imagein::Image_t<D>::normalize(double dstMin, double dstMax) {
         for(unsigned int j = 0; j < getHeight(); ++j) {
             for(unsigned int i = 0; i < getWidth(); ++i) {
                 double value = getPixel(i, j, c);
-                value = value * ratio + offset;
+                value = (value + offset) * ratio;
                 value = std::max(static_cast<double>(std::numeric_limits<D>::min()), value);
                 value = std::min(static_cast<double>(std::numeric_limits<D>::max()), value);
                 setPixel(i, j, c, static_cast<D>(value));
