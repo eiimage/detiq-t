@@ -42,6 +42,7 @@ namespace genericinterface
   class Service
   {
   public:
+    virtual ~Service() {}
     /**
     * @brief Just before the QMainWindow::show (), it is important to connect each
     * services to the other.

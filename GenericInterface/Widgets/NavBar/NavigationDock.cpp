@@ -78,6 +78,10 @@ NavigationDock::NavigationDock(const QString & title, QWidget * parent, Qt::Wind
 
 }
 
+NavigationDock::~NavigationDock() {
+
+}
+
 QList<NodeId> NavigationDock::getSelection()
 {
     QItemSelectionModel *selection = _view->selectionModel();

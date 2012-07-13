@@ -88,7 +88,26 @@ namespace genericinterface
 	int addService(Service* s);
 	//int addNewService(Service* s);
     bool removeService(Service* s);
-	
+    /**
+    * @brief Add a new service to the generic interface
+    *
+    * <p>The integer using for the identification of one service is very important : it's thanks to
+    * its you will be able to connect your services with other, including the default ones. The GenericInterface
+    * gives a set of minimalist services, identify by an integer :</p>
+    *
+    * <ul>
+    *   <li> WindowService : 0
+    *   <li> FileService : 1
+    *   <li> UtilityService : 2
+    * </ul>
+    *
+    * <p>
+    *
+    * @param id the identifier of the service
+    * @param s the service to add
+    */
+    void addService(int id, Service* s) throw (BadIdException);
+
     /**
     * @brief Change the id service to a custom one.
     *
@@ -176,25 +195,6 @@ namespace genericinterface
 	int _nbServices;
     bool _running;
 	
-	/**
-    * @brief Add a new service to the generic interface
-    *
-    * <p>The integer using for the identification of one service is very important : it's thanks to
-    * its you will be able to connect your services with other, including the default ones. The GenericInterface
-    * gives a set of minimalist services, identify by an integer :</p>
-    *
-    * <ul>
-    *   <li> WindowService : 0
-    *   <li> FileService : 1
-    *   <li> UtilityService : 2
-    * </ul>
-    *
-    * <p>
-    *
-    * @param id the identifier of the service
-    * @param s the service to add
-    */
-    void addService(int id, Service* s) throw (BadIdException);
 	
   private:
     /**

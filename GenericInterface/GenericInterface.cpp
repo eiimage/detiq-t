@@ -35,7 +35,8 @@ GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _n
     _settings = new QSettings(org, app);
 
     addService(FILE_SERVICE, new FileService);
-    addService(WINDOW_SERVICE, new WindowService(navPos));
+    WindowService *ws = new WindowService(navPos);
+    addService(WINDOW_SERVICE, ws);
     addService(UTILITY_SERVICE, new UtilityService);
 
     this->setWindowIcon(QIcon(":/images/image-x-generic.png"));
@@ -78,6 +79,7 @@ bool GenericInterface::removeService(Service* s) {
     for(map<int, Service*>::iterator it = _services.begin(); it != _services.end(); ++it) {
         if(it->second == s) {
             _services.erase(it);
+            delete s;
             return true;
         }
     }
@@ -96,13 +98,15 @@ void GenericInterface::addService(int id, Service* s) throw (BadIdException)
 
 void GenericInterface::changeService(int id, Service* s) throw (BadIdException)
 {
-  if (_services.find(id) == _services.end())
-    throw new BadIdException(id);
-  else
-  {
-    delete _services[id];
+    map<int, Service*>::iterator it = _services.find(id);
+    if (it == _services.end()) {
+        throw new BadIdException(id);
+    }
+    Service* service = it->second;
+    _services.erase(it);
     _services[id] = s;
-  }
+    delete service;
+
 }
 
 Service* GenericInterface::getService(int id) throw (BadIdException)
