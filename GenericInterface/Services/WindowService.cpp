@@ -180,7 +180,7 @@ void WindowService::signalMdiChange() const {
 void WindowService::addFile(const QString& path)
 {
     QMutexLocker locker(&_mutex);
-    StandardImageWindow* siw = new StandardImageWindow(path, _gi);
+    StandardImageWindow* siw = new StandardImageWindow(path);
     const Image* img = siw->getImage();
     if(img->size() == 0) {
         delete siw;
@@ -221,6 +221,8 @@ void WindowService::addImage(NodeId id, ImageWindow* imgWnd, int pos)
 
     SubWindowController* swc = new SubWindowController(sw);
 
+    QObject::connect(imgWnd, SIGNAL(addImage(ImageWindow*,ImageWindow*)), this, SLOT(addImage(ImageWindow*,ImageWindow*)));
+    QObject::connect(imgWnd, SIGNAL(addWidget(ImageWindow*,QWidget*)), this, SLOT(addWidget(ImageWindow*,QWidget*)));
     QObject::connect(sw, SIGNAL(aboutToActivate()), imgWnd, SLOT(activated()));
 
     QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
@@ -233,6 +235,10 @@ void WindowService::addImage(NodeId id, ImageWindow* imgWnd, int pos)
     _nav->setActiveNode(id);
     //signalMdiChange();
 
+}
+
+void WindowService::addImage(ImageWindow* srcWnd, ImageWindow* imgWnd) {
+    this->addImage(this->getNodeId(srcWnd), imgWnd);
 }
 
 bool WindowService::addWidget(NodeId id, QWidget* widget)
@@ -263,6 +269,10 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
     _nav->setActiveNode(id);
     //signalMdiChange();
     return true;
+}
+
+bool WindowService::addWidget(ImageWindow* srcWnd, QWidget* widget) {
+   return this->addWidget(this->getNodeId(srcWnd), widget);
 }
 
 void WindowService::removeSubWindow(QMdiSubWindow* sw)

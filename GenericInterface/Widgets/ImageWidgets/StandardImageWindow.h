@@ -52,7 +52,7 @@ public:
      * \param path The image path
      * \param gi The interface associated with this
      */
-    StandardImageWindow(const QString path, GenericInterface* gi);
+    StandardImageWindow(const QString path);
 
     /*!
      * \brief Constructor based on an Image already openned
@@ -63,7 +63,7 @@ public:
      * \param gi The interface associated with this
      * \param image The image which is used
      */
-    StandardImageWindow(const QString path, GenericInterface* gi, Image* image);
+    StandardImageWindow(const QString path, Image* image);
     StandardImageWindow(const StandardImageWindow&, imagein::Image* img = NULL);
 
 
@@ -107,8 +107,6 @@ public slots:
 
     virtual void updateSrc(GenericHistogramView*, imagein::Rectangle);
 
-signals:
-    
 protected:
     const imagein::Image* _image;
 

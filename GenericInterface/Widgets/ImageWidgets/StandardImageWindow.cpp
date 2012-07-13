@@ -32,8 +32,8 @@ using namespace imagein;
 using namespace std;
 using namespace imagein::algorithm;
 
-StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* gi)
-    : ImageWindow(path, gi)
+StandardImageWindow::StandardImageWindow(const QString path)
+    : ImageWindow(path)
 {
     bool error = false;
     QString msg = "";
@@ -61,15 +61,14 @@ StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* g
 
     _image = image;
     this->setDisplayImage(image);
-    _gi = gi;
     
     this->setWindowTitle(ImageWindow::getTitleFromPath(path));
     
     init();
 }
 
-StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* gi, Image* image)
-    : ImageWindow(path, gi, image)
+StandardImageWindow::StandardImageWindow(const QString path, Image* image)
+    : ImageWindow(path, image)
 {
     _image = image;
 
@@ -79,7 +78,7 @@ StandardImageWindow::StandardImageWindow(const QString path, GenericInterface* g
 }
 
 StandardImageWindow::StandardImageWindow(const StandardImageWindow& siw, imagein::Image* image)
-    : ImageWindow(siw.getPath(), siw._gi)
+    : ImageWindow(siw.getPath())
 {
     if(image == NULL) {
         image = new Image(*siw._image);
@@ -203,8 +202,9 @@ void StandardImageWindow::showGenericHistogram(GenericHistogramWindow* histogram
     _imageView->setSelectSrc(histogramWnd->getView());
     QObject::connect(histogramWnd, SIGNAL(selectRectChange(imagein::Rectangle, GenericHistogramView*)), _imageView, SLOT(showSelectRect(imagein::Rectangle, GenericHistogramView*)));
    
-    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-    ws->addWidget(ws->getNodeId(this), histogramWnd);
+//    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+//    ws->addWidget(ws->getNodeId(this), histogramWnd);
+    emit addWidget(this, histogramWnd);
 }
 
 void StandardImageWindow::showHistogram()
@@ -255,8 +255,7 @@ void StandardImageWindow::showPixelsGrid()
 {
     GridWindow* grid = new GridWindow(_image);
     grid->setWindowTitle(this->windowTitle() + QString(" - ")  + tr("Pixels Grid"));
-    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-    ws->addWidget(ws->getNodeId(this), grid);
+    emit addWidget(this, grid);
 }
 
 void StandardImageWindow::crop() {
@@ -274,24 +273,21 @@ void StandardImageWindow::copycrop() {
     const Image* oldImg = _image;
     Image* newImg = oldImg->crop(_imageView->getRectangle());
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
-    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-    ws->addImage(ws->getNodeId(this), newImgWnd);
+    emit addImage(this, newImgWnd);
 }
 
 void StandardImageWindow::convertToGrayscale() {
     GrayscaleImage* newImg = RgbToGrayscale()(Converter<RgbImage>::convert(*_image));
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
 
-    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-    ws->addImage(ws->getNodeId(this), newImgWnd);
+    emit addImage(this, newImgWnd);
 }
 
 void StandardImageWindow::convertToBinary() {
     GrayscaleImage* newImg = Otsu()(Converter<GrayscaleImage>::convert(*_image));
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
 
-    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-    ws->addImage(ws->getNodeId(this), newImgWnd);
+    emit addImage(this, newImgWnd);
 }
 
 void StandardImageWindow::showSelectedPixelInformations(int x, int y) const

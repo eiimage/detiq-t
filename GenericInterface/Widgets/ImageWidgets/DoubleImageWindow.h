@@ -48,7 +48,7 @@ public:
      * \param gi The interface associated with this
      * \param image The image which is used
      */
-    DoubleImageWindow(const QString path, GenericInterface* gi, Image_t<double>* image, bool normalize = false, bool logScale = false, double logCOnstant = 1.0);
+    DoubleImageWindow(const QString path, Image_t<double>* image, bool normalize = false, bool logScale = false, double logCOnstant = 1.0);
     DoubleImageWindow(const DoubleImageWindow&, imagein::Image_t<double>* img = NULL);
 
 

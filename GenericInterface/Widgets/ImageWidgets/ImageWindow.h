@@ -64,7 +64,7 @@ class ImageWindow : public QWidget
          * \param source The source window
          * \param rect The application area (Rectangle used for Histogram, Algorithm...)
          */
-        ImageWindow(QString path, GenericInterface* gi, const imagein::Image* image = NULL, imagein::Rectangle rect = imagein::Rectangle());
+        ImageWindow(QString path, const imagein::Image* image = NULL, imagein::Rectangle rect = imagein::Rectangle());
 
         ~ImageWindow();
 
@@ -128,12 +128,15 @@ class ImageWindow : public QWidget
          */
         void highlightRectChange(imagein::Rectangle rect, ImageWindow* source);
 
+        void addWidget(ImageWindow*, QWidget*);
+        void addImage(ImageWindow*, ImageWindow*);
+
+
     protected:
         void setDisplayImage(const Image* displayImg);
 
         imagein::Rectangle _applicationArea;
         QString _path;
-        GenericInterface* _gi;
         const imagein::Image* _displayImg;
         ImageView* _imageView;
 

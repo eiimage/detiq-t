@@ -70,7 +70,9 @@ namespace genericinterface
   public slots:
     void addFile(const QString& path);
     void addImage(NodeId id, ImageWindow* image, int pos = -1);
+    void addImage(ImageWindow* srcImg, ImageWindow* dstImg);
     bool addWidget(NodeId id, QWidget* widget);
+    bool addWidget(ImageWindow* srcImg, QWidget* widget);
     void updateDisplay();
     void removeId(NodeId id);
     void moveToNode(StandardImageWindow* siw, int pos = -1);

@@ -25,8 +25,8 @@ using namespace std;
 using namespace genericinterface;
 using namespace imagein;
 
-ImageWindow::ImageWindow(QString path, GenericInterface* gi, const Image* displayImg, Rectangle rect)
-    : _displayImg(displayImg), _path(path), _gi(gi)
+ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
+    : _displayImg(displayImg), _path(path)
 {
     _applicationArea = rect;
     _zoomFactor = 1;
@@ -150,7 +150,7 @@ QString ImageWindow::getTitleFromPath(QString path)
 
 
 void ImageWindow::startDrag() {
-    QDrag *drag = new QDrag(_gi);
+    QDrag *drag = new QDrag(this);
     QMimeData *mimeData = new QMimeData();
     QByteArray encodedData;
     QDataStream stream(&encodedData, QIODevice::WriteOnly);

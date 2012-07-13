@@ -24,8 +24,8 @@ using namespace genericinterface;
 using namespace imagein;
 using namespace std;
 
-DoubleImageWindow::DoubleImageWindow(const QString path, GenericInterface* gi, Image_t<double>* image, bool normalize, bool logScale, double logConstant)
-    : ImageWindow(path, gi), _image(image), _normalize(normalize), _logScale(logScale), _logConstant(logConstant)
+DoubleImageWindow::DoubleImageWindow(const QString path, Image_t<double>* image, bool normalize, bool logScale, double logConstant)
+    : ImageWindow(path), _image(image), _normalize(normalize), _logScale(logScale), _logConstant(logConstant)
 {
     _image = image;
 
@@ -37,7 +37,7 @@ DoubleImageWindow::DoubleImageWindow(const QString path, GenericInterface* gi, I
 }
 
 DoubleImageWindow::DoubleImageWindow(const DoubleImageWindow& siw, imagein::Image_t<double>* image)
-    : ImageWindow(siw.getPath(), siw._gi), _normalize(siw._normalize), _logScale(siw._logScale), _logConstant(siw._logConstant)
+    : ImageWindow(siw.getPath()), _normalize(siw._normalize), _logScale(siw._logScale), _logConstant(siw._logConstant)
 {
     if(image == NULL) {
         image = new Image_t<double>(*siw._image);
@@ -173,8 +173,7 @@ void DoubleImageWindow::crop() {
 void DoubleImageWindow::copycrop() {
     Image_t<double>* newImg = _image->crop(_imageView->getRectangle());
     DoubleImageWindow* newImgWnd = new DoubleImageWindow(*this, newImg);
-    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-    ws->addImage(ws->getNodeId(this), newImgWnd);
+    emit addImage(this, newImgWnd);
 }
 
 void DoubleImageWindow::showSelectedPixelInformations(int x, int y) const

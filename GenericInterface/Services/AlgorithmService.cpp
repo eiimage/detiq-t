@@ -57,7 +57,7 @@ void AlgorithmService::applyAlgorithm(GenericAlgorithm_t<Image::depth_t>* algo)
         Image* im_res = (*algo)(im);
         //im_res = Converter<Image>::makeDisplayable(*im_res);
 
-        StandardImageWindow* siw_res = new StandardImageWindow(siw->getPath(), _gi, im_res);
+        StandardImageWindow* siw_res = new StandardImageWindow(siw->getPath(), im_res);
         emit newImageWindowCreated(_ws->getNodeId(siw), siw_res);
     }
 }
