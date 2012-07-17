@@ -43,10 +43,26 @@
 #include <Image.h>
 #include "ImageView.h"
 
+class QSpinBox;
+
 namespace genericinterface
 {
 
 class GenericInterface;
+
+class SelectionWidget : public QWidget {
+  Q_OBJECT
+  public:
+    SelectionWidget(QWidget* parent, int width, int height);
+    void setRange(int width, int height);
+  public slots:
+    void updateSelection(QRect select);
+    void selectionMoved(int);
+  signals:
+    void selectionMoved(QRect);
+  protected:
+    QSpinBox *_Xspinbox, *_Yspinbox, *_Wspinbox, *_Hspinbox;
+};
 /*!
    * \brief Inherited class by all Windows
    *
@@ -153,6 +169,9 @@ class ImageWindow : public QWidget
         QToolButton* _selectButton;
         QToolButton* _mouseButton;
         QToolButton* _selectAllButton;
+        SelectionWidget* _selectWidget;
+        QWidget* _infoWidget;
+        QVBoxLayout* _infoLayout;
 
         void initStatusBar();
 

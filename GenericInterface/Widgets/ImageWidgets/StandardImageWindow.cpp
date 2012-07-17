@@ -193,7 +193,7 @@ void StandardImageWindow::updateStatusBar()
     infoLayout->addLayout(layoutStats);
     infoLayout->addLayout(layoutSelectedPixel);
     infoLayout->addLayout(layoutHoveredPixel);
-    _statusBar->layout()->addWidget(infoWidget);
+    _infoLayout->addWidget(infoWidget);
 
 }
 

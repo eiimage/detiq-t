@@ -20,10 +20,51 @@
 #include "../../GenericInterface.h"
 
 #include "ImageWindow.h"
+#include <QSpinBox>
 
 using namespace std;
 using namespace genericinterface;
 using namespace imagein;
+
+SelectionWidget::SelectionWidget(QWidget* parent, int width, int height) : QWidget(parent) {
+    this->setFont(QFont("arial", 8));
+    _Xspinbox = new QSpinBox(this);
+    _Yspinbox = new QSpinBox(this);
+    _Wspinbox = new QSpinBox(this);
+    _Hspinbox = new QSpinBox(this);
+    this->setRange(width, height);
+    QHBoxLayout* layout = new QHBoxLayout(this);
+    layout->addWidget(new QLabel(tr("Selection : ")));
+    layout->addWidget(new QLabel(tr("x:")));
+    layout->addWidget(_Xspinbox);
+    layout->addWidget(new QLabel(tr("y:")));
+    layout->addWidget(_Yspinbox);
+    layout->addWidget(new QLabel(tr("width:")));
+    layout->addWidget(_Wspinbox);
+    layout->addWidget(new QLabel(tr("height:")));
+    layout->addWidget(_Hspinbox);
+    connect(_Xspinbox, SIGNAL(valueChanged(int)), this, SLOT(selectionMoved(int)));
+    connect(_Yspinbox, SIGNAL(valueChanged(int)), this, SLOT(selectionMoved(int)));
+    connect(_Wspinbox, SIGNAL(valueChanged(int)), this, SLOT(selectionMoved(int)));
+    connect(_Hspinbox, SIGNAL(valueChanged(int)), this, SLOT(selectionMoved(int)));
+}
+void SelectionWidget::setRange(int width, int height) {
+    _Xspinbox->setRange(0, width);
+    _Yspinbox->setRange(0, height);
+    _Wspinbox->setRange(0, width);
+    _Hspinbox->setRange(0, height);
+}
+void SelectionWidget::updateSelection(QRect select) {
+    this->blockSignals(true);
+    _Xspinbox->setValue(select.x());
+    _Yspinbox->setValue(select.y());
+    _Wspinbox->setValue(select.width());
+    _Hspinbox->setValue(select.height());
+    this->blockSignals(false);
+}
+void SelectionWidget::selectionMoved(int) {
+    emit selectionMoved(QRect(_Xspinbox->value(), _Yspinbox->value(), _Wspinbox->value(), _Hspinbox->value()));
+}
 
 ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
     : _displayImg(displayImg), _path(path)
@@ -49,6 +90,11 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
 void ImageWindow::setDisplayImage(const Image* displayImg) {
     _displayImg = displayImg;
     _imageView->setImage(displayImg);
+    QString width = QString("%1").arg(_imageView->pixmap().width());
+    QString height = QString("%1").arg(_imageView->pixmap().height());
+
+    _lImageSize->setText(QString("(%1x%2)").arg(width, height));
+    _selectWidget->setRange(displayImg->getWidth(), displayImg->getHeight());
 }
 
 ImageWindow::~ImageWindow() {
@@ -103,6 +149,14 @@ void ImageWindow::initStatusBar()
     _selectAllButton->setIconSize (QSize(24, 24));
     _selectAllButton->setEnabled(false);
 
+    _selectWidget = new SelectionWidget(this, _imageView->pixmap().width(), _imageView->pixmap().height());
+    connect(_imageView, SIGNAL(selectionMoved(QRect)), _selectWidget, SLOT(updateSelection(QRect)));
+    connect(_selectWidget, SIGNAL(selectionMoved(QRect)), _imageView, SLOT(moveSelection(QRect)));
+    _selectWidget->hide();
+
+    _infoWidget = new QWidget(this);
+    _infoLayout = new QVBoxLayout(_infoWidget);
+
     QObject::connect(_mouseButton, SIGNAL(toggled(bool)), this, SLOT(toggleMouseMode(bool)));
     QObject::connect(_selectButton, SIGNAL(toggled(bool)), this, SLOT(toggleSelectMode(bool)));
     QObject::connect(_selectAllButton, SIGNAL(clicked()), _imageView, SLOT(selectAll()));
@@ -122,6 +176,8 @@ void ImageWindow::initStatusBar()
     layoutImage->addSpacing(8);
 
     layout->addWidget(widgetImage);
+    layout->addWidget(_selectWidget);
+    layout->addWidget(_infoWidget);
 }
 
 
@@ -187,11 +243,15 @@ void ImageWindow::toggleSelectMode(bool checked) {
         _mouseButton->setChecked(false);
         _imageView->switchMode(ImageView::MODE_SELECT);
         _selectAllButton->setEnabled(true);
+        _infoWidget->hide();
+        _selectWidget->show();
     }
     else {
         if(!_mouseButton->isChecked()) {
             _selectButton->setChecked(true);
         }
+        _selectWidget->hide();
+        _infoWidget->show();
     }
 }
 

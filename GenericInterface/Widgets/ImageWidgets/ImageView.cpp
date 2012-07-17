@@ -158,6 +158,7 @@ void ImageView::selectionMove(QPoint pos) {
     if(_selectSrc != NULL) {
         emit updateSrc(_selectSrc, imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
     }
+    emit selectionMoved(_select);
 }
 
 void ImageView::selectionResize(QPoint pos) {
@@ -204,6 +205,7 @@ void ImageView::selectionResize(QPoint pos) {
     if(_selectSrc != NULL) {
         emit updateSrc(_selectSrc, imagein::Rectangle(_select.x(), _select.y(), _select.width(), _select.height()));
     }
+    emit selectionMoved(_select);
 }
 
 void ImageView::selectionMake(QPoint pos) {
@@ -222,6 +224,7 @@ void ImageView::selectionMake(QPoint pos) {
     }
     _select = _select.intersected(_imgWidget->pixmap().rect());
     redrawSelect();
+    emit selectionMoved(_select);
 }
 
 
@@ -335,6 +338,16 @@ void ImageView::selectAll()
     _selectSrc = NULL;
     _select = QRect(0, 0, pixmap().width(), pixmap().height());
     redrawSelect();
+}
+
+void ImageView::moveSelection(QRect rect) {
+    _select = rect;
+    redrawSelect();
+    _oldSelect = _select;
+    _vLine = (_oldSelect.width() == 0 && _oldSelect.height() == pixmap().height());
+    _hLine = (_oldSelect.height() == 0 && _oldSelect.width() == pixmap().width());
+
+    _selectSrc = NULL;
 }
 
 void ImageView::switchMode(Mode mode) {

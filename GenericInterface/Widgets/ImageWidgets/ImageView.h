@@ -90,6 +90,7 @@ namespace genericinterface
     public slots:
 
     void showSelectRect(imagein::Rectangle rect, GenericHistogramView* source);
+    void moveSelection(QRect rect);
     void selectAll();
     void scale(double, double);
     virtual QSize sizeHint() const { return pixmap().size()+QSize(frameWidth()*2,frameWidth()*2); }
@@ -119,6 +120,7 @@ namespace genericinterface
         
         void startDrag();
         void updateSrc(GenericHistogramView*, imagein::Rectangle);
+        void selectionMoved(QRect);
 
   protected:
     QWidget* _parent;
