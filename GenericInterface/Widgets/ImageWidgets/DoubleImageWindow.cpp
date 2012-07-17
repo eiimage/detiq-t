@@ -133,6 +133,9 @@ void DoubleImageWindow::updateStatusBar()
     layoutSelectedPixel->addWidget(_lSelectedPixelInfo);
     layoutSelectedPixel->addWidget(_lSelectedPixelPosition);
     layoutSelectedPixel->addWidget(_lSelectedPixelColor);
+    _lSelectedPixelInfo->hide();
+    _lSelectedPixelPosition->hide();
+    _lSelectedPixelColor->hide();
 
     QHBoxLayout* layoutHoveredPixel = new QHBoxLayout();
     layoutHoveredPixel->setContentsMargins(0, 0, 0, 0);
@@ -185,11 +188,14 @@ void DoubleImageWindow::showSelectedPixelInformations(int x, int y) const
     for(unsigned int i = 0; i < _image->getNbChannels(); i++)
     {
         try {
-            _lSelectedPixelColor->setText(_lSelectedPixelColor->text() + QString(" %1").arg(_image->getPixel(x, y, i)) );
+            _lSelectedPixelColor->setText(_lSelectedPixelColor->text() + QString(" %1").arg(_image->getPixel(x, y, i), 0, 'f', 2) );
         }
         catch(std::out_of_range&) {
         }
     }
+    _lSelectedPixelInfo->show();
+    _lSelectedPixelPosition->show();
+    _lSelectedPixelColor->show();
 }
 
 void DoubleImageWindow::showHoveredPixelInformations(int x, int y) const
@@ -200,7 +206,7 @@ void DoubleImageWindow::showHoveredPixelInformations(int x, int y) const
     for(unsigned int i = 0; i < _image->getNbChannels(); i++)
     {
         try {
-            _lHoveredPixelColor->setText(_lHoveredPixelColor->text() + QString(" %1").arg(_image->getPixel(x, y, i)) );
+            _lHoveredPixelColor->setText(_lHoveredPixelColor->text() + QString(" %1").arg(_image->getPixel(x, y, i), 0, 'f', 2) );
         }
         catch(std::out_of_range&) {
         }
