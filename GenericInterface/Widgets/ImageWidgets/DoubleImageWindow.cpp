@@ -63,6 +63,8 @@ void DoubleImageWindow::init()
 {
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
+    menu()->addAction(tr("Pixels Grid"), this, SLOT(showPixelsGrid()));
+    menu()->addSeparator();
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
 
@@ -151,10 +153,9 @@ void DoubleImageWindow::updateStatusBar()
 
 void DoubleImageWindow::showPixelsGrid()
 {
-//    GridWindow* grid = new GridWindow(_image);
-//    grid->setWindowTitle(this->windowTitle() + QString(" - ")  + tr("Pixels Grid"));
-//    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-//    ws->addWidget(ws->getNodeId(this), grid);
+    GridView* grid = new GridView(_image, _displayImg);
+    grid->setWindowTitle(this->windowTitle() + QString(" - ")  + tr("Pixels Grid"));
+    emit addWidget(this, grid);
 }
 
 void DoubleImageWindow::crop() {

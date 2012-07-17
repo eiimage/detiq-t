@@ -23,6 +23,7 @@
 
 #include "Algorithm/RgbToGrayscale.h"
 #include "Algorithm/Otsu.h"
+#include "GridView.h"
 
 #include <QPushButton>
 #include <QMessageBox>
@@ -253,7 +254,7 @@ void StandardImageWindow::showColumnProfile()
 
 void StandardImageWindow::showPixelsGrid()
 {
-    GridWindow* grid = new GridWindow(_image);
+    GridView* grid = new GridView(_image);
     grid->setWindowTitle(this->windowTitle() + QString(" - ")  + tr("Pixels Grid"));
     emit addWidget(this, grid);
 }

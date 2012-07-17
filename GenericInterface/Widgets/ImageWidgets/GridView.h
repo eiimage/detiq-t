@@ -75,7 +75,8 @@ namespace genericinterface
     * @param dx the original horizontal offset
     * @param dy the original vertical offset
     */
-    GridView(const imagein::Image* im, int dx, int dy);
+    GridView(const imagein::Image* image);
+    GridView(const imagein::Image_t<double>* dataImg, const imagein::Image* displayImg);
 
   private:
     QHBoxLayout* _layout; /*!< the layout of the widget */

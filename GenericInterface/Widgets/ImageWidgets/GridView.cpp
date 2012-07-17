@@ -75,30 +75,48 @@ void RadioPanel::rcvActivated(int a)
   emit activated(a);
 }
 
-GridView::GridView(const imagein::Image* im, int dx, int dy)
+GridView::GridView(const imagein::Image* im)
 {
     _layout = new QHBoxLayout(this);
-    //_viewer = new ImageViewer(im, dx, dy);
 
-    QVBoxLayout *layout = new QVBoxLayout();
-    layout->setSizeConstraint(QLayout::SetFixedSize);
-    //QGraphicsView* view = new QGraphicsView;
-    //view->setScene(_viewer);
+    QWidget* leftWidget = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(leftWidget);
 
     RadioPanel* panel = new RadioPanel(im->getNbChannels());
 
-    //layout->addWidget(view);
     ThumbnailView* view = new ThumbnailView(this, im);
     view->setFixedSize(256, 256*view->pixmap().height()/view->pixmap().width());
     layout->addWidget(view);
     layout->addWidget(panel);
-    _layout->addLayout(layout);
+    _layout->addWidget(leftWidget);
 
-    //ZoomViewer* zv = new ZoomViewer(im, ImageViewer::RECT_W, ImageViewer::RECT_H);
-    //QGraphicsView* viewz = new QGraphicsView;
-    //viewz->setScene(zv);
-    //_layout->addWidget(viewz);
     PixelGrid* pixelGrid = new PixelGrid(im);
+    pixelGrid->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    _layout->addWidget(pixelGrid);
+
+    QObject::connect(panel, SIGNAL(activated(int)), pixelGrid, SLOT(setChannel(int)));
+
+    QObject::connect(view, SIGNAL(positionChanged(QPoint)), pixelGrid, SLOT(setOffset(QPoint)));
+    QObject::connect(pixelGrid, SIGNAL(resized(QSize)), view, SLOT(setRectSize(QSize)));
+
+}
+
+GridView::GridView(const imagein::Image_t<double>* dataImg, const imagein::Image* displayImg)
+{
+    _layout = new QHBoxLayout(this);
+
+    QWidget* leftWidget = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(leftWidget);
+
+    RadioPanel* panel = new RadioPanel(dataImg->getNbChannels());
+
+    ThumbnailView* view = new ThumbnailView(this, displayImg);
+    view->setFixedSize(256, 256*view->pixmap().height()/view->pixmap().width());
+    layout->addWidget(view);
+    layout->addWidget(panel);
+    _layout->addWidget(leftWidget);
+
+    PixelGrid* pixelGrid = new DoublePixelGrid(dataImg, displayImg);
     pixelGrid->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     _layout->addWidget(pixelGrid);
 

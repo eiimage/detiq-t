@@ -18,6 +18,7 @@
 */
 
 #include <QScrollBar>
+#include <QSpinBox>
 
 #include "ImageView.h"
 

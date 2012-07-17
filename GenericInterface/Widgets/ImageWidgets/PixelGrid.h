@@ -51,7 +51,7 @@ namespace genericinterface
     */
     void setOffset(QPoint offset);
     void setChannel(int c);
-    virtual QSize sizeHint() const { return QSize(16*PIXEL_S, 16*PIXEL_S); }
+    virtual QSize sizeHint() const { return QSize(17*PIXEL_S+2, 17*PIXEL_S+2); }
 
   signals:
     void resized(QSize size);
@@ -66,6 +66,19 @@ namespace genericinterface
     const imagein::Image* _image;
     QPoint _offset;
     int _channel;
+  };
+
+  class DoublePixelGrid : public PixelGrid
+  {
+  public:
+    static const int PIXEL_S = 32;
+      DoublePixelGrid(const imagein::Image_t<double>* dataImg, const imagein::Image* displayImg);
+
+  protected:
+      void paintEvent (QPaintEvent* event );
+      const imagein::Image_t<double>* _dataImg;
+
+
   };
 }
 

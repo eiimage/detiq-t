@@ -31,7 +31,7 @@ GridWindow::GridWindow(const imagein::Image* img) : QScrollArea()
 {
   QVBoxLayout* box = new QVBoxLayout;
 
-  _view = new GridView(img, 0, 0);
+  _view = new GridView(img);
 
   box->addWidget(_view);
   setLayout(box);
