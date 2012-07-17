@@ -42,29 +42,52 @@ void ImageWidget::paintEvent (QPaintEvent* event ) {
 
 QImage ImageWidget::convertImage(const imagein::Image* img)
 {
-    bool hasAlpha = (img->getNbChannels() == 4 || img->getNbChannels() == 2);
+    unsigned int channels = img->getNbChannels();
+    bool hasAlpha = (channels== 4 || channels == 2);
     QImage qImg(img->getWidth(), img->getHeight(), (hasAlpha ? QImage::Format_ARGB32 : QImage::Format_RGB32));
     //on récupère les bits de l'image qt, qu'on cast en QRgb (qui fait 32 bits -> une image RGB(A))
     QRgb* data = reinterpret_cast<QRgb*>(qImg.bits());
     //Pour chaque pixel de l'image Qt, on récupère les données correspondantes de l'image ImageIn grace à l'itérateur
     Image::const_iterator it = img->begin();
-    for(int i = 0; i < qImg.width()*qImg.height(); ++i) {
-        int red, green, blue, alpha;
-        if(img->getNbChannels() < 3) {
-            red = green = blue = *(it++);
+    int size = qImg.width()*qImg.height();
+    switch(channels) {
+        case 0: break;
+        case 1:
+        {
+            for(int i = 0; i < size; ++i) {
+                const imagein::Image::depth_t gray = *(it++);
+                data[i] = qRgb(gray, gray, gray);
+            }
+            break;
         }
-        else {
-            red = *(it++);
-            green = *(it++);
-            blue = *(it++);
+        case 2:
+        {
+            for(int i = 0; i < size; ++i) {
+                const imagein::Image::depth_t gray = *(it++);
+                const imagein::Image::depth_t alpha = *(it++);
+                data[i] = qRgba(gray, gray, gray, alpha);
+            }
+            break;
         }
-        if(hasAlpha) {
-            alpha = *(it++);
-            //On utilise la fonction qRgb(a) pour en faire un pointeur de qRgb
-            data[i] = qRgba(red, green, blue, alpha);
+        case 3:
+        {
+            for(int i = 0; i < size; ++i) {
+                const imagein::Image::depth_t red = *(it++);
+                const imagein::Image::depth_t green = *(it++);
+                const imagein::Image::depth_t blue = *(it++);
+                data[i] = qRgb(red, green, blue);
+            }
+            break;
         }
-        else {
-            data[i] = qRgb(red, green, blue);
+        default:
+        {
+            for(int i = 0; i < size; ++i) {
+                const imagein::Image::depth_t red = *(it++);
+                const imagein::Image::depth_t green = *(it++);
+                const imagein::Image::depth_t blue = *(it++);
+                const imagein::Image::depth_t alpha = *(it++);
+                data[i] = qRgba(red, green, blue, alpha);
+            }
         }
     }
     return qImg;
