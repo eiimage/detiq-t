@@ -48,7 +48,7 @@ public:
      * \param gi The interface associated with this
      * \param image The image which is used
      */
-    DoubleImageWindow(const QString path, Image_t<double>* image, bool normalize = false, bool logScale = false, double logCOnstant = 1.0);
+    DoubleImageWindow(Image_t<double>* image, const QString path = QString(), bool normalize = false, bool logScale = false, double logCOnstant = 1.0);
     DoubleImageWindow(const DoubleImageWindow&, imagein::Image_t<double>* img = NULL);
 
 
@@ -67,6 +67,10 @@ public:
     inline const imagein::Image_t<double>* getImage() const { return _image; }
 
     imagein::Image* makeDisplayable(const imagein::Image_t<double>*) const;
+    virtual bool isDouble() const { return true; }
+    virtual bool isStandard() const { return false; }
+    inline bool isNormalized() const { return _normalize; }
+    inline bool isLogScaled() const { return _logScale; }
 
 
 public slots:

@@ -75,9 +75,10 @@ class ImageWindow : public QWidget
          */
         static QString getTitleFromPath(QString path);
 
-        QString getPath() const { return _path; }
+        inline QString getPath() const { return _path; }
+        inline void setPath(QString path) { _path = path; }
 
-        QString getName() const { return getTitleFromPath(_path); }
+        inline QString getName() const { return getTitleFromPath(_path); }
 
         /*!
          * \brief Returns the displayable Image contained in the window.
@@ -96,6 +97,8 @@ class ImageWindow : public QWidget
         inline ImageView* view() { return _imageView; }
 
         void zoom(int delta);
+        virtual bool isDouble() const = 0;
+        virtual bool isStandard() const = 0;
 
 
     public slots:

@@ -67,7 +67,7 @@ StandardImageWindow::StandardImageWindow(const QString path)
     init();
 }
 
-StandardImageWindow::StandardImageWindow(const QString path, Image* image)
+StandardImageWindow::StandardImageWindow(Image* image, const QString path)
     : ImageWindow(path, image)
 {
     _image = image;

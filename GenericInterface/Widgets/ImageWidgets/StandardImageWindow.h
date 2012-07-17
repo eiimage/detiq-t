@@ -63,7 +63,7 @@ public:
      * \param gi The interface associated with this
      * \param image The image which is used
      */
-    StandardImageWindow(const QString path, Image* image);
+    StandardImageWindow(Image *image, const QString path = QString());
     StandardImageWindow(const StandardImageWindow&, imagein::Image* img = NULL);
 
 
@@ -86,6 +86,8 @@ public:
      *
      */
     inline const imagein::Image* getImage() const { return _image; }
+    virtual bool isDouble() const { return false; }
+    virtual bool isStandard() const { return true; }
 
 
 public slots:

@@ -19,12 +19,13 @@
 
 #include "GenericInterface.h"
 #include "DoubleImageWindow.h"
+#include "GridView.h"
 
 using namespace genericinterface;
 using namespace imagein;
 using namespace std;
 
-DoubleImageWindow::DoubleImageWindow(const QString path, Image_t<double>* image, bool normalize, bool logScale, double logConstant)
+DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path, bool normalize, bool logScale, double logConstant)
     : ImageWindow(path), _image(image), _normalize(normalize), _logScale(logScale), _logConstant(logConstant)
 {
     _image = image;
