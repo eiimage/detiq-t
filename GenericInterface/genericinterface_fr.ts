@@ -9,6 +9,33 @@
     </message>
 </context>
 <context>
+    <name>genericinterface::DoubleImageWindow</name>
+    <message>
+        <source>Pixels Grid</source>
+        <translation>Grille de pixels</translation>
+    </message>
+    <message>
+        <source>Crop</source>
+        <translation>Rogner</translation>
+    </message>
+    <message>
+        <source>Copy &amp; crop</source>
+        <translation>Copier &amp; rognier</translation>
+    </message>
+    <message>
+        <source>Selected</source>
+        <translation>Selectionné</translation>
+    </message>
+    <message>
+        <source>Color</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <source>Hovered</source>
+        <translation>Survolé</translation>
+    </message>
+</context>
+<context>
     <name>genericinterface::FileService</name>
     <message>
         <source>&amp;File</source>
@@ -174,6 +201,29 @@
     </message>
 </context>
 <context>
+    <name>genericinterface::ImageWindow</name>
+    <message>
+        <source>Image</source>
+        <translation>Image</translation>
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation>Zoom</translation>
+    </message>
+    <message>
+        <source>Selection mode</source>
+        <translation>Mode sélection</translation>
+    </message>
+    <message>
+        <source>Hand mode</source>
+        <translation>Mode main</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Sélectionner tout</translation>
+    </message>
+</context>
+<context>
     <name>genericinterface::NavigationDock</name>
     <message>
         <source>Close all image from the selection</source>
@@ -287,7 +337,7 @@
     </message>
     <message>
         <source>Image</source>
-        <translation>Image</translation>
+        <translation type="obsolete">Image</translation>
     </message>
     <message>
         <source>Selected</source>
@@ -303,19 +353,27 @@
     </message>
     <message>
         <source>Zoom</source>
-        <translation>Zoom</translation>
+        <translation type="obsolete">Zoom</translation>
     </message>
     <message>
         <source>Selection mode</source>
-        <translation>Mode sélection</translation>
+        <translation type="obsolete">Mode sélection</translation>
     </message>
     <message>
         <source>Hand mode</source>
-        <translation>Mode main</translation>
+        <translation type="obsolete">Mode main</translation>
     </message>
     <message>
         <source>Select all</source>
-        <translation>Sélectionner tout</translation>
+        <translation type="obsolete">Sélectionner tout</translation>
+    </message>
+    <message>
+        <source>Convert to grayscale</source>
+        <translation>Convertir en niveaux de gris</translation>
+    </message>
+    <message>
+        <source>Convert to binary</source>
+        <translation>Convertir en binaire</translation>
     </message>
 </context>
 <context>
