@@ -37,7 +37,8 @@
 		EasyBMP.cpp
 		Graph.cpp
 		Algorithm/Filter.cpp
-    Algorithm/Filtering.cpp
+        Algorithm/Filtering.cpp
+        Algorithm/MorphoMat.cpp
 	</sources>	
 </lib>
 
