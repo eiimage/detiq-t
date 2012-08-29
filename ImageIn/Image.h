@@ -165,6 +165,21 @@ namespace imagein
             inline unsigned int size() const { return _width*_height*_nChannels; }
             bool operator==(const imagein::Image_t<D>& img) const;
 
+            inline Image_t<D>* operator-(const Image_t<D>& img) const {
+                Image_t<D>* res = new Image_t<D>(std::min(_width, img._width), std::min(_height, img._height), std::min(_nChannels, img._nChannels));
+                for(unsigned int c = 0; c < res->_nChannels; ++c) {
+                    for(unsigned int j = 0; j < res->_height; ++j) {
+                        for(unsigned int i = 0; i < res->_width; ++i) {
+                            int value = getPixelAt(i, j, c) - img.getPixelAt(i, j, c);
+                            value = std::max(static_cast<int>(std::numeric_limits<D>::min()), value);
+                            value = std::min(static_cast<int>(std::numeric_limits<D>::max()), value);
+                            res->setPixel(i, j, c, static_cast<D>(value));
+                        }
+                    }
+                }
+                return res;
+            }
+
             /*!
              * \brief Saves the image into a file.
              *
