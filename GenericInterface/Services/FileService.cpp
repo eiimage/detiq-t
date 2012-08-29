@@ -124,7 +124,7 @@ void FileService::saveAs()
 
 	if(file != "") {
 	    if(!file.contains('.')) file += ext;
-		this->save(path, ext);
+        this->save(file, ext);
 	}
 }
 
