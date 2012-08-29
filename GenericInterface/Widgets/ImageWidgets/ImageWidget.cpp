@@ -44,7 +44,8 @@ QImage ImageWidget::convertImage(const imagein::Image* img)
 {
     unsigned int channels = img->getNbChannels();
     bool hasAlpha = (channels== 4 || channels == 2);
-    QImage qImg(img->getWidth(), img->getHeight(), (hasAlpha ? QImage::Format_ARGB32 : QImage::Format_RGB32));
+//    QImage qImg(img->getWidth(), img->getHeight(), (hasAlpha ? QImage::Format_ARGB32 : QImage::Format_RGB32));
+    QImage qImg(img->getWidth(), img->getHeight(), QImage::Format_RGB32);
     //on récupère les bits de l'image qt, qu'on cast en QRgb (qui fait 32 bits -> une image RGB(A))
     QRgb* data = reinterpret_cast<QRgb*>(qImg.bits());
     //Pour chaque pixel de l'image Qt, on récupère les données correspondantes de l'image ImageIn grace à l'itérateur
