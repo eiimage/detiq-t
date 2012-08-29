@@ -77,6 +77,8 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
     QObject::connect(_imageView, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
     _statusBar = new QWidget();
     initStatusBar();
+    menu()->addAction(tr("Rename"), this, SLOT(rename()));
+    menu()->addSeparator();
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(_imageView);
@@ -297,4 +299,17 @@ void ImageWindow::pixelClicked(int x, int y) {
 
 void ImageWindow::pixelHovered(int x, int y) {
     this->showHoveredPixelInformations(x, y);
+}
+
+void ImageWindow::rename() {
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Rename image"),
+                                         tr("New name:"), QLineEdit::Normal,
+                                         windowTitle(), &ok);
+    if (ok && !text.isEmpty())
+        this->setWindowTitle(text);
+}
+
+void ImageWindow::keyPressEvent ( QKeyEvent * event ) {
+//    if(event->
 }

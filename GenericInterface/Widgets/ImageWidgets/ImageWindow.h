@@ -131,6 +131,8 @@ class ImageWindow : public QWidget
         virtual void pixelClicked(int x, int y);
         virtual void pixelHovered(int x, int y);
 
+        void rename();
+
 
     signals:
         /*!
@@ -178,6 +180,7 @@ class ImageWindow : public QWidget
         double _zoomFactor;
 
         void wheelEvent (QWheelEvent * event);
+        void keyPressEvent ( QKeyEvent * event );
 
         virtual void showHoveredPixelInformations(int x, int y) const = 0;
         virtual void showSelectedPixelInformations(int x, int y) const = 0;
