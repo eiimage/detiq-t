@@ -66,10 +66,10 @@ void* BmpImage::readData()
 			// Getting the current pixel
 			px = workImg->GetPixel(i,j);
 			// Every pixel is in a RGBA form, we will always get the RGB components, and the Alpha component when necessary
-			data[c*(i+j*w)] = px.Red;
-			data[c*(i+j*w)+1] = px.Green;
-			data[c*(i+j*w)+2] = px.Blue;
-			if(c==4) data[c*(i+j*w)+3] = px.Alpha; // In case there are 4 channels, we get the Alpha channel too
+            data[w*j+i] = px.Red;
+            data[w*(h + j)+i] = px.Green;
+            data[w*(h*2 + j)+i] = px.Blue;
+            if(c==4) data[w*(h*3 + j)+i] = px.Alpha; // In case there are 4 channels, we get the Alpha channel too
 		}
 	}
 	return data;
@@ -92,10 +92,10 @@ void BmpImage::writeData(const void* const data_, unsigned int width, unsigned i
 			// Getting the current pixel
 			px=(*workImg)(i,j);
 			// Every pixel is in a RGBA form, we will always load the RGB components, and the Alpha component when necessary
-			px->Red = data[nChannels*(i+j*width)];
-			px->Green = data[nChannels*(i+j*width)+1];
-			px->Blue = data[nChannels*(i+j*width)+2];
-			if(nChannels == 4) px->Alpha = data[nChannels*(i+j*width)+3]; // In case there are 4 channels, we load the Alpha channel too
+            px->Red = data[width*j + i];
+            px->Green = data[width*(height + j) + i];
+            px->Blue = data[width*(height*2 + j) + i];
+            if(nChannels == 4) px->Alpha = data[width*(height*3 + j) + i]; // In case there are 4 channels, we load the Alpha channel too
 			//TODO handling of a depth other than uint8_t
 		}
 	}

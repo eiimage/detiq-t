@@ -79,13 +79,37 @@ void* PngImage::readData()
 
     delete[] rowPtrs;
 
-    return data;
+    uint8_t* image = new uint8_t[h*rowSize];
+    for(unsigned int j = 0; j < h; ++j) {
+        for(unsigned int i = 0; i < w; ++i) {
+            for(unsigned int k = 0; k < c; ++k) {
+                image[w*(h*k + j) + i] = data[j*rowSize + i*c + k];
+            }
+        }
+    }
+    delete[] data;
+    return image;
+
+
+//    return data;
 }
 
 void PngImage::writeData(const void* const data_, unsigned int width, unsigned int height, unsigned int nChannels, unsigned int depth)
 {
-	const uint8_t* const data = reinterpret_cast<const uint8_t* const>(data_);
-	
+    const uint8_t* const image = reinterpret_cast<const uint8_t* const>(data_);
+    uint8_t* data = new uint8_t[width*height*nChannels*depth/8];
+    const unsigned int nDepth = depth/8;
+    for(unsigned int j = 0; j < height; ++j) {
+        for(unsigned int i = 0; i < width; ++i) {
+            for(unsigned int c = 0; c < nChannels; ++c) {
+                for(unsigned int d = 0; d < (depth/8); ++d) {
+                    const uint8_t v = image[nDepth*( width*( height*c + j ) + i ) + d];
+                    data[nDepth*( nChannels*( width*j + i ) + c) + d] = v;
+                }
+            }
+        }
+    }
+
     if(!_writePngPtr) {
         initWrite();
     }
@@ -128,6 +152,7 @@ void PngImage::writeData(const void* const data_, unsigned int width, unsigned i
 
     //then the end of the file.
     png_write_end(_writePngPtr, _writeInfoPtr);
+    delete[] data;
 }
 
 void PngImage::initRead()

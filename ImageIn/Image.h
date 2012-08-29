@@ -132,17 +132,27 @@ namespace imagein
              * \param cPixel The new value.
              * \throw out_of_range if the parameters are not a valid pixel.
              */
-            inline void setPixel(unsigned int x, unsigned int y, unsigned int channel, const D& cPixel);
+            inline void setPixel(unsigned int x, unsigned int y, unsigned int channel, D cPixel);
 
-             /*!
-             * \brief Set the values of the given pixel.
-             *
-             * \param x The abscissa of the pixel
-             * \param y The ordinate of the pixel
-             * \param pixel An array containing the values of each channels.
-             * \throw out_of_range if the parameters are not a valid pixel.
-             */
-            void setPixel(unsigned int x, unsigned int y, const D* pixel);
+            inline D getPixelAt(unsigned int x, unsigned int y, unsigned int channel) const
+            {
+                return _mat[channel*_width*_height + y*_width + x];
+            }
+
+            inline void setPixelAt(unsigned int x, unsigned int y, unsigned int channel, D cPixel)
+            {
+                _mat[channel*_width*_height + y*_width + x] = cPixel;
+            }
+
+//             /*!
+//             * \brief Set the values of the given pixel.
+//             *
+//             * \param x The abscissa of the pixel
+//             * \param y The ordinate of the pixel
+//             * \param pixel An array containing the values of each channels.
+//             * \throw out_of_range if the parameters are not a valid pixel.
+//             */
+//            void setPixel(unsigned int x, unsigned int y, const D* pixel);
 
             //! Returns an iterator to the first channel on the top-left corner of the image
             inline iterator begin() { return _mat; }

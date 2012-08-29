@@ -275,14 +275,37 @@ void* JpgImage::readData(){
      * warnings occurred (test whether jerr.pub.num_warnings is nonzero).
      */
 
+    uint8_t* image = new uint8_t[height*rowSize];
+    for(unsigned int j = 0; j < height; ++j) {
+        for(unsigned int i = 0; i < width; ++i) {
+            for(unsigned int c = 0; c < nChannels; ++c) {
+                image[width*( height*c + j) + i] = data[j*rowSize + i*nChannels + c];
+            }
+        }
+    }
+    delete[] data;
+    return image;
+
     /* And we're done! */
-    return data;
+//    return data;
 }
 
 void JpgImage::writeData(const void* const data_, unsigned int width, unsigned int height, unsigned int nChannels, unsigned int depth){
 
-	const uint8_t* const data = reinterpret_cast<const uint8_t* const>(data_);
-	
+    const uint8_t* const image = reinterpret_cast<const uint8_t* const>(data_);
+    uint8_t* data = new uint8_t[width*height*nChannels*depth/8];
+    const unsigned int nDepth = depth/8;
+    for(unsigned int j = 0; j < height; ++j) {
+        for(unsigned int i = 0; i < width; ++i) {
+            for(unsigned int c = 0; c < nChannels; ++c) {
+                for(unsigned int d = 0; d < (depth/8); ++d) {
+                    const uint8_t v = image[nDepth*( width*( height*c + j ) + i ) + d];
+                    data[nDepth*( nChannels*( width*j + i ) + c) + d] = v;
+                }
+            }
+        }
+    }
+
     /* This struct contains the JPEG compression parameters and pointers to
     * working space (which is allocated as needed by the JPEG library).
     * It is possible to have several such structures, representing multiple
@@ -402,4 +425,5 @@ void JpgImage::writeData(const void* const data_, unsigned int width, unsigned i
     jpeg_destroy_compress(&cinfo);
 
     /* And we're done! */
+    delete[] data;
 }

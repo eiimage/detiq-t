@@ -100,7 +100,8 @@ D imagein::Image_t<D>::getPixel(unsigned int x, unsigned int y, unsigned int cha
         throw std::out_of_range("Invalid coordinates for getPixel");
     }
 	
-	return _mat[y*_nChannels*_width + x*_nChannels + channel]; 
+//	return _mat[y*_nChannels*_width + x*_nChannels + channel];
+    return _mat[channel*_width*_height + y*_width + x];
 }
 
 template <typename D>
@@ -110,18 +111,19 @@ void imagein::Image_t<D>::setPixel(unsigned int x, unsigned int y, unsigned int 
         throw std::out_of_range("Invalid coordinates for setPixel");
     }
 
-    _mat[y*_width*_nChannels + x*_nChannels + channel] = cPixel;
+//    _mat[y*_width*_nChannels + x*_nChannels + channel] = cPixel;
+    _mat[channel*_width*_height + y*_width + x] = cPixel;
 }
 
-template <typename D>
-void imagein::Image_t<D>::setPixel(unsigned int x, unsigned int y, const D* pixel)
-{
-    if(x >= _width || y >= _height) {
-        throw std::out_of_range("Invalid coordinates for setPixel");
-    }
+//template <typename D>
+//void imagein::Image_t<D>::setPixel(unsigned int x, unsigned int y, const D* pixel)
+//{
+//    if(x >= _width || y >= _height) {
+//        throw std::out_of_range("Invalid coordinates for setPixel");
+//    }
 
-    std::copy(pixel, pixel+_nChannels, _mat+y*_width*_nChannels+x*_nChannels);
-}
+//    std::copy(pixel, pixel+_nChannels, _mat+y*_width*_nChannels+x*_nChannels);
+//}
 
 template <typename D>
 bool imagein::Image_t<D>::operator==(const imagein::Image_t<D>& img) const {
@@ -157,31 +159,29 @@ imagein::Image_t<D>* imagein::Image_t<D>::crop(const imagein::Rectangle& rect) c
 template <typename D>
 void imagein::Image_t<D>::crop(const imagein::Rectangle& rect, D* mat) const
 {
-    unsigned int topleft = rect.y*_width*_nChannels + rect.x*_nChannels;
-    unsigned int bottomright = (rect.y+rect.h-1)*_width*_nChannels + (rect.x+rect.w)*_nChannels;
-
-    imagein::Image_t<D>::const_iterator it = this->begin() + topleft; //iterator pointing on the top-left corner of the rectangle
-    imagein::Image_t<D>::const_iterator end = this->begin() + bottomright; //iterator pointing just after the bottom-right corner of the rectangle
-
     D* di = mat; //pointer to the first element of data
+    for(unsigned int nChannel = 0; nChannel < _nChannels; ++nChannel) {
+        const unsigned int channelBegin = nChannel*_width*_height;
+        const unsigned int topLeft = channelBegin + rect.y*_width + rect.x;
+        const unsigned int bottomRight = topLeft + (rect.h-1)*_width + (rect.w-1) + 1;
 
-    unsigned int columnNo = 0;
-    unsigned int channelNo = 0;
+        imagein::Image_t<D>::const_iterator it = this->begin() + topLeft; //iterator pointing on the top-left corner of the rectangle
+        imagein::Image_t<D>::const_iterator end = this->begin() + bottomRight; //iterator pointing just after the bottom-right corner of the rectangle
 
-    while(it < end) {
-        *di = *it;
-        ++di;
-        ++it;
 
-        if(++channelNo == _nChannels) {
+        unsigned int columnNo = 0;
+
+        while(it < end) {
+            *di = *it;
+            ++di;
+            ++it;
+
             ++columnNo;
-            channelNo = 0;
-        }
 
-        if(columnNo == rect.w) {
-            it += (_width-rect.w) * _nChannels;
-            columnNo = 0;
-            channelNo = 0;
+            if(columnNo == rect.w) {
+                it += (_width-rect.w);
+                columnNo = 0;
+            }
         }
     }
 }
