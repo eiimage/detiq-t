@@ -68,7 +68,7 @@ namespace imagein
 			 *
 			 * \param other The Image to be copied.
 			 */
-            GrayscaleImage_t(const GrayscaleImage_t<D>& other) : Image_t<D>(other) {};
+            GrayscaleImage_t(const GrayscaleImage_t<D>& other) : Image_t<D>(other) {}
 			
 			/*!
              * \brief Crops the image to the boundaries defined by a Rectangle.

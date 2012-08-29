@@ -104,11 +104,11 @@ namespace imagein
             Image_t<D>& operator=(const Image_t<D>& other);
 
             //! Returns the width of the image
-            inline unsigned int getWidth() const { return _width; };
+            inline unsigned int getWidth() const { return _width; }
             //! Returns the height of the image
-            inline unsigned int getHeight() const { return _height; };
+            inline unsigned int getHeight() const { return _height; }
             //! Returns the number of channels of the image
-            inline unsigned int getNbChannels() const { return _nChannels; };
+            inline unsigned int getNbChannels() const { return _nChannels; }
 
             /*!
              * \brief Returns the value of a pixel.
@@ -145,14 +145,14 @@ namespace imagein
             void setPixel(unsigned int x, unsigned int y, const D* pixel);
 
             //! Returns an iterator to the first channel on the top-left corner of the image
-            inline iterator begin() { return _mat; };
+            inline iterator begin() { return _mat; }
             //! Returns a const iterator to the first channel on the top-left corner of the image
-            inline const_iterator begin() const { return _mat; };
+            inline const_iterator begin() const { return _mat; }
             //! Returns an iterator past then end of the image
-            inline iterator end() { return _mat + _width*_height*_nChannels; };
+            inline iterator end() { return _mat + size(); }
             //! returns a const iterator past the end of the image
-            inline const_iterator end() const { return _mat + _width*_height*_nChannels; };
-            inline unsigned int size() const { return _width*_height*_nChannels; };
+            inline const_iterator end() const { return _mat + size(); }
+            inline unsigned int size() const { return _width*_height*_nChannels; }
             bool operator==(const imagein::Image_t<D>& img) const;
 
             /*!
@@ -170,7 +170,7 @@ namespace imagein
              * \param channel The channel to take into account for the histogram.
              * \param rect The image area on which to calculate the Histogram.
              */
-            inline Histogram getHistogram(unsigned int channel=0, const Rectangle& rect = Rectangle()) const { return Histogram(*this, channel, rect); };
+            inline Histogram getHistogram(unsigned int channel=0, const Rectangle& rect = Rectangle()) const { return Histogram(*this, channel, rect); }
 
 
             /*!
