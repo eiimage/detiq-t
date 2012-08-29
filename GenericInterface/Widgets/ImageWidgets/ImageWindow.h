@@ -106,9 +106,10 @@ class ImageWindow : public QWidget
          * \brief Returns the Rectangle which is the current image's selection on the window.
          *
          */
-        const imagein::Rectangle selection() { return _imageView->getRectangle(); }
+        const imagein::Rectangle selection() const { return _imageView->getRectangle(); }
+
         inline QMenu* menu() { return _menu; }
-        inline QPoint selectedPixel() { return _selectedPixel; }
+        inline QPoint selectedPixel() const { return _selectedPixel; }
 
         inline ImageView* view() { return _imageView; }
 
