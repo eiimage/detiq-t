@@ -29,6 +29,7 @@
 
 #include "../Service.h"
 #include "Node.h"
+#include "Widgets/ImageWidgets/ImageWindow.h"
 
 
 
@@ -49,7 +50,7 @@ namespace genericinterface
         virtual void applyAlgorithm(imagein::GenericAlgorithm_t<imagein::Image::depth_t>* algo);
 
     signals:
-        void newImageWindowCreated(NodeId id, StandardImageWindow* widget);
+        void newImageWindowCreated(NodeId id, ImageWindow* widget);
 
     protected:
         GenericInterface* _gi;

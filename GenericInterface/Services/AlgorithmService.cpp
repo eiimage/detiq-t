@@ -42,8 +42,8 @@ void AlgorithmService::connect(GenericInterface* gi)
   _gi = gi;
   _ws = _gi->windowService();
 
-  QObject::connect(this, SIGNAL(newImageWindowCreated(NodeId, StandardImageWindow*)), 
-                    _ws, SLOT(addImage(NodeId, StandardImageWindow*)));
+  QObject::connect(this, SIGNAL(newImageWindowCreated(NodeId, ImageWindow*)),
+                    _ws, SLOT(addImage(NodeId,ImageWindow*)));
 }
 
 void AlgorithmService::applyAlgorithm(GenericAlgorithm_t<Image::depth_t>* algo)
