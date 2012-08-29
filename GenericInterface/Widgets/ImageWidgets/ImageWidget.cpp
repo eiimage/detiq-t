@@ -55,38 +55,43 @@ QImage ImageWidget::convertImage(const imagein::Image* img)
         case 1:
         {
             for(int i = 0; i < size; ++i) {
-                const imagein::Image::depth_t gray = *(it++);
+                const imagein::Image::depth_t gray = *(it);
                 data[i] = qRgb(gray, gray, gray);
+                ++it;
             }
             break;
         }
         case 2:
         {
             for(int i = 0; i < size; ++i) {
-                const imagein::Image::depth_t gray = *(it++);
-                const imagein::Image::depth_t alpha = *(it++);
+                const imagein::Image::depth_t gray = *(it);
+                const imagein::Image::depth_t alpha = *(it + size);
                 data[i] = qRgba(gray, gray, gray, alpha);
+                ++it;
             }
             break;
         }
         case 3:
         {
             for(int i = 0; i < size; ++i) {
-                const imagein::Image::depth_t red = *(it++);
-                const imagein::Image::depth_t green = *(it++);
-                const imagein::Image::depth_t blue = *(it++);
+                const imagein::Image::depth_t red = *(it);
+                const imagein::Image::depth_t green = *(it + size );
+                const imagein::Image::depth_t blue = *(it + size*2 );
                 data[i] = qRgb(red, green, blue);
+                ++it;
             }
             break;
         }
         default:
         {
             for(int i = 0; i < size; ++i) {
-                const imagein::Image::depth_t red = *(it++);
-                const imagein::Image::depth_t green = *(it++);
-                const imagein::Image::depth_t blue = *(it++);
-                const imagein::Image::depth_t alpha = *(it++);
-                data[i] = qRgba(red, green, blue, alpha);
+                const imagein::Image::depth_t red = *(it);
+                const imagein::Image::depth_t green = *(it + size );
+                const imagein::Image::depth_t blue = *(it + size*2 );
+                const imagein::Image::depth_t alpha = *(it + size*3 );
+//                data[i] = qRgba(red, green, blue, alpha);
+                data[i] = qRgb(red, green, blue);
+                ++it;
             }
         }
     }
