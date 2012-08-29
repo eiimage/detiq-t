@@ -79,7 +79,7 @@ namespace imagein
             GrayscaleImage_t<D>* crop(const Rectangle& rect) const;
 			
 			//! accessor to the value of a pixel. 
-            inline const D& getPixel(unsigned int x, unsigned int y) const { return Image_t<D>::getPixel(x, y, 0); }
+            inline D getPixel(unsigned int x, unsigned int y) const { return Image_t<D>::getPixel(x, y, 0); }
 			
 			//! mutator for the value of a pixel. 
             inline void setPixel(unsigned int x, unsigned int y, const D& cPixel) { Image_t<D>::setPixel(x, y, 0, cPixel); };

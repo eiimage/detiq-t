@@ -94,7 +94,7 @@ imagein::Image_t<D>& imagein::Image_t<D>::operator=(const imagein::Image_t<D>& o
 }
 
 template <typename D>
-const D& imagein::Image_t<D>::getPixel(unsigned int x, unsigned int y, unsigned int channel) const
+D imagein::Image_t<D>::getPixel(unsigned int x, unsigned int y, unsigned int channel) const
 { 
 	if(x >= _width || y >= _height || channel > _nChannels) {
         throw std::out_of_range("Invalid coordinates for getPixel");
@@ -104,7 +104,7 @@ const D& imagein::Image_t<D>::getPixel(unsigned int x, unsigned int y, unsigned 
 }
 
 template <typename D>
-void imagein::Image_t<D>::setPixel(unsigned int x, unsigned int y, unsigned int channel, const D& cPixel)
+void imagein::Image_t<D>::setPixel(unsigned int x, unsigned int y, unsigned int channel, D cPixel)
 {
     if(x >= _width || y >= _height || channel > _nChannels) {
         throw std::out_of_range("Invalid coordinates for setPixel");
