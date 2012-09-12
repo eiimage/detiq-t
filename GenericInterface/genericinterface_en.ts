@@ -12,36 +12,36 @@
 <context>
     <name>genericinterface::DoubleImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="66"/>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="160"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="68"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="176"/>
         <source>Pixels Grid</source>
         <translation>Pixels Grid</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="68"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="70"/>
         <source>Crop</source>
         <translation>Crop</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="69"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="71"/>
         <source>Copy &amp; crop</source>
         <translation>Copy &amp; crop</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="98"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="100"/>
         <source>Selected</source>
         <translation>Selected</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="107"/>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="122"/>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="187"/>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="205"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="109"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="124"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="203"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="221"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="113"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="115"/>
         <source>Hovered</source>
         <translation>Hovered</translation>
     </message>
@@ -209,34 +209,34 @@
 <context>
     <name>genericinterface::GenericInterface</name>
     <message>
-        <location filename="GenericInterface.cpp" line="70"/>
-        <location filename="GenericInterface.cpp" line="171"/>
+        <location filename="GenericInterface.cpp" line="77"/>
+        <location filename="GenericInterface.cpp" line="178"/>
         <source>Interface&apos;s integrity compromised</source>
         <translation>Interface&apos;s integrity compromised</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="71"/>
+        <location filename="GenericInterface.cpp" line="78"/>
         <source>An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations.</source>
         <translation>An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations.</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="172"/>
+        <location filename="GenericInterface.cpp" line="179"/>
         <source>An error occurred in the addition of a service. The interface may not offer all the expected features. See the log file for more informations.</source>
         <translation>An error occurred in the addition of a service. The interface may not offer all the expected features. See the log file for more informations.</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="209"/>
+        <location filename="GenericInterface.cpp" line="216"/>
         <source>&amp;Window</source>
         <translation>&amp;Window</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="242"/>
-        <location filename="GenericInterface.cpp" line="243"/>
+        <location filename="GenericInterface.cpp" line="249"/>
+        <location filename="GenericInterface.cpp" line="250"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="243"/>
+        <location filename="GenericInterface.cpp" line="250"/>
         <source>&amp;Exit</source>
         <translation>&amp;Exit</translation>
     </message>
@@ -260,30 +260,45 @@
 <context>
     <name>genericinterface::ImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="71"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="80"/>
+        <source>Rename</source>
+        <translation>Rename</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="115"/>
         <source>Image</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="82"/>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="226"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="126"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="284"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="88"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="132"/>
         <source>Selection mode</source>
         <translation>Selection mode</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="95"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="139"/>
         <source>Hand mode</source>
         <translation>Hand mode</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="103"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="147"/>
         <source>Select all</source>
         <translation>Select all</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="306"/>
+        <source>Rename image</source>
+        <translation>Rename image</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="307"/>
+        <source>New name:</source>
+        <translation>New name:</translation>
     </message>
 </context>
 <context>
@@ -355,6 +370,34 @@
     </message>
 </context>
 <context>
+    <name>genericinterface::SelectionWidget</name>
+    <message>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="37"/>
+        <source>Selection : </source>
+        <translation>Selection : </translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="38"/>
+        <source>x:</source>
+        <translation>x:</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="40"/>
+        <source>y:</source>
+        <translation>y:</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="42"/>
+        <source>width:</source>
+        <translation>width:</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="44"/>
+        <source>height:</source>
+        <translation>height:</translation>
+    </message>
+</context>
+<context>
     <name>genericinterface::StandardImageWindow</name>
     <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="47"/>
@@ -372,67 +415,67 @@
         <translation>Error while opening file</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="106"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="107"/>
         <source>Histogram</source>
         <translation>Histogram</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="107"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="108"/>
         <source>Horizontal Projection Histogram</source>
         <translation>Horizontal Projection Histogram</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="108"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="109"/>
         <source>Vertical Projection Histogram</source>
         <translation>Vertical Projection Histogram</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="109"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="258"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="110"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="259"/>
         <source>Pixels Grid</source>
         <translation>Pixels Grid</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="110"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="111"/>
         <source>Column Profile</source>
         <translation>Column Profile</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="111"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="244"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="251"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="112"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="245"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="252"/>
         <source>Line Profile</source>
         <translation>Line Profile</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="113"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="114"/>
         <source>Crop</source>
         <translation>Crop</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="114"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="115"/>
         <source>Copy &amp; crop</source>
         <translation>Copy &amp; crop</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="116"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="117"/>
         <source>Convert to grayscale</source>
         <translation>Convert to grayscale</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="117"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="118"/>
         <source>Convert to binary</source>
         <translation>Convert to binary</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="220"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="232"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="221"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="233"/>
         <source>Select value</source>
         <translation>Select value</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="220"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="232"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="221"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="233"/>
         <source>Which value (0..255) ?</source>
         <translation>Which value (0..255) ?</translation>
     </message>
@@ -441,20 +484,20 @@
         <translation type="obsolete">Image</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="146"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="147"/>
         <source>Selected</source>
         <translation>Selected</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="155"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="170"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="297"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="312"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="156"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="171"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="299"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="314"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="161"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="162"/>
         <source>Hovered</source>
         <translation>Hovered</translation>
     </message>
@@ -533,12 +576,12 @@
         <translation>&amp;Cascade windows</translation>
     </message>
     <message>
-        <location filename="Services/WindowService.cpp" line="311"/>
+        <location filename="Services/WindowService.cpp" line="322"/>
         <source>Attention</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="Services/WindowService.cpp" line="311"/>
+        <location filename="Services/WindowService.cpp" line="322"/>
         <source>You&apos;re going to close all the relative windows, are you sure you want to continue ?</source>
         <translation>You&apos;re going to close all the relative windows, are you sure you want to continue ?</translation>
     </message>

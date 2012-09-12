@@ -222,6 +222,18 @@
         <source>Select all</source>
         <translation>Sélectionner tout</translation>
     </message>
+    <message>
+        <source>Rename</source>
+        <translation>Renommer</translation>
+    </message>
+    <message>
+        <source>Rename image</source>
+        <translation>Renommer l&apos;image</translation>
+    </message>
+    <message>
+        <source>New name:</source>
+        <translation>Nouveau nom :</translation>
+    </message>
 </context>
 <context>
     <name>genericinterface::NavigationDock</name>
@@ -279,6 +291,29 @@
     <message>
         <source>Row profile</source>
         <translation>Profil ligne</translation>
+    </message>
+</context>
+<context>
+    <name>genericinterface::SelectionWidget</name>
+    <message>
+        <source>Selection : </source>
+        <translation>Sélection : </translation>
+    </message>
+    <message>
+        <source>x:</source>
+        <translation>x :</translation>
+    </message>
+    <message>
+        <source>y:</source>
+        <translation>y : </translation>
+    </message>
+    <message>
+        <source>width:</source>
+        <translation>largeur :</translation>
+    </message>
+    <message>
+        <source>height:</source>
+        <translation>hauteur :</translation>
     </message>
 </context>
 <context>
