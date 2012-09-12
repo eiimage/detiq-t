@@ -172,7 +172,16 @@ namespace imagein {
              */
             static Image_t<D>* makeDisplayable(const Image_t<int>& from);
             static Image_t<D>* makeDisplayable(const Image_t<bool>& from);
+
+            template<typename D2>
+            static Image_t<D>* convert(const Image_t<D2>& from);
     };
+
+//    template<>
+//    class Converter<Image_t<double> > {
+//        template<typename D>
+//        static Image_t<double>* convert(const Image_t<D>& from);
+//    };
 }
 
 #include "Converter.tpp"
