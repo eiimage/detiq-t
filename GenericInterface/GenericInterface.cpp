@@ -45,6 +45,13 @@ GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _n
         setWindowTitle(name);
 }
 
+GenericInterface::~GenericInterface() {
+    for(map<int, Service*>::iterator it = _services.begin(); it != _services.end(); ++it) {
+        delete it->second;
+    }
+    _services.clear();
+}
+
 int GenericInterface::addService(Service* s)
 {
     for(map<int, Service*>::iterator it = _services.begin(); it != _services.end(); ++it) {
