@@ -44,9 +44,9 @@ Filtering::Filtering(std::vector<Filter*> filters) : _filters(filters)
     _policy = blackPolicy;
 }
 
-Image_t<int>* Filtering::algorithm(const std::vector<const Image_t<int>*>& imgs)
+Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>& imgs)
 {
-    const Image_t<int>* img = dynamic_cast<const Image_t<int>*>(imgs.at(0));
+    const Image_t<double>* img = imgs.at(0);
 
     if(img == NULL) {
         throw ImageTypeException(__LINE__, __FILE__);
@@ -61,7 +61,7 @@ Image_t<int>* Filtering::algorithm(const std::vector<const Image_t<int>*>& imgs)
     bool odd = width % 2 != 1 || height % 2 != 1;
 
     std::vector<Filter*>::iterator filter;
-    std::vector<Image_t<int>*> images;
+    std::vector<Image_t<double>*> images;
 
     for(filter = _filters.begin(); filter != _filters.end(); ++filter)
     {
@@ -80,7 +80,7 @@ Image_t<int>* Filtering::algorithm(const std::vector<const Image_t<int>*>& imgs)
         else
             factor = -negFactor;
 
-        Image_t<int>* result = new Image_t<int>(width, height, nChannels);
+        Image_t<double>* result = new Image_t<double>(width, height, nChannels);
 
 #ifdef __linux__
 
@@ -124,8 +124,8 @@ Image_t<int>* Filtering::algorithm(const std::vector<const Image_t<int>*>& imgs)
 
 #else
         
-        int halfHeightFilter = (*filter)->height() / 2;
-        int halfWidthFilter = (*filter)->width() / 2;
+        int halfHeightFilter = (*filter)->getHeight() / 2;
+        int halfWidthFilter = (*filter)->getWidth() / 2;
 
         for(int x = 0; x < width; x++)
         {
@@ -133,19 +133,19 @@ Image_t<int>* Filtering::algorithm(const std::vector<const Image_t<int>*>& imgs)
             {
                 for(int channel = 0; channel < nChannels; channel++)
                 {
-                    int newPixel = 0;
+                    double newPixel = 0;
 
-                    for(int i = 0; i < (*filter)->width(); i++)
+                    for(int i = 0; i < (*filter)->getWidth(); i++)
                     {
-                        for(int j = 0; j < (*filter)->height(); j++)
+                        for(int j = 0; j < (*filter)->getHeight(); j++)
                         {
                             if(odd)
                             {
-                                newPixel += (**filter)[i][j] * ((*_policy)(img, x + i - halfWidthFilter, y + j - halfHeightFilter, channel));
+                                newPixel += (*filter)->getPixelAt(i,j) * ((*_policy)(img, x + i - halfWidthFilter, y + j - halfHeightFilter, channel));
                             }
                             else
                             {
-                                newPixel += (**filter)[i][j] * ((*_policy)(img, x + i - halfWidthFilter - 1, y + j - halfHeightFilter - 1, channel));
+                                newPixel += (*filter)->getPixelAt(i,j) * ((*_policy)(img, x + i - halfWidthFilter - 1, y + j - halfHeightFilter - 1, channel));
                             }
                         }
                     }
@@ -158,7 +158,7 @@ Image_t<int>* Filtering::algorithm(const std::vector<const Image_t<int>*>& imgs)
 #endif
         images.push_back(result);
     }
-    Image_t<int>* result = NULL;
+    Image_t<double>* result = NULL;
 
     if(images.size() == 1)
         result = images[0];
@@ -166,7 +166,7 @@ Image_t<int>* Filtering::algorithm(const std::vector<const Image_t<int>*>& imgs)
     {
         unsigned int size = images.size();
         
-        MaxDistance<Image_t<int>, 2> av;
+        MaxDistance<Image_t<double>, 2> av;
 
         for(unsigned int i = 0; i < size; ++i)
         {
@@ -188,8 +188,8 @@ void* Filtering::parallelAlgorithm(void* data)
 {
     struct ParallelArgs args = *((ParallelArgs*) data);
 
-    const Image_t<int>* img = args.img;
-    Image_t<int>* result = args.result;
+    const Image_t<double>* img = args.img;
+    Image_t<double>* result = args.result;
     Filter* filter = args.filter;
     Policy policy = args.policy;
     unsigned int infx = args.infx;
@@ -197,30 +197,28 @@ void* Filtering::parallelAlgorithm(void* data)
     int factor = args.factor;
     bool odd = args.odd;
 
-    int halfHeightFilter = filter->height() / 2;
-    int halfWidthFilter = filter->width() / 2;
+    int halfHeightFilter = filter->getHeight() / 2;
+    int halfWidthFilter = filter->getWidth() / 2;
     for(unsigned int x = infx; x < supx; x++)
     {
         for(unsigned int y = 0; y < img->getHeight(); y++)
         {
             for(unsigned int channel = 0; channel < img->getNbChannels(); channel++)
             {
-                int newPixel = 0;
+                double newPixel = 0;
 
-                for(int i = 0; i < filter->width(); i++)
+                for(unsigned int i = 0; i < filter->getWidth(); i++)
                 {
-                    for(int j = 0; j < filter->height(); j++)
+                    for(unsigned int j = 0; j < filter->getHeight(); j++)
                     {
-                        int p;
                         if(odd)
                         {
-                            p = (*filter)[i][j] * ((*policy)(img, (int)x + i - halfWidthFilter, (int)y + j - halfHeightFilter, channel));
+                            newPixel += filter->getPixelAt(i,j) * ((*policy)(img, (int)x + i - halfWidthFilter, (int)y + j - halfHeightFilter, channel));
                         }
                         else
                         {
-                            p = (*filter)[i][j] * ((*policy)(img, (int)x + i - halfWidthFilter - 1, (int)y + j - halfHeightFilter - 1, channel));
+                            newPixel += filter->getPixelAt(i,j) * ((*policy)(img, (int)x + i - halfWidthFilter - 1, (int)y + j - halfHeightFilter - 1, channel));
                         }
-                        newPixel += p;
                     }
                 }
                 if(factor > 1)
@@ -232,6 +230,7 @@ void* Filtering::parallelAlgorithm(void* data)
     delete (ParallelArgs*) data;
     if(supx != img->getWidth())
         pthread_exit(NULL);
+    return NULL;
 }
 #endif
 

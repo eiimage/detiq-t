@@ -23,14 +23,15 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include "../GrayscaleImage.h"
 
 namespace imagein
 {
 	namespace algorithm
 	{
-		class Filter
+        class Filter : public GrayscaleImage_t<double>
 		{
-		private:
+/*        private:
 		  class Line
 		  {
 		  public:
@@ -46,26 +47,27 @@ namespace imagein
 		public:
 		  class iterator
 		  {
-        friend class Filter;
+            friend class Filter;
 
+            public:
+            iterator operator++ ();
+            int& operator* ();
+            bool operator !=(Filter::iterator it);
+            std::pair<int, int> pos ();
+
+            private:
+            iterator (Filter& m);
+
+            Filter& _Filter;
+            int _i;
+            int _j;
+          };
+*/
         public:
-        iterator operator++ ();
-        int& operator* ();
-        bool operator !=(Filter::iterator it);
-        std::pair<int, int> pos ();
-
-        private:
-        iterator (Filter& m);
-
-        Filter& _Filter;
-        int _i;
-        int _j;
-		  };
-
-		  Filter (int w, int h);
+          Filter (unsigned int w, unsigned int h);
 		  Filter (const Filter& m);
 		  virtual ~Filter ();
-
+/*
 		  iterator begin();
 		  iterator end();
 
@@ -73,18 +75,18 @@ namespace imagein
 		  inline int height() { return _height; }
 
 		  Line operator[] (int i);
-      
-      static std::vector<Filter*> uniform(int numPixels);
+ */
+            static std::vector<Filter*> uniform(int numPixels);
 			static std::vector<Filter*> gaussian(double alpha);
 			static std::vector<Filter*> prewitt(int numPixels);
 			static std::vector<Filter*> roberts();
 			static std::vector<Filter*> sobel();
 			static std::vector<Filter*> squareLaplacien();
       
-		private:
-		  int _width;
-		  int _height;
-		  int* _mtrx;
+//		private:
+//		  int _width;
+//		  int _height;
+//		  int* _mtrx;
 
 		};
 

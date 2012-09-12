@@ -31,9 +31,9 @@ namespace imagein
 {
 	namespace algorithm
 	{		
-		class Filtering : public Algorithm_t<Image_t<int>, 1>
+        class Filtering : public Algorithm_t<Image_t<double>, 1>
 		{
-			typedef int (*Policy)(const Image_t<int>*, const int&, const int&, const int&);
+            typedef double (*Policy)(const Image_t<double>*, const int&, const int&, const int&);
 			
 		public:
 			Filtering(Filter* filter);
@@ -49,9 +49,9 @@ namespace imagein
 			static Filtering sobel();
 			static Filtering squareLaplacien();
 
-			static int blackPolicy(const Image_t<int>* img, const int& x, const int& y, const int& channel)
+            static double blackPolicy(const Image_t<double>* img, const int& x, const int& y, const int& channel)
 			{
-				int newPixel;
+                double newPixel;
 				try
 				{
 					newPixel = img->getPixel(x, y, channel);
@@ -63,9 +63,9 @@ namespace imagein
 				return newPixel;
 			}
 			
-			static int mirrorPolicy(const Image_t<int>* img, const int& x, const int& y, const int& channel)
+            static double mirrorPolicy(const Image_t<double>* img, const int& x, const int& y, const int& channel)
 			{
-				int newPixel;
+                double newPixel;
 				try
 				{
 					newPixel = img->getPixel(x, y, channel);
@@ -94,9 +94,9 @@ namespace imagein
 				return newPixel;
 			}
 			
-			static int nearestPolicy(const Image_t<int>* img, const int& x, const int& y, const int& channel)
+            static double nearestPolicy(const Image_t<double>* img, const int& x, const int& y, const int& channel)
 			{
-				int newPixel;
+                double newPixel;
 				try
 				{
 					newPixel = img->getPixel(x, y, channel);
@@ -125,9 +125,9 @@ namespace imagein
 				return newPixel;
 			}
 			
-			static int sphericalPolicy(const Image_t<int>* img, const int& x, const int& y, const int& channel)
+            static double sphericalPolicy(const Image_t<double>* img, const int& x, const int& y, const int& channel)
 			{
-				int newPixel;
+                double newPixel;
 				try
 				{
 					newPixel = img->getPixel(x, y, channel);
@@ -161,7 +161,7 @@ namespace imagein
 			static void* parallelAlgorithm(void* data);
 			#endif
 			
-			Image_t<int>* algorithm(const std::vector<const Image_t<int>*>& imgs);
+            Image_t<double>* algorithm(const std::vector<const Image_t<double>*>& imgs);
 		
 		private:
 			std::vector<Filter*> _filters;
@@ -170,8 +170,8 @@ namespace imagein
 			#ifdef __linux__
 			struct ParallelArgs
 			{
-				const Image_t<int>* img;
-				Image_t<int>* result;
+                const Image_t<double>* img;
+                Image_t<double>* result;
 				Filter* filter;
 				Policy policy;
 				int infx;
