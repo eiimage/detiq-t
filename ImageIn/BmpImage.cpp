@@ -93,8 +93,13 @@ void BmpImage::writeData(const void* const data_, unsigned int width, unsigned i
 			px=(*workImg)(i,j);
 			// Every pixel is in a RGBA form, we will always load the RGB components, and the Alpha component when necessary
             px->Red = data[width*j + i];
-            px->Green = data[width*(height + j) + i];
-            px->Blue = data[width*(height*2 + j) + i];
+            if(nChannels > 2) {
+                px->Green = data[width*(height + j) + i];
+                px->Blue = data[width*(height*2 + j) + i];
+            }
+            else {
+                px->Green = px->Blue = px->Red;
+            }
             if(nChannels == 4) px->Alpha = data[width*(height*3 + j) + i]; // In case there are 4 channels, we load the Alpha channel too
 			//TODO handling of a depth other than uint8_t
 		}
