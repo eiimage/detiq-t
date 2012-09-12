@@ -41,16 +41,16 @@ int main(int argc, char** argv)
   Filtering c1(fls[0]);
   Filtering c2(fls[1]);
 
-  EdgeColoration_t<Image_t<int>, 2> ec;
+  EdgeColoration_t<Image_t<double>, 2> ec;
 
-  Image* i          = new Image("samples/de.jpg");
+  Image* i          = new Image("samples/lena.jpg");
   RgbToGrayscale algo;
   Image* img        = algo(i);
-  Image_t<int>* i1  = c1(Converter<Image>::convertToInt(*img));
-  Image_t<int>* i2  = c2(Converter<Image>::convertToInt(*img));
-  Image_t<int>* res = ec(i1, i2);
+  Image_t<double>* i1  = c1(Converter<Image_t<double> >::convert(*img));
+  Image_t<double>* i2  = c2(Converter<Image_t<double> >::convert(*img));
+  Image_t<double>* res = ec(i1, i2);
 
-  Converter<Image>::makeDisplayable(*res)->save("test.png");
+  Converter<Image>::makeDisplayable(*Converter<Image_t<int> >::convert(*res))->save("test.png");
 }
 
 /*
