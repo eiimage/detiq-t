@@ -376,6 +376,7 @@ void ImageView::setImage(const imagein::Image* image)
     _imgWidget->setFixedSize(pixmap().size());
     this->updateGeometry();
     redrawSelect();
+    _imgWidget->update();
 }
 
 
