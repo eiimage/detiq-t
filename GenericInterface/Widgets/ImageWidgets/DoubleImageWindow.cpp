@@ -20,6 +20,8 @@
 #include "GenericInterface.h"
 #include "DoubleImageWindow.h"
 #include "GridView.h"
+#include <QDoubleSpinBox>
+#include <QSlider>
 
 using namespace genericinterface;
 using namespace imagein;
@@ -150,6 +152,20 @@ void DoubleImageWindow::updateStatusBar()
     infoLayout->addLayout(layoutHoveredPixel);
     _infoLayout->addWidget(infoWidget);
 
+    QWidget* logWidget = new QWidget();
+    QHBoxLayout* logLayout = new QHBoxLayout(logWidget);
+    QSlider* logSlider = new QSlider(Qt::Horizontal);
+    logSlider->setRange(0, 12);
+    logSlider->setValue(6);
+//    QDoubleSpinBox* logBox = new QDoubleSpinBox();
+//    logBox->setRange(0., 1000000000.);
+//    logBox->setValue(_logConstant);
+    QObject::connect(logSlider, SIGNAL(valueChanged(int)), this, SLOT(setLogScale(int)));
+    logLayout->addWidget(new QLabel("Log scale : "));
+
+    logLayout->addWidget(logSlider);
+    _infoLayout->addWidget(logWidget);
+
 }
 
 
@@ -216,7 +232,7 @@ void DoubleImageWindow::showHoveredPixelInformations(int x, int y) const
 void DoubleImageWindow::updateSrc(GenericHistogramView* histo, imagein::Rectangle rect) {
 }
 
-Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) const {
+Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image, double constantScale) {
 
     Image_t<double>* tmpImg = new Image_t<double>(*image);
     Image* resImg = new Image(image->getWidth(), image->getHeight(), image->getNbChannels());
@@ -226,16 +242,18 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) const {
     }
 
     std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
+    double mean = tmpImg->mean();
+    _logConstant = exp(-log2(mean)) / 8.;
+    std::cout << "Log constant = " << _logConstant << std::endl;
+    std::cout << "Log scale = " << constantScale << std::endl;
     for(unsigned int c = 0; c < image->getNbChannels(); ++c) {
-        double mean = tmpImg->mean(c);
-        const double constant = exp(-log2(mean));
-        const double denom = log(255.0 * constant + 1.0);
+        const double denom = log(255.0 * _logConstant * constantScale + 1.0);
         const double factor = 255.0 / denom;
         for(unsigned int j = 0; j < image->getHeight(); ++j) {
             for(unsigned int i = 0; i < image->getWidth(); ++i) {
                 double mag = tmpImg->getPixel(i, j, c);
                 if(_logScale) {
-                    mag = log(mag*constant + 1.0) * factor;
+                    mag = log(mag*_logConstant*constantScale + 1.0) * factor;
                 }
                 mag = std::min(255.0, std::max(0.0, mag));
                 resImg->setPixel(i, j, c, mag);
@@ -243,4 +261,13 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) const {
         }
     }
     return resImg;
+}
+
+void DoubleImageWindow::setLogScale(int logScale) {
+
+//    _logConstant = logConstant;
+    const Image* tmpImg = _displayImg;
+    double scale = std::pow(8, logScale/2. - 3.);
+    setDisplayImage(makeDisplayable(_image, scale));
+    delete tmpImg;
 }

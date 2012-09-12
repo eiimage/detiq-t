@@ -23,6 +23,7 @@
 #include "ImageWindow.h"
 
 #include <Converter.h>
+#include <QDoubleSpinBox>
 
 
 namespace genericinterface
@@ -66,7 +67,7 @@ public:
      */
     inline const imagein::Image_t<double>* getImage() const { return _image; }
 
-    imagein::Image* makeDisplayable(const imagein::Image_t<double>*) const;
+    imagein::Image* makeDisplayable(const imagein::Image_t<double>*, double constantScale = 1.);
     virtual bool isDouble() const { return true; }
     virtual bool isStandard() const { return false; }
     inline bool isNormalized() const { return _normalize; }
@@ -83,6 +84,8 @@ public slots:
     virtual void showSelectedPixelInformations(int x, int y) const;
 
     virtual void updateSrc(GenericHistogramView*, imagein::Rectangle);
+
+    virtual void setLogScale(int);
 
 signals:
 
@@ -102,6 +105,7 @@ protected:
     QLabel* _lSelectedPixelInfo;
     QLabel* _lSelectedPixelPosition;
     QLabel* _lSelectedPixelColor;
+    QDoubleSpinBox* _logBox;
 };
 }
 
