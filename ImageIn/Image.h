@@ -54,6 +54,49 @@ namespace imagein
             typedef D* iterator; //!< Random access iterator
             typedef const D* const_iterator; //!< Random access const-iterator
 
+            class Line {
+              public:
+                inline D& operator[](int i) {
+                    return _ptr[i * _jmp];
+                }
+                int size() { return _size; }
+//              protected:
+                Line(D* ptr, int jmp, int size) : _ptr(ptr), _jmp(jmp), _size(size) {}
+              private:
+                D* _ptr;
+                int _jmp;
+                int _size;
+            };
+            class ConstLine {
+              public:
+                inline D operator[](int i) const {
+                    return _ptr[i * _jmp];
+                }
+                int size() { return _size; }
+//              protected:
+                ConstLine(const D* ptr, int jmp, int size) : _ptr(ptr), _jmp(jmp), _size(size) {}
+              private:
+                const D* _ptr;
+                int _jmp;
+                int _size;
+            };
+
+            class Row : public Line {
+              public:
+                Row(D* ptr, int size) : Line(ptr, 1, size) {}
+            };
+            class Column : public Line {
+              public:
+                Column(D* ptr, int size, int jmp) : Line(ptr, jmp, size) {}
+            };
+            class ConstRow : public ConstLine {
+              public:
+                ConstRow(const D* ptr, int size) : ConstLine(ptr, 1, size) {}
+            };
+            class ConstColumn : public ConstLine {
+              public:
+                ConstColumn(const D* ptr, int size, int jmp) : ConstLine(ptr, jmp, size) {}
+            };
             /*!
              * \brief Default constructor. Constructs an image from the parameters given.
              *
@@ -134,7 +177,7 @@ namespace imagein
              */
             inline void setPixel(unsigned int x, unsigned int y, unsigned int channel, D cPixel);
 
-            inline D getPixelAt(unsigned int x, unsigned int y, unsigned int channel) const
+            inline D getPixelAt(unsigned int x, unsigned int y, unsigned int channel = 0) const
             {
                 return _mat[channel*_width*_height + y*_width + x];
             }
@@ -142,6 +185,22 @@ namespace imagein
             inline void setPixelAt(unsigned int x, unsigned int y, unsigned int channel, D cPixel)
             {
                 _mat[channel*_width*_height + y*_width + x] = cPixel;
+            }
+            inline void setPixelAt(unsigned int x, unsigned int y, D cPixel)
+            {
+                _mat[y*_width + x] = cPixel;
+            }
+            inline Row getRow(unsigned int j, unsigned int c = 0) {
+                return Row(_mat + c*_width*_height + j*_width, _width);
+            }
+            inline Line getColumn(unsigned int i, unsigned int c = 0) {
+                return Line(_mat + c*_width*_height + i, _width, _height);
+            }
+            inline ConstRow getConstRow(unsigned int j, unsigned int c = 0) const {
+                return ConstRow(_mat + c*_width*_height + j*_width, _width);
+            }
+            inline ConstLine getConstColumn(unsigned int i, unsigned int c = 0) const {
+                return ConstLine(_mat + c*_width*_height + i, _width, _height);
             }
 
 //             /*!
