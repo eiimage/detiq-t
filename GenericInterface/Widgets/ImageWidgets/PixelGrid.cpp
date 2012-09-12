@@ -45,7 +45,7 @@ inline uintmax_t sum(const Image* im, int i, int j) {
     for(unsigned int c=0; c<im->getNbChannels(); ++c) {
         sum += static_cast<uintmax_t>(im->getPixel(i, j, c));
     }
-    return sum;
+    return sum / im->getNbChannels();
 }
 
 void PixelGrid::resizeEvent(QResizeEvent* event) {
@@ -90,7 +90,7 @@ void PixelGrid::paintEvent (QPaintEvent* event ) {
         for(int i = 0; i < srcSize.width(); ++i) {
             try {
                 Image::depth_t value = _image->getPixel(i+_offset.x(), j+_offset.y(), _channel);
-                painter.setPen( (sum(_image, i+_offset.x(), j+_offset.y()) > 3*127) ? Qt::black : Qt::white ); 
+                painter.setPen( (sum(_image, i+_offset.x(), j+_offset.y()) >= 127) ? Qt::black : Qt::white );
                 QString string = QString("%1").arg(value);
                 const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
                 painter.drawText(QPointF((i+1)*PIXEL_S+offsetX, (j+1)*PIXEL_S+offsetY), string);
@@ -129,7 +129,7 @@ void DoublePixelGrid::paintEvent (QPaintEvent* event ) {
         for(int i = 0; i < srcSize.width(); ++i) {
             try {
                 double value = _dataImg->getPixel(i+_offset.x(), j+_offset.y(), _channel);
-                painter.setPen( (sum(_image, i+_offset.x(), j+_offset.y()) > 3*127) ? Qt::black : Qt::white );
+                painter.setPen( (sum(_image, i+_offset.x(), j+_offset.y()) > 127) ? Qt::black : Qt::white );
                 QString string = QString("%1").arg(value,0,'f',2);
                 const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
                 painter.drawText(QPointF(i*PIXEL_S+offsetX, j*PIXEL_S+offsetY), string);
