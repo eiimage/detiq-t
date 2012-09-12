@@ -293,10 +293,21 @@ void WindowService::removeSubWindow(QMdiSubWindow* sw)
         _widgets.erase(id);
         //std::cout << "delete node" << std::endl;
         delete node;
+        QList<QMdiSubWindow*> swList = _mdi->subWindowList(QMdiArea::ActivationHistoryOrder);
+        if(!swList.isEmpty()) {
+            QMdiSubWindow* sw = swList.last();
+            sw->showNormal();
+            _nav->setActiveNode(findNodeId(sw));
+            _mdi->setActiveSubWindow(sw);
+        }
+    }
+    else {
+        _mdi->setActiveSubWindow(node->windows.last());
     }
     //signalMdiChange();
     //std::cout << "removeSubWindow::end" << std::endl;
     //this->updateDisplay();
+    if(getCurrentImageWindow() == NULL) emit activeWidgetChanged(NULL);
 }
 
 void WindowService::removeId(NodeId id)
