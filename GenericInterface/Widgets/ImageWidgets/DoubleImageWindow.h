@@ -49,7 +49,7 @@ public:
      * \param gi The interface associated with this
      * \param image The image which is used
      */
-    DoubleImageWindow(Image_t<double>* image, const QString path = QString(), bool normalize = false, bool logScale = false, double logCOnstant = 1.0);
+    DoubleImageWindow(Image_t<double>* image, const QString path = QString(), bool normalize = false, bool logScale = false, double logConstantScale = 1.0, bool abs = false);
     DoubleImageWindow(const DoubleImageWindow&, imagein::Image_t<double>* img = NULL);
 
 
@@ -67,7 +67,7 @@ public:
      */
     inline const imagein::Image_t<double>* getImage() const { return _image; }
 
-    imagein::Image* makeDisplayable(const imagein::Image_t<double>*, double constantScale = 1.);
+    imagein::Image* makeDisplayable(const imagein::Image_t<double>*);
     virtual bool isDouble() const { return true; }
     virtual bool isStandard() const { return false; }
     inline bool isNormalized() const { return _normalize; }
@@ -94,7 +94,8 @@ protected:
 
     bool _normalize;
     bool _logScale;
-    double _logConstant;
+    double _logConstantScale;
+    bool _abs;
 
     void init();
     void updateStatusBar();

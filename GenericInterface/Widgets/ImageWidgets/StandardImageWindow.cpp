@@ -284,6 +284,7 @@ void StandardImageWindow::convertToGrayscale() {
     emit addImage(this, newImgWnd);
 }
 
+
 void StandardImageWindow::convertToBinary() {
     GrayscaleImage* newImg = Otsu()(Converter<GrayscaleImage>::convert(*_image));
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
