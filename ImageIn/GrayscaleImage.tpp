@@ -39,3 +39,7 @@ imagein::GrayscaleImage_t<D>* imagein::GrayscaleImage_t<D>::crop(const imagein::
     return ret;
 }
 
+template <typename D>
+imagein::GrayscaleImage_t<D>::GrayscaleImage_t(const Image_t<D>* img, unsigned int c) : imagein::Image_t<D>(img->getWidth(), img->getHeight(), 1, &img->begin()[c*img->getWidth()*img->getHeight()]) {
+
+}

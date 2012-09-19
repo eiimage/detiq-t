@@ -23,6 +23,7 @@
 #include "ImageFileAbsFactory.h"
 #include <limits>
 #include <stdexcept>
+#include "AlgorithmException.h"
 #include <cmath>
 
 template <typename D>
@@ -69,6 +70,27 @@ imagein::Image_t<D>::Image_t(const imagein::Image_t<D>& other)
 {
     _mat = new D[_width*_height*_nChannels];
     std::copy(other.begin(), other.end(), _mat);
+}
+
+template<typename D>
+imagein::Image_t<D>::Image_t(std::vector<const Image_t<D>*> images) {
+    _width = images.size() > 0 ? images[0]->_width : 0;
+    _height = images.size() > 0 ? images[0]->_height : 0;
+    this->_nChannels = 0;
+    for(typename std::vector<const Image_t<D>*>::iterator it = images.begin(); it < images.end(); ++it) {
+        this->_nChannels += (*it)->_nChannels;
+        if((*it)->_width != _width || (*it)->_height != _height) {
+            throw ImageSizeException(__LINE__, __FILE__);
+        }
+    }
+    std::cout << "_mat = new D[" << _width << "*" << _height << "*" << _nChannels << "];" << std::endl;
+    _mat = new D[_width*_height*_nChannels];
+    int i = 0;
+    for(typename std::vector<const Image_t<D>*>::iterator it = images.begin(); it < images.end(); ++it) {
+        std::copy((*it)->begin(), (*it)->end(), &_mat[_width*_height*i]);
+        i += (*it)->_nChannels;
+
+    }
 }
 
 template <typename D>

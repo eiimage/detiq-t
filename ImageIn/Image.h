@@ -110,6 +110,7 @@ namespace imagein
              */
             Image_t(unsigned int width, unsigned int height, unsigned int nChannels, const D* data);
             Image_t(unsigned int width, unsigned int height, unsigned int nChannels, D value);
+            Image_t(std::vector<const Image_t<D>* >);
 
 			/*!
              * \brief Constructs an image from the given file.
@@ -178,6 +179,10 @@ namespace imagein
             inline void setPixel(unsigned int x, unsigned int y, unsigned int channel, D cPixel);
 
             inline D getPixelAt(unsigned int x, unsigned int y, unsigned int channel = 0) const
+            {
+                return _mat[channel*_width*_height + y*_width + x];
+            }
+            inline D& pixelAt(unsigned int x, unsigned int y, unsigned int channel = 0)
             {
                 return _mat[channel*_width*_height + y*_width + x];
             }
