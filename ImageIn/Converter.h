@@ -173,6 +173,7 @@ namespace imagein {
             static Image_t<D>* makeDisplayable(const Image_t<int>& from);
             static Image_t<D>* makeDisplayable(const Image_t<bool>& from);
 
+            static Image_t<D>* convertAndRound(const Image_t<double>& from);
             template<typename D2>
             static Image_t<D>* convert(const Image_t<D2>& from);
     };
