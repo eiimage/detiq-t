@@ -33,7 +33,8 @@
 		ImageFileAbsFactory.cpp
 		ImageFileFactory.cpp
 		JpgImage.cpp
-		PngImage.cpp
+                PngImage.cpp
+                VffImage.cpp
 		EasyBMP.cpp
 		Graph.cpp
 		Algorithm/Filter.cpp
