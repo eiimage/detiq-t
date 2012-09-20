@@ -55,6 +55,11 @@ imagein::Image_t<D>::Image_t(std::string filename)
     if(im==NULL) {
         throw "Unable to open file";
     }
+    int depth = im->readDepth();
+    if(depth != (8*sizeof(D))/sizeof(uint8_t)) {
+        std::cout << depth << "!=" << (8*sizeof(D)/sizeof(uint8_t)) << std::endl;
+        throw "Image depth exception";
+    }
 
     _width = im->readWidth();
     _height = im->readHeight();
