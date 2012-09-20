@@ -50,6 +50,10 @@ StandardImageWindow::StandardImageWindow(const QString path)
         error = true;
         msg = QString::fromStdString(e.getMsg());
     }
+    catch(const char* e) {
+        error = true;
+        msg = e;
+    }
     catch(...) {
         error = true;
         msg = tr("Unknown exception");
