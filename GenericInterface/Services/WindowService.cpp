@@ -81,18 +81,18 @@ ImageWindow* WindowService::getCurrentImageWindow()
     }
 }
 
-std::vector<ImageWindow*> WindowService::getImageWindows() {
-    vector<ImageWindow*> result;
+
+std::vector<const ImageWindow*> WindowService::getImageWindows() const {
+    vector<const ImageWindow*> result;
     QList<QMdiSubWindow*> windows = _mdi->subWindowList();
     foreach(QMdiSubWindow* sw, windows) {
-        ImageWindow* siw = dynamic_cast<ImageWindow*>(sw->widget());
+        const ImageWindow* siw = dynamic_cast<const ImageWindow*>(sw->widget());
         if(siw != NULL) {
             result.push_back(siw);
         }
     }
     return result;
 }
-
 NodeId WindowService::findNodeId(QMdiSubWindow* sw) const {
     QMutexLocker locker(&_mutex);
     for(std::map<NodeId, Node*>::const_iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)

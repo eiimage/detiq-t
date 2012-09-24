@@ -52,7 +52,7 @@ namespace genericinterface
     * @brief Returns the current subwindow if it is an ImageWindow.
     */
     ImageWindow* getCurrentImageWindow();
-    std::vector<ImageWindow*> getImageWindows();
+    std::vector<const ImageWindow*> getImageWindows() const;
 
 	NodeId getNodeId(QWidget* widget) const;
 	const Node* getNode(NodeId id) const;
