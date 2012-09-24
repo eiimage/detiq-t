@@ -71,7 +71,7 @@
     </message>
     <message>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)</source>
-        <translation>Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG(*.jpg)</translation>
+        <translation type="obsolete">Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG(*.jpg)</translation>
     </message>
     <message>
         <source>Open a file</source>
@@ -79,11 +79,19 @@
     </message>
     <message>
         <source>Images (*.png *.bmp *.jpg *.jpeg)</source>
-        <translation>Images (*.png *.bmp *.jpg *.jpeg)</translation>
+        <translation type="obsolete">Images (*.png *.bmp *.jpg *.jpeg)</translation>
     </message>
     <message>
         <source>&amp;%1 %2</source>
         <translation>&amp;%1 %2</translation>
+    </message>
+    <message>
+        <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</source>
+        <translation>Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG(*.jpg *.jpeg);; Image VFF (*.vff)</translation>
+    </message>
+    <message>
+        <source>Supported image (*.png *.bmp *.jpg *.jpeg *.vff);; PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</source>
+        <translation>Images supportées (*.png *.bmp *.jpg *.jpeg *.vff);; Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG (*.jpg *.jpeg);; VFF image (*.vff)</translation>
     </message>
 </context>
 <context>
@@ -233,6 +241,10 @@
     <message>
         <source>New name:</source>
         <translation>Nouveau nom :</translation>
+    </message>
+    <message>
+        <source>Apply mask</source>
+        <translation>Appliquer un masque</translation>
     </message>
 </context>
 <context>
@@ -463,6 +475,22 @@
     <message>
         <source>You&apos;re going to close all the relative windows, are you sure you want to continue ?</source>
         <translation>Vous êtes sur le point de fermer toutes les fenêtres relatives, êtes-vous sûr de vouloir continuer ?</translation>
+    </message>
+    <message>
+        <source>Apply binary mask to </source>
+        <translation type="obsolete">Appliquer un masque binaire à </translation>
+    </message>
+    <message>
+        <source>Mask to apply : </source>
+        <translation>Masque à appliquer : </translation>
+    </message>
+    <message>
+        <source> - masked</source>
+        <translation> - masquée</translation>
+    </message>
+    <message>
+        <source>Apply mask to </source>
+        <translation>Appliquer un masque à</translation>
     </message>
 </context>
 </TS>
