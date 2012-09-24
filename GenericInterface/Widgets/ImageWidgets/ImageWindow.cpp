@@ -79,6 +79,8 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
     initStatusBar();
     menu()->addAction(tr("Rename"), this, SLOT(rename()));
     menu()->addSeparator();
+    menu()->addAction(tr("Apply mask"), this, SLOT(applyBinaryMask()));
+    menu()->addSeparator();
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(_imageView);
@@ -308,6 +310,10 @@ void ImageWindow::rename() {
                                          windowTitle(), &ok);
     if (ok && !text.isEmpty())
         this->setWindowTitle(text);
+}
+
+void ImageWindow::applyBinaryMask() {
+    emit applyBinaryMask(this);
 }
 
 void ImageWindow::keyPressEvent ( QKeyEvent * event ) {

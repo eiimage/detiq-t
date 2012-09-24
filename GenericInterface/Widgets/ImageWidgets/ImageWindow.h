@@ -133,6 +133,7 @@ class ImageWindow : public QWidget
         virtual void pixelHovered(int x, int y);
 
         void rename();
+        void applyBinaryMask();
 
 
     signals:
@@ -152,6 +153,7 @@ class ImageWindow : public QWidget
 
         void addWidget(ImageWindow*, QWidget*);
         void addImage(ImageWindow*, ImageWindow*);
+        void applyBinaryMask(ImageWindow*);
 
 
     protected:
