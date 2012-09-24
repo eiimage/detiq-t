@@ -72,6 +72,8 @@ public:
     virtual bool isStandard() const { return false; }
     inline bool isNormalized() const { return _normalize; }
     inline bool isLogScaled() const { return _logScale; }
+    inline double getLogScale() const  { return _logConstantScale; }
+    inline bool isAbsolute() const { return _abs; }
 
 
 public slots:
