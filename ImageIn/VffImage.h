@@ -36,7 +36,7 @@ namespace imagein
             inline unsigned int readDepth();
             void* readData();
 
-            void writeData(const void* const data, unsigned int width, unsigned int height, unsigned int nChannels, unsigned int depth);
+            void writeData(const void* const data, unsigned int width, unsigned int height, unsigned int, unsigned int depth);
 
     };
 }
