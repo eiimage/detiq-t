@@ -73,6 +73,7 @@ namespace genericinterface
     void addImage(ImageWindow* srcImg, ImageWindow* dstImg);
     bool addWidget(NodeId id, QWidget* widget);
     bool addWidget(ImageWindow* srcImg, QWidget* widget);
+    virtual void addText(std::string);
     void updateDisplay();
     void removeId(NodeId id);
     void moveToNode(StandardImageWindow* siw, int pos = -1);

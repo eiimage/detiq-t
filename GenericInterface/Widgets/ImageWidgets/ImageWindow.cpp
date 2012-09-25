@@ -67,7 +67,7 @@ void SelectionWidget::selectionMoved(int) {
 }
 
 ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
-    : _displayImg(displayImg), _path(path)
+    : _path(path), _displayImg(displayImg)
 {
     _applicationArea = rect;
     _zoomFactor = 1;
@@ -316,6 +316,6 @@ void ImageWindow::applyBinaryMask() {
     emit applyBinaryMask(this);
 }
 
-void ImageWindow::keyPressEvent ( QKeyEvent * event ) {
+void ImageWindow::keyPressEvent ( QKeyEvent * /*event*/ ) {
 //    if(event->
 }

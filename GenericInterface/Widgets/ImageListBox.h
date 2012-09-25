@@ -67,13 +67,13 @@ public:
         : QComboBox(parent)
     {
         int i = 0, index = 0;
-        for(typename std::map<const imagein::Image*, std::string>::const_iterator it = stdImgs.begin(); it != stdImgs.end(); ++it) {
+        for(std::map<const imagein::Image*, std::string>::const_iterator it = stdImgs.begin(); it != stdImgs.end(); ++it) {
             _images.insert(std::pair<std::string, ImageType>(it->second, STDIMG));
             _stdImgs.insert(std::pair<std::string, const imagein::Image*>(it->second, it->first));
             this->insertItem(i, QString(it->second.c_str()));
             if(it->second == currentImg) index = i;
         }
-        for(typename std::map<const imagein::Image_t<double>*, std::string>::const_iterator it = dblImgs.begin(); it != dblImgs.end(); ++it) {
+        for(std::map<const imagein::Image_t<double>*, std::string>::const_iterator it = dblImgs.begin(); it != dblImgs.end(); ++it) {
             _images.insert(std::pair<std::string, ImageType>(it->second, DBLIMG));
             _dblImgs.insert(std::pair<std::string, const imagein::Image_t<double>*>(it->second, it->first));
             this->insertItem(i, QString(it->second.c_str()));
@@ -88,7 +88,7 @@ public:
     }
 
     const imagein::Image* getStdImage(std::string name) {
-        typename std::map<std::string, const imagein::Image*>::iterator it = _stdImgs.find(name);
+        std::map<std::string, const imagein::Image*>::iterator it = _stdImgs.find(name);
         if(it != _stdImgs.end()) {
             return _stdImgs[name];
         }
@@ -96,7 +96,7 @@ public:
     }
 
     const imagein::Image_t<double>* getDblImage(std::string name) {
-        typename std::map<std::string, const imagein::Image_t<double>*>::iterator it = _dblImgs.find(name);
+        std::map<std::string, const imagein::Image_t<double>*>::iterator it = _dblImgs.find(name);
         if(it != _dblImgs.end()) {
             return _dblImgs[name];
         }

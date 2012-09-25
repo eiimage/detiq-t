@@ -25,7 +25,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QDialogButtonBox>
-#include "../ImageListBox.h"
+#include "../Widgets/ImageListBox.h"
 #include "../Widgets/ImageWidgets/StandardImageWindow.h"
 #include "../Widgets/ImageWidgets/DoubleImageWindow.h"
 
@@ -281,6 +281,11 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
 
 bool WindowService::addWidget(ImageWindow* srcWnd, QWidget* widget) {
    return this->addWidget(this->getNodeId(srcWnd), widget);
+}
+
+void WindowService::addText(std::string s) {
+    QMdiSubWindow* sw = _mdi->addSubWindow(new QLabel(QString::fromStdString(s)));
+    sw->show();
 }
 
 void WindowService::removeSubWindow(QMdiSubWindow* sw)

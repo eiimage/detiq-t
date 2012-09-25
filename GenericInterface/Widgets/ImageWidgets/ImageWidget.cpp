@@ -35,7 +35,7 @@ void ImageWidget::setImage(const imagein::Image* img) {
     _pixmap.convertFromImage(convertImage(img));
 }
 
-void ImageWidget::paintEvent (QPaintEvent* event ) {
+void ImageWidget::paintEvent (QPaintEvent* /*event*/ ) {
     QPainter painter(this);
     painter.drawPixmap(this->rect(), _pixmap);
 }
@@ -43,12 +43,12 @@ void ImageWidget::paintEvent (QPaintEvent* event ) {
 QImage ImageWidget::convertImage(const imagein::Image* img)
 {
     unsigned int channels = img->getNbChannels();
-    bool hasAlpha = (channels== 4 || channels == 2);
+//    bool hasAlpha = (channels== 4 || channels == 2);
 //    QImage qImg(img->getWidth(), img->getHeight(), (hasAlpha ? QImage::Format_ARGB32 : QImage::Format_RGB32));
     QImage qImg(img->getWidth(), img->getHeight(), QImage::Format_RGB32);
     //on récupère les bits de l'image qt, qu'on cast en QRgb (qui fait 32 bits -> une image RGB(A))
     QRgb* data = reinterpret_cast<QRgb*>(qImg.bits());
-    //Pour chaque pixel de l'image Qt, on récupère les données correspondantes de l'image ImageIn grace à l'itérateur
+    //Pour chaque pixel de l'image Qt, on récupère les données correspondantes de l'image ImageIn grace �  l'itérateur
     Image::const_iterator it = img->begin();
     int size = qImg.width()*qImg.height();
     switch(channels) {
@@ -89,7 +89,7 @@ QImage ImageWidget::convertImage(const imagein::Image* img)
                 const imagein::Image::depth_t red = *(it);
                 const imagein::Image::depth_t green = *(it + size );
                 const imagein::Image::depth_t blue = *(it + size*2 );
-                const imagein::Image::depth_t alpha = *(it + size*3 );
+//                const imagein::Image::depth_t alpha = *(it + size*3 );
 //                data[i] = qRgba(red, green, blue, alpha);
                 data[i] = qRgb(red, green, blue);
                 ++it;

@@ -52,7 +52,7 @@ void PixelGrid::resizeEvent(QResizeEvent* event) {
     emit resized(event->size()/PIXEL_S);
 }
 
-void PixelGrid::paintEvent (QPaintEvent* event ) {
+void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
     QPainter painter(this);
     
     QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
@@ -104,7 +104,7 @@ DoublePixelGrid::DoublePixelGrid(const imagein::Image_t<double>* dataImg, const 
     : PixelGrid(displayImg), _dataImg(dataImg) {
 }
 
-void DoublePixelGrid::paintEvent (QPaintEvent* event ) {
+void DoublePixelGrid::paintEvent (QPaintEvent* /*event */) {
 //    QPainter painter(this);
 
 //    QSize srcSize(this->width()/PIXEL_S, this->height()/PIXEL_S);

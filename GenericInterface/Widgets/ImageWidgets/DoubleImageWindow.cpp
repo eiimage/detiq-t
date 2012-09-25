@@ -231,7 +231,7 @@ void DoubleImageWindow::showHoveredPixelInformations(int x, int y) const
     }
 }
 
-void DoubleImageWindow::updateSrc(GenericHistogramView* histo, imagein::Rectangle rect) {
+void DoubleImageWindow::updateSrc(GenericHistogramView* /*histo*/, imagein::Rectangle /*rect*/) {
 }
 
 Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
