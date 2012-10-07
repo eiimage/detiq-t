@@ -58,7 +58,8 @@ namespace genericinterface
 		 * \param values Table of values
 		 */
 		void setValues(const imagein::Array<unsigned int>&);
-	};
+        void setValues(const imagein::Array<double>&);
+    };
 }
 
 #endif // GRAPHICALHISTOGRAM_H

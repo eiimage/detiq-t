@@ -62,6 +62,34 @@ namespace imagein
           template<typename D>
           void computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect);
     };
+
+    class CumulatedHistogram : public Array<double>
+    {
+         public:
+        /*!
+         * \brief Constructs an Cumulated histogram from an image.
+         *
+         * \param img The image from which to compute the histogram.
+         * \param channel The channel to consider for the values.
+         * \param rect A rectangle used to crop the image before computing the Histogram.
+         */
+          template <typename D>
+          CumulatedHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect = Rectangle());
+
+        /*!
+         * \brief Constructs an Histogram from an image.
+         *
+         * \param img The image from which to compute the histogram.
+         * \param rect A rectangle used to crop the image before computing the Histogram.
+         */
+          template <typename D>
+          CumulatedHistogram(const Image_t<D>& img, const Rectangle& rect = Rectangle());
+
+          private:
+
+          template<typename D>
+          void computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect);
+    };
 }
 
 #include "Histogram.tpp"

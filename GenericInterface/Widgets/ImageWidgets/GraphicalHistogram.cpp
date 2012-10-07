@@ -50,3 +50,17 @@ void GraphicalHistogram::setValues(const imagein::Array<unsigned int>& values)
 
     setData(new QwtIntervalSeriesData(samples));
 }
+
+void GraphicalHistogram::setValues(const imagein::Array<double>& values)
+{
+    QVector<QwtIntervalSample> samples(values.size());
+    for (unsigned int i = 0; i < values.size(); ++i)
+    {
+        QwtInterval interval(double(i), i + 1.0 );
+        interval.setBorderFlags(QwtInterval::ExcludeMaximum);
+
+        samples[i] = QwtIntervalSample(values[i], interval);
+    }
+
+    setData(new QwtIntervalSeriesData(samples));
+}

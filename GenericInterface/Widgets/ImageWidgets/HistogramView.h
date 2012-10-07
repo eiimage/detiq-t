@@ -42,7 +42,7 @@ namespace genericinterface
 		 * \param image The image concerned by the histogram
 		 * \param rect The part of the image where the histogram is applied
 		 */
-		HistogramView(const imagein::Image* image, imagein::Rectangle rect);
+        HistogramView(const imagein::Image* image, imagein::Rectangle rect, bool cumul = false);
     };
 }
 

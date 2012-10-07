@@ -108,6 +108,7 @@ void StandardImageWindow::init()
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
     menu()->addAction(tr("Histogram"), this, SLOT(showHistogram()));
+    menu()->addAction(tr("Cumulated histogram"), this, SLOT(showCumulatedHistogram()));
     menu()->addAction(tr("Horizontal Projection Histogram"), this, SLOT(showHProjectionHistogram()));
     menu()->addAction(tr("Vertical Projection Histogram"), this, SLOT(showVProjectionHistogram()));
     menu()->addAction(tr("Pixels Grid"), this, SLOT(showPixelsGrid()));
@@ -215,6 +216,11 @@ void StandardImageWindow::showGenericHistogram(GenericHistogramWindow* histogram
 void StandardImageWindow::showHistogram()
 {
     HistogramWindow* histogramWnd = new HistogramWindow( _image, selection(), this->windowTitle());
+    showGenericHistogram(histogramWnd);
+}
+
+void StandardImageWindow::showCumulatedHistogram() {
+    HistogramWindow* histogramWnd = new HistogramWindow( _image, selection(), this->windowTitle(), true);
     showGenericHistogram(histogramWnd);
 }
 

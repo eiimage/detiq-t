@@ -18,6 +18,7 @@
 */
 
 #include "Histogram.h"
+#include "Image.h"
 
 #include <cmath>
 #include <iostream>
@@ -50,5 +51,29 @@ void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int ch
             //unsigned int value = pixel >= 0 ? pixel : this->_width + pixel;
             this->_array[static_cast<unsigned int>(pixel)]++;
         }
+    }
+}
+
+template <typename D>
+imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect) : imagein::Array<double>(1 << (sizeof(D)*8))
+{
+    this->computeHistogram(img, channel, rect);
+}
+
+template <typename D>
+imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, const imagein::Rectangle& rect) : imagein::Array<unsigned int>(1 << (sizeof(D)*8))
+{
+    this->computeHistogram(img, 0, rect);
+}
+
+template<typename D>
+void imagein::CumulatedHistogram::computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect)
+{
+    Histogram histo = img.getHistogram(channel, rect);
+    double cumul = 0.;
+    double imgSize = img.getWidth() * img.getHeight();
+    for(unsigned int i=0; i<this->_width; i++) {
+        cumul += histo[i] / imgSize;
+        this->_array[i] = cumul;
     }
 }

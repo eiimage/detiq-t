@@ -127,6 +127,35 @@ std::vector<Filter*> Filter::uniform(int numPixels = 3)
   return filters;
 }
 
+const double pi = 3.1415926535897932384626433832795;
+const double pid2 = 1.57079632679489661923132169163975144209858469968755291;
+const double sqrt2 = 1.414213562373095048801688724209698078569671875376948;
+
+inline double gauss(int x, int y, double sigma) {
+    const double sigma2 = sigma * sigma;
+    return std::exp( - (x*x + y*y) / (2. * sigma2) ) / (2. * pi * sigma2);
+}
+
+std::vector<Filter*> Filter::gaussian(unsigned int size, double sigma) {
+    Filter* filter = new Filter(size, size);
+
+    const int offsetX = (filter->getWidth() - 1) / 2;
+    const int offsetY = (filter->getHeight() - 1) / 2;
+    const double coef = 1. / gauss(offsetX, offsetY, sigma);
+    for(unsigned int j = 0; j < filter->getHeight(); ++j) {
+        for(unsigned int i = 0; i < filter->getWidth(); ++i) {
+            const int x = i - offsetX;
+            const int y = j - offsetY;
+            const double value = std::floor( (coef * gauss(x, y, sigma)) + 0.5);
+            filter->setPixelAt(i, j, value);
+        }
+    }
+
+    std::vector<Filter*> filters;
+    filters.push_back(filter);
+    return filters;
+}
+
 std::vector<Filter*> Filter::gaussian(double alpha)
 {
   std::vector<double> gaussCoef;
