@@ -32,8 +32,10 @@ namespace imagein
 	namespace algorithm
 	{		
         class Filtering : public Algorithm_t<Image_t<double>, 1>
-		{
-            typedef double (*Policy)(const Image_t<double>*, const int&, const int&, const int&);
+        {
+            public:
+            enum Policy { POLICY_BLACK, POLICY_MIRROR, POLICY_NEAREST, POLICY_TOR};
+//            typedef double (*Policy)(const Image_t<double>*, const int&, const int&, const int&);
 			
 		public:
 			Filtering(Filter* filter);
@@ -44,7 +46,8 @@ namespace imagein
 			
 			static Filtering uniformBlur(int numPixels);
 			static Filtering gaussianBlur(double alpha);
-			static Filtering prewitt(int numPixels);
+            static Filtering gaussianBlur(int size, double sigma);
+            static Filtering prewitt(int numPixels);
 			static Filtering roberts();
 			static Filtering sobel();
 			static Filtering squareLaplacien();
@@ -174,8 +177,8 @@ namespace imagein
                 Image_t<double>* result;
 				Filter* filter;
 				Policy policy;
-				int infx;
-				int supx;
+                int infl;
+                int supl;
 				int factor;
         bool odd;
 			};

@@ -27,8 +27,8 @@ using namespace genericinterface;
 using namespace imagein;
 using namespace std;
 
-DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path, bool normalize, bool logScale, double logConstant)
-    : ImageWindow(path), _image(image), _normalize(normalize), _logScale(logScale), _logConstant(logConstant)
+DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path, bool normalize, bool logScale, double logConstantScale, bool abs)
+    : ImageWindow(path), _image(image), _normalize(normalize), _logScale(logScale), _logConstantScale(logConstantScale), _abs(abs)
 {
     _image = image;
 
@@ -40,7 +40,7 @@ DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path,
 }
 
 DoubleImageWindow::DoubleImageWindow(const DoubleImageWindow& siw, imagein::Image_t<double>* image)
-    : ImageWindow(siw.getPath()), _normalize(siw._normalize), _logScale(siw._logScale), _logConstant(siw._logConstant)
+    : ImageWindow(siw.getPath()), _normalize(siw._normalize), _logScale(siw._logScale), _logConstantScale(siw._logConstantScale)
 {
     if(image == NULL) {
         image = new Image_t<double>(*siw._image);
@@ -152,19 +152,21 @@ void DoubleImageWindow::updateStatusBar()
     infoLayout->addLayout(layoutHoveredPixel);
     _infoLayout->addWidget(infoWidget);
 
-    QWidget* logWidget = new QWidget();
-    QHBoxLayout* logLayout = new QHBoxLayout(logWidget);
-    QSlider* logSlider = new QSlider(Qt::Horizontal);
-    logSlider->setRange(0, 12);
-    logSlider->setValue(6);
-//    QDoubleSpinBox* logBox = new QDoubleSpinBox();
-//    logBox->setRange(0., 1000000000.);
-//    logBox->setValue(_logConstant);
-    QObject::connect(logSlider, SIGNAL(valueChanged(int)), this, SLOT(setLogScale(int)));
-    logLayout->addWidget(new QLabel("Log scale : "));
+    if(_logScale) {
+        QWidget* logWidget = new QWidget();
+        QHBoxLayout* logLayout = new QHBoxLayout(logWidget);
+        QSlider* logSlider = new QSlider(Qt::Horizontal);
+        logSlider->setRange(0, 12);
+        logSlider->setValue( (log2(_logConstantScale) / 3. + 3.) * 2.);
+    //    QDoubleSpinBox* logBox = new QDoubleSpinBox();
+    //    logBox->setRange(0., 1000000000.);
+    //    logBox->setValue(_logConstant);
+        QObject::connect(logSlider, SIGNAL(valueChanged(int)), this, SLOT(setLogScale(int)));
+        logLayout->addWidget(new QLabel("Log scale : "));
 
-    logLayout->addWidget(logSlider);
-    _infoLayout->addWidget(logWidget);
+        logLayout->addWidget(logSlider);
+        _infoLayout->addWidget(logWidget);
+    }
 
 }
 
@@ -229,13 +231,19 @@ void DoubleImageWindow::showHoveredPixelInformations(int x, int y) const
     }
 }
 
-void DoubleImageWindow::updateSrc(GenericHistogramView* histo, imagein::Rectangle rect) {
+void DoubleImageWindow::updateSrc(GenericHistogramView* /*histo*/, imagein::Rectangle /*rect*/) {
 }
 
-Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image, double constantScale) {
+Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
 
     Image_t<double>* tmpImg = new Image_t<double>(*image);
     Image* resImg = new Image(image->getWidth(), image->getHeight(), image->getNbChannels());
+
+    if(_abs) {
+        for(Image_t<double>::iterator it = tmpImg->begin(); it < tmpImg->end(); ++it) {
+            *it = std::abs(*it);
+        }
+    }
     std::cout << "Before normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
     if(_normalize) {
         tmpImg->normalize(0.0, 255.0);
@@ -243,17 +251,17 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image, double c
 
     std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
     double mean = tmpImg->mean();
-    _logConstant = exp(-log2(mean)) / 8.;
-    std::cout << "Log constant = " << _logConstant << std::endl;
-    std::cout << "Log scale = " << constantScale << std::endl;
+    double logConstant = exp(-log2(mean)) / 8.;
+    std::cout << "Log constant scale = " << _logConstantScale << std::endl;
+    std::cout << "Log constant = " << logConstant << std::endl;
     for(unsigned int c = 0; c < image->getNbChannels(); ++c) {
-        const double denom = log(255.0 * _logConstant * constantScale + 1.0);
+        const double denom = log(255.0 * logConstant * _logConstantScale + 1.0);
         const double factor = 255.0 / denom;
         for(unsigned int j = 0; j < image->getHeight(); ++j) {
             for(unsigned int i = 0; i < image->getWidth(); ++i) {
                 double mag = tmpImg->getPixel(i, j, c);
                 if(_logScale) {
-                    mag = log(mag*_logConstant*constantScale + 1.0) * factor;
+                    mag = log(mag*logConstant*_logConstantScale + 1.0) * factor;
                 }
                 mag = std::min(255.0, std::max(0.0, mag));
                 resImg->setPixel(i, j, c, mag);
@@ -267,7 +275,7 @@ void DoubleImageWindow::setLogScale(int logScale) {
 
 //    _logConstant = logConstant;
     const Image* tmpImg = _displayImg;
-    double scale = std::pow(8, logScale/2. - 3.);
-    setDisplayImage(makeDisplayable(_image, scale));
+    _logConstantScale = std::pow(8, logScale/2. - 3.);
+    setDisplayImage(makeDisplayable(_image));
     delete tmpImg;
 }

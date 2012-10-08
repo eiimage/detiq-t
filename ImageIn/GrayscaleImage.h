@@ -51,6 +51,7 @@ namespace imagein
 			 *
              */
             GrayscaleImage_t(unsigned int width=0, unsigned int height=0, const D* data=NULL) : Image_t<D>(width, height, 1, data) {};
+            explicit GrayscaleImage_t(const Image_t<D>* img, unsigned int c);
 		
 			/*!
              * \brief Constructs an image from the given file.

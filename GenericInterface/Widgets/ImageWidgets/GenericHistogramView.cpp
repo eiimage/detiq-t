@@ -35,7 +35,8 @@
 using namespace genericinterface;
 using namespace imagein;
 
-GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection): _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection)
+GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
+    : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
 {
 	_qwtPlot = new QwtPlot();
 	init(image);
@@ -163,11 +164,16 @@ void GenericHistogramView::populate(const imagein::Image* image)
 		//graphicalHisto->setValues(sizeof(values) / sizeof(int), values);
 		//graphicalHisto->setValues(histogram);
         
-		if(_projection)
+        if(_projection) {
             graphicalHisto->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
-		else
+        }
+        else if(_cumulated) {
+            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, i, _rectangle));
+        }
+        else {
             graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
-		if(_horizontal)
+        }
+        if(_horizontal)
 			graphicalHisto->setOrientation(Qt::Horizontal);
 		graphicalHisto->attach(_qwtPlot);
     _graphicalHistos.push_back(graphicalHisto);

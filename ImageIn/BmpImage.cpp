@@ -67,8 +67,8 @@ void* BmpImage::readData()
 			px = workImg->GetPixel(i,j);
 			// Every pixel is in a RGBA form, we will always get the RGB components, and the Alpha component when necessary
             data[w*j+i] = px.Red;
-            data[w*(h + j)+i] = px.Green;
-            data[w*(h*2 + j)+i] = px.Blue;
+            if(c>=2) data[w*(h + j)+i] = px.Green;
+            if(c>=3) data[w*(h*2 + j)+i] = px.Blue;
             if(c==4) data[w*(h*3 + j)+i] = px.Alpha; // In case there are 4 channels, we get the Alpha channel too
 		}
 	}

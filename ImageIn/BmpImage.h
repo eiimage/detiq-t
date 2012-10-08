@@ -60,8 +60,9 @@ namespace imagein
 	{
 		/* There are always 3 channels (RGB), whatever the depth is,
 		   except when the depth is 32, then there is a fourth channel (Alpha) */
-		if(readDepth()==32) return 4;
-		else return 3;
+//        if(r==32) return 4;
+//        else return 3;
+        return workImg->TellBitDepth() / readDepth();
 	}
 
 	inline unsigned int BmpImage::readDepth()
@@ -69,8 +70,9 @@ namespace imagein
 		/* Since a channel is always represented with 8 bits in ImageIn and there are 
 		  at least 3 channels (RGB), the minimum depth will be 24 bits. When there is
 		  a fourth channel (Alpha), the depth will be 32 bits */
-		if(workImg->TellBitDepth() == 32) return 32;
-		else return 24;
+//		if(workImg->TellBitDepth() == 32) return 32;
+//		else return 24;
+        return (sizeof(RGBApixel)*8)/sizeof(uint8_t)/4;
 	}
 }
 

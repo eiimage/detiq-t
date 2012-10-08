@@ -204,7 +204,7 @@ unsigned int JpgImage::readNbChannels(){
 }
 
 unsigned int JpgImage::readDepth(){
-    return sizeof(JSAMPLE);
+    return (8*sizeof(JSAMPLE))/sizeof(uint8_t);
 }
 
 void* JpgImage::readData(){

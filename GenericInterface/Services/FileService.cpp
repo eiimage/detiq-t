@@ -118,7 +118,7 @@ void FileService::saveAs()
         path = currentWindow->getPath();
     }
     QString selectedFilter;
-	QString file = QFileDialog::getSaveFileName(_gi, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)"), &selectedFilter);
+    QString file = QFileDialog::getSaveFileName(_gi, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)"), &selectedFilter);
 
 	QString ext = selectedFilter.right(5).left(4);
 
@@ -172,7 +172,7 @@ void FileService::chooseFile()
     if(currentWindow != NULL) {
         path = currentWindow->getPath();
     }
-    QStringList filenames = QFileDialog::getOpenFileNames(_gi, tr("Open a file"), path, tr("Images (*.png *.bmp *.jpg *.jpeg)"));
+    QStringList filenames = QFileDialog::getOpenFileNames(_gi, tr("Open a file"), path, tr("Supported image (*.png *.bmp *.jpg *.jpeg *.vff);; PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)"));
     loadFiles(filenames);
 }
 

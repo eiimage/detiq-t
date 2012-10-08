@@ -92,6 +92,7 @@ public:
 
 public slots:
     void showHistogram();
+    void showCumulatedHistogram();
     void showHProjectionHistogram();
     void showVProjectionHistogram();
     void showPixelsGrid();

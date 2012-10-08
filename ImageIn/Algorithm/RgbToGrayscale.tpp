@@ -29,9 +29,9 @@ namespace imagein {
 			{
 
                 GrayscaleImage_t<D>* img_res = new GrayscaleImage_t<D>(img->getWidth(), img->getHeight());
-                for (int j = 0 ; j < img->getHeight() ; ++j)
+                for (unsigned int j = 0 ; j < img->getHeight() ; ++j)
                 {
-                    for (int i = 0 ; i < img->getWidth() ; ++i)
+                    for (unsigned int i = 0 ; i < img->getWidth() ; ++i)
                     {
                         img_res->setPixel(i, j, img->getPixel(i, j, 0) * _r
                                                 + img->getPixel(i, j, 1) * _g

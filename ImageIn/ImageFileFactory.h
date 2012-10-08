@@ -66,6 +66,8 @@ namespace imagein
              * \sa ImageFileAbsFactory, Image::Image()
              */
             virtual ImageFile* getImageFile(std::string filename) const;
+
+
     };
 }
 

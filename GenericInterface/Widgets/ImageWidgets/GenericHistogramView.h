@@ -59,7 +59,7 @@ public:
      * \param image The image concerned by the histogram
      * \param rect The part of the image where the histogram is applied
      */
-    GenericHistogramView(const imagein::Image* image, imagein::Rectangle rect, bool horizontal=false, int value=0, bool projection=false);
+    GenericHistogramView(const imagein::Image* image, imagein::Rectangle rect, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false);
 
     /*!
      * \brief GenericHistogramView destructor.
@@ -126,6 +126,7 @@ protected:
 
 private:
     bool _projection;
+    bool _cumulated;
     void init(const imagein::Image*);
     void populate(const imagein::Image*);
 };

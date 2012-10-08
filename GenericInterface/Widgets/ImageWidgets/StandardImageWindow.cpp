@@ -50,6 +50,10 @@ StandardImageWindow::StandardImageWindow(const QString path)
         error = true;
         msg = QString::fromStdString(e.getMsg());
     }
+    catch(const char* e) {
+        error = true;
+        msg = e;
+    }
     catch(...) {
         error = true;
         msg = tr("Unknown exception");
@@ -104,6 +108,7 @@ void StandardImageWindow::init()
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
     menu()->addAction(tr("Histogram"), this, SLOT(showHistogram()));
+    menu()->addAction(tr("Cumulated histogram"), this, SLOT(showCumulatedHistogram()));
     menu()->addAction(tr("Horizontal Projection Histogram"), this, SLOT(showHProjectionHistogram()));
     menu()->addAction(tr("Vertical Projection Histogram"), this, SLOT(showVProjectionHistogram()));
     menu()->addAction(tr("Pixels Grid"), this, SLOT(showPixelsGrid()));
@@ -214,6 +219,11 @@ void StandardImageWindow::showHistogram()
     showGenericHistogram(histogramWnd);
 }
 
+void StandardImageWindow::showCumulatedHistogram() {
+    HistogramWindow* histogramWnd = new HistogramWindow( _image, selection(), this->windowTitle(), true);
+    showGenericHistogram(histogramWnd);
+}
+
 void StandardImageWindow::showHProjectionHistogram()
 {
     bool ok;
@@ -283,6 +293,7 @@ void StandardImageWindow::convertToGrayscale() {
 
     emit addImage(this, newImgWnd);
 }
+
 
 void StandardImageWindow::convertToBinary() {
     GrayscaleImage* newImg = Otsu()(Converter<GrayscaleImage>::convert(*_image));

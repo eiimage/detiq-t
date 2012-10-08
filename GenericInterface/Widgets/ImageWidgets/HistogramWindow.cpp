@@ -22,10 +22,15 @@
 using namespace genericinterface;
 using namespace imagein;
 
-HistogramWindow::HistogramWindow(const Image* image, imagein::Rectangle rect, QString name)
-    : GenericHistogramWindow(new HistogramView(image, rect))
+HistogramWindow::HistogramWindow(const Image* image, imagein::Rectangle rect, QString name, bool cumul)
+    : GenericHistogramWindow(new HistogramView(image, rect, cumul))
 {
-    this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
+    if(!cumul) {
+        this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
+    }
+    else {
+        this->setWindowTitle(name + QString(" - ") + tr("Cumulated histogram"));
+    }
 }
 
 HistogramWindow::~HistogramWindow()

@@ -49,6 +49,7 @@ IMAGEIN_OBJECTS =  \
 	ImageIn_ImageFileFactory.o \
 	ImageIn_JpgImage.o \
 	ImageIn_PngImage.o \
+	ImageIn_VffImage.o \
 	ImageIn_EasyBMP.o \
 	ImageIn_Graph.o \
 	ImageIn_Filter.o \
@@ -133,6 +134,9 @@ ImageIn_JpgImage.o: ./JpgImage.cpp
 	$(CXX) -c -o $@ $(IMAGEIN_CXXFLAGS) $(CPPDEPS) $<
 
 ImageIn_PngImage.o: ./PngImage.cpp
+	$(CXX) -c -o $@ $(IMAGEIN_CXXFLAGS) $(CPPDEPS) $<
+
+ImageIn_VffImage.o: ./VffImage.cpp
 	$(CXX) -c -o $@ $(IMAGEIN_CXXFLAGS) $(CPPDEPS) $<
 
 ImageIn_EasyBMP.o: ./EasyBMP.cpp

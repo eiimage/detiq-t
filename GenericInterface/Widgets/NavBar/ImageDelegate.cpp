@@ -104,12 +104,12 @@ void ImageDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     painter->restore();
 }
 
-QSize ImageDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
+QSize ImageDelegate::sizeHint(const QStyleOptionViewItem & /*option*/, const QModelIndex & index) const
 {
     return getItemSize(index);
 }
 
-bool ImageDelegate::helpEvent(QHelpEvent* event, QAbstractItemView* view, const QStyleOptionViewItem& option, const QModelIndex& index ) {
+bool ImageDelegate::helpEvent(QHelpEvent* event, QAbstractItemView* view, const QStyleOptionViewItem&/* option*/, const QModelIndex& index ) {
     if ( !event || !view ) {
         return false;
     }
