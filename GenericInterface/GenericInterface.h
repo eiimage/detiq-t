@@ -182,6 +182,7 @@ namespace genericinterface
     virtual QToolBar* toolBar(QString name);
 
     inline QSettings* settings() { return _settings; }
+    inline bool running() { return _running; }
 
 
   protected:
