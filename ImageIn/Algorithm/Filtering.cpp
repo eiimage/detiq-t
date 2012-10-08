@@ -46,6 +46,83 @@ Filtering::Filtering(std::vector<Filter*> filters) : _filters(filters)
     _policy = POLICY_BLACK;
 }
 
+template<Filtering::Policy>
+inline double filtering(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf);
+
+template<>
+inline double filtering<Filtering::POLICY_BLACK>(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf) {
+    double newPixel = 0.;
+    for(unsigned int i = 0; i < filter->getWidth(); i++)
+    {
+        for(unsigned int j = 0; j < filter->getHeight(); j++)
+        {
+            const int imgX = x + i - hwf;
+            const int imgY = y + j - hhf;
+            if(imgX > 0 && imgX < img->getWidth() && imgY > 0 && imgY < img->getHeight()) {
+                newPixel += filter->getPixelAt(i,j) * img->getPixelAt(imgX, imgY, c);
+            }
+        }
+    }
+    return newPixel;
+}
+
+template<>
+inline double filtering<Filtering::POLICY_MIRROR>(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf) {
+    double newPixel = 0.;
+    for(unsigned int i = 0; i < filter->getWidth(); i++)
+    {
+        for(unsigned int j = 0; j < filter->getHeight(); j++)
+        {
+            int imgX = x + i - hwf;
+            int imgY = y + j - hhf;
+            if(imgX < 0) imgX = -imgX;
+            if(imgY < 0) imgY = -imgY;
+            if(imgX >= img->getWidth()) imgX = 2*img->getWidth() - imgX - 1;
+            if(imgY >= img->getHeight()) imgY = 2*img->getHeight() - imgY - 1;
+            newPixel += filter->getPixelAt(i,j) * img->getPixelAt(imgX, imgY, c);
+        }
+    }
+    return newPixel;
+}
+
+template<>
+inline double filtering<Filtering::POLICY_NEAREST>(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf) {
+    double newPixel = 0.;
+    for(unsigned int i = 0; i < filter->getWidth(); i++)
+    {
+        for(unsigned int j = 0; j < filter->getHeight(); j++)
+        {
+            int imgX = x + i - hwf;
+            int imgY = y + j - hhf;
+            if(imgX < 0) imgX = 0;
+            if(imgY < 0) imgY = 0;
+            if(imgX >= img->getWidth()) imgX = img->getWidth() - 1;
+            if(imgY >= img->getHeight()) imgY = img->getHeight() - 1;
+            newPixel += filter->getPixelAt(i,j) * img->getPixelAt(imgX, imgY, c);
+        }
+    }
+    return newPixel;
+}
+
+template<>
+inline double filtering<Filtering::POLICY_TOR>(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf) {
+    double newPixel = 0.;
+    for(unsigned int i = 0; i < filter->getWidth(); i++)
+    {
+        for(unsigned int j = 0; j < filter->getHeight(); j++)
+        {
+            int imgX = x + i - hwf;
+            int imgY = y + j - hhf;
+            if(imgX < 0) imgX = img->getWidth() - imgX;
+            if(imgY < 0) imgY = img->getHeight() - imgY;
+            if(imgX >= img->getWidth()) imgX = imgX - img->getWidth();
+            if(imgY >= img->getHeight()) imgY = imgY - img->getHeight();
+            newPixel += filter->getPixelAt(i,j) * img->getPixelAt(imgX, imgY, c);
+        }
+    }
+    return newPixel;
+}
+
 Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>& imgs)
 {
     const Image_t<double>* img = imgs.at(0);
@@ -124,34 +201,52 @@ Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>&
         int halfHeightFilter = (*filter)->getHeight() / 2;
         int halfWidthFilter = (*filter)->getWidth() / 2;
 
-        for(int x = 0; x < width; x++)
-        {
-            for(int y = 0; y < height; y++)
+        switch(_policy) {
+            case POLICY_TOR:
             {
-                for(int channel = 0; channel < nChannels; channel++)
-                {
-                    double newPixel = 0;
-
-                    for(int i = 0; i < (*filter)->getWidth(); i++)
-                    {
-                        for(int j = 0; j < (*filter)->getHeight(); j++)
-                        {
-                            if(odd)
-                            {
-                                newPixel += (*filter)->getPixelAt(i,j) * ((*_policy)(img, x + i - halfWidthFilter, y + j - halfHeightFilter, channel));
-                            }
-                            else
-                            {
-                                newPixel += (*filter)->getPixelAt(i,j) * ((*_policy)(img, x + i - halfWidthFilter - 1, y + j - halfHeightFilter - 1, channel));
-                            }
-                        }
+                for(int c = 0; c < nChannels; c++) {
+	            for(int y = 0; y < height; y++) {
+	                for(int x = 0; x < width; x++) {
+	        	    result->pixelAt(x, y, c) = filtering<POLICY_TOR>(img, x, y, c, *filter, halfWidthFilter, halfHeightFilter);
+	        	}
                     }
-                    if(factor > 1)
-                        newPixel /= factor;
-                    result->setPixel(x, y, channel, newPixel);
                 }
-            }
-        }
+		break;
+	    }
+            case POLICY_NEAREST:
+            {
+                for(int c = 0; c < nChannels; c++) {
+	            for(int y = 0; y < height; y++) {
+	                for(int x = 0; x < width; x++) {
+	        	    result->pixelAt(x, y, c) = filtering<POLICY_NEAREST>(img, x, y, c, *filter, halfWidthFilter, halfHeightFilter);
+	        	}
+                    }
+                }
+		break;
+	    }
+            case POLICY_MIRROR:
+            {
+                for(int c = 0; c < nChannels; c++) {
+	            for(int y = 0; y < height; y++) {
+	                for(int x = 0; x < width; x++) {
+	        	    result->pixelAt(x, y, c) = filtering<POLICY_MIRROR>(img, x, y, c, *filter, halfWidthFilter, halfHeightFilter);
+	        	}
+                    }
+                }
+		break;
+	    }
+            default:
+            {
+                for(int c = 0; c < nChannels; c++) {
+	            for(int y = 0; y < height; y++) {
+	                for(int x = 0; x < width; x++) {
+	        	    result->pixelAt(x, y, c) = filtering<POLICY_BLACK>(img, x, y, c, *filter, halfWidthFilter, halfHeightFilter);
+	        	}
+                    }
+                }
+		break;
+	    }
+	}
 #endif
         images.push_back(result);
     }
@@ -180,82 +275,7 @@ Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>&
     return result;
 }
 
-template<Filtering::Policy>
-inline double filtering(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf);
 
-template<>
-inline double filtering<Filtering::POLICY_BLACK>(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf) {
-    double newPixel = 0.;
-    for(unsigned int i = 0; i < filter->getWidth(); i++)
-    {
-        for(unsigned int j = 0; j < filter->getHeight(); j++)
-        {
-            const int imgX = x + i - hwf;
-            const int imgY = y + j - hhf;
-            if(imgX > 0 && imgX < img->getWidth() && imgY > 0 && imgY < img->getHeight()) {
-                newPixel += filter->getPixelAt(i,j) * img->getPixelAt(imgX, imgY, c);
-            }
-        }
-    }
-    return newPixel;
-}
-
-template<>
-inline double filtering<Filtering::POLICY_MIRROR>(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf) {
-    double newPixel = 0.;
-    for(unsigned int i = 0; i < filter->getWidth(); i++)
-    {
-        for(unsigned int j = 0; j < filter->getHeight(); j++)
-        {
-            int imgX = x + i - hwf;
-            int imgY = y + j - hhf;
-            if(imgX < 0) imgX = -imgX;
-            if(imgY < 0) imgY = -imgY;
-            if(imgX >= img->getWidth()) imgX = 2*img->getWidth() - imgX - 1;
-            if(imgY >= img->getHeight()) imgY = 2*img->getHeight() - imgY - 1;
-            newPixel += filter->getPixelAt(i,j) * img->getPixelAt(imgX, imgY, c);
-        }
-    }
-    return newPixel;
-}
-
-template<>
-inline double filtering<Filtering::POLICY_NEAREST>(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf) {
-    double newPixel = 0.;
-    for(unsigned int i = 0; i < filter->getWidth(); i++)
-    {
-        for(unsigned int j = 0; j < filter->getHeight(); j++)
-        {
-            int imgX = x + i - hwf;
-            int imgY = y + j - hhf;
-            if(imgX < 0) imgX = 0;
-            if(imgY < 0) imgY = 0;
-            if(imgX >= img->getWidth()) imgX = img->getWidth() - 1;
-            if(imgY >= img->getHeight()) imgY = img->getHeight() - 1;
-            newPixel += filter->getPixelAt(i,j) * img->getPixelAt(imgX, imgY, c);
-        }
-    }
-    return newPixel;
-}
-
-template<>
-inline double filtering<Filtering::POLICY_TOR>(const Image_t<double>* img, int x, int y, int c, Filter* filter, int hwf, int hhf) {
-    double newPixel = 0.;
-    for(unsigned int i = 0; i < filter->getWidth(); i++)
-    {
-        for(unsigned int j = 0; j < filter->getHeight(); j++)
-        {
-            int imgX = x + i - hwf;
-            int imgY = y + j - hhf;
-            if(imgX < 0) imgX = img->getWidth() - imgX;
-            if(imgY < 0) imgY = img->getHeight() - imgY;
-            if(imgX >= img->getWidth()) imgX = imgX - img->getWidth();
-            if(imgY >= img->getHeight()) imgY = imgY - img->getHeight();
-            newPixel += filter->getPixelAt(i,j) * img->getPixelAt(imgX, imgY, c);
-        }
-    }
-    return newPixel;
-}
 
 
 #ifdef __linux__

@@ -215,7 +215,7 @@ void ImageWindow::startDrag() {
     QByteArray encodedData;
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
     uintptr_t ptr = reinterpret_cast<uintptr_t>(this);
-    stream << ptr;
+    stream << QVariant::fromValue(ptr);
     if(_imageView->mode() == ImageView::MODE_MOUSE) {
         mimeData->setData("application/detiqt.genericinterface.stdimgwnd", encodedData);
         drag->setPixmap(_imageView->pixmap().scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation));
