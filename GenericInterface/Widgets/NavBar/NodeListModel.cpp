@@ -123,7 +123,7 @@ QMimeData* NodeListModel::mimeData(const QModelIndexList& indexes ) const {
     foreach (const QModelIndex &index, indexes) {
         if (index.isValid()) {
             const Node* node = data(index, Qt::DisplayRole).value<const Node*>();
-            stream << reinterpret_cast<uintptr_t>(node);
+            stream << QVariant::fromValue(reinterpret_cast<uintptr_t>(node));
         }
     }
 
@@ -164,7 +164,10 @@ bool NodeListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
         while (!stream.atEnd()) {
             uintptr_t data;
-            stream >> data;
+            QVariant variant;
+            stream >> variant;
+            data = variant.value<uintptr_t>();
+            //stream >> data;
             const Node* node = reinterpret_cast<const Node*>(data);
             newNodes << QVariant::fromValue(node);
             ++rows;
@@ -181,7 +184,10 @@ bool NodeListModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         QByteArray encodedData = isCopy ? data->data(type + "stdimgwnd.copy") : data->data(type + "stdimgwnd");
         QDataStream stream(&encodedData, QIODevice::ReadOnly);
         uintptr_t data;
-        stream >> data;
+        QVariant variant;
+        stream >> variant;
+        data = variant.value<uintptr_t>();
+        //stream >> data;
         StandardImageWindow* siw = reinterpret_cast<StandardImageWindow*>(data);
         if(siw == NULL) {
             return false;

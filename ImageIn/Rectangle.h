@@ -38,6 +38,10 @@ namespace imagein
         Rectangle(unsigned int x, unsigned int y, unsigned int w, unsigned int h) : x(x), y(y), w(w), h(h) {}
         Rectangle() : x(0), y(0), w(0), h(0) {}
         Rectangle(const imagein::Rectangle& r) : x(r.x), y(r.y), w(r.w), h(r.h) {}
+        inline unsigned int left() { return x; }
+        inline unsigned int right() { return x + w; }
+        inline unsigned int top() { return y; }
+        inline unsigned int bottom() { return y + h; }
     };
 }
 

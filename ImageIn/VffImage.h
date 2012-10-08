@@ -17,33 +17,28 @@
  * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HISTOGRAMVIEW_H
-#define HISTOGRAMVIEW_H
+#ifndef VFFIMAGE_H
+#define VFFIMAGE_H
 
-#include "GenericHistogramView.h"
+#include "ImageFile.h"
 
-namespace genericinterface
+namespace imagein
 {
-	/*!
-     * \brief Create and display a graphical histogram
-     *
-     * Creates and display a graphical histogram from an image and a rectangle.
-     * This class manages via HistogramPicker the mouse events.
-     */
-    class HistogramView : public GenericHistogramView
+    //! ImageFile subclass for VFF files. See ImageFile for details.
+    class VffImage : public ImageFile
     {
-    Q_OBJECT
-    public:
-		/*!
-		 * \brief Default constructor
-		 * 
-		 * Initializes and display the histogram from the parameters. 
-		 * 
-		 * \param image The image concerned by the histogram
-		 * \param rect The part of the image where the histogram is applied
-		 */
-        HistogramView(const imagein::Image* image, imagein::Rectangle rect, bool cumul = false);
+        public:
+            VffImage(std::string filename);
+
+            inline unsigned int readHeight();
+            inline unsigned int readWidth();
+            inline unsigned int readNbChannels();
+            inline unsigned int readDepth();
+            void* readData();
+
+            void writeData(const void* const data, unsigned int width, unsigned int height, unsigned int, unsigned int depth);
+
     };
 }
 
-#endif // HISTOGRAMVIEW_H
+#endif // VFFIMAGE_H

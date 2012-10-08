@@ -24,6 +24,7 @@
 #include "JpgImage.h"
 #include "PngImage.h"
 #include "BmpImage.h"
+#include "VffImage.h"
 #include "UnknownFormatException.h"
 
 using namespace imagein;
@@ -52,11 +53,14 @@ ImageFile* ImageFileFactory::getImageFile(std::string filename) const
     if(ext==".bmp") {
         imgf = new BmpImage(filename);
     }
-    else if(ext==".jpg" || filename.substr(filename.size()-5,5)==".jpeg") {
+    else if(ext==".jpg" || ext ==".jpeg") {
         imgf = new JpgImage(filename);
     }
     else if(ext==".png") {
         imgf = new PngImage(filename);
+    }
+    else if(ext==".vff") {
+        imgf = new VffImage(filename);
     }
     else {
       throw UnknownFormatException(__LINE__, __FILE__);

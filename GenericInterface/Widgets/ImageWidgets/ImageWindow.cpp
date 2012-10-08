@@ -67,7 +67,7 @@ void SelectionWidget::selectionMoved(int) {
 }
 
 ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
-    : _displayImg(displayImg), _path(path)
+    : _path(path), _displayImg(displayImg)
 {
     _applicationArea = rect;
     _zoomFactor = 1;
@@ -78,6 +78,8 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
     _statusBar = new QWidget();
     initStatusBar();
     menu()->addAction(tr("Rename"), this, SLOT(rename()));
+    menu()->addSeparator();
+    menu()->addAction(tr("Apply mask"), this, SLOT(applyBinaryMask()));
     menu()->addSeparator();
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -213,7 +215,7 @@ void ImageWindow::startDrag() {
     QByteArray encodedData;
     QDataStream stream(&encodedData, QIODevice::WriteOnly);
     uintptr_t ptr = reinterpret_cast<uintptr_t>(this);
-    stream << ptr;
+    stream << QVariant::fromValue(ptr);
     if(_imageView->mode() == ImageView::MODE_MOUSE) {
         mimeData->setData("application/detiqt.genericinterface.stdimgwnd", encodedData);
         drag->setPixmap(_imageView->pixmap().scaled(QSize(76,76), Qt::KeepAspectRatio, Qt::FastTransformation));
@@ -310,6 +312,10 @@ void ImageWindow::rename() {
         this->setWindowTitle(text);
 }
 
-void ImageWindow::keyPressEvent ( QKeyEvent * event ) {
+void ImageWindow::applyBinaryMask() {
+    emit applyBinaryMask(this);
+}
+
+void ImageWindow::keyPressEvent ( QKeyEvent * /*event*/ ) {
 //    if(event->
 }

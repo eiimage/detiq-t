@@ -53,7 +53,7 @@ namespace genericinterface
        * \param image The image concerned by the histogram
        * \param rect The part of the image where the histogram is applied
        */
-      HistogramWindow(const imagein::Image* image, imagein::Rectangle rect, QString name = "");
+      HistogramWindow(const imagein::Image* image, imagein::Rectangle rect, QString name = "", bool cumul = false);
         
       /*!
        * \brief HistogramWindow destructor.

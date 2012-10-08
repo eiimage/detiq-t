@@ -289,6 +289,22 @@ namespace imagein {
   }
 
   template <typename D>
+  Image_t<D>* Converter<Image_t<D> >::convertAndRound(const Image_t<double>& from) {
+      Image_t<D>* resImg = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
+      for(unsigned int c = 0; c < resImg->getNbChannels(); ++c) {
+          for(unsigned int j = 0; j < resImg->getHeight(); ++j) {
+              for(unsigned int i = 0; i < resImg->getWidth(); ++i) {
+                  double value = from.getPixel(i, j, c);
+                  if(value > 255.) value = 255.;
+                  if(value < 0.) value = 0.;
+                  resImg->setPixel(i, j, c, value + 0.5);
+              }
+          }
+      }
+      return resImg;
+  }
+
+  template <typename D>
   template <typename D2>
   Image_t<D>* Converter<Image_t<D> >::convert(const Image_t<D2>& from) {
       Image_t<D>* resImg = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());

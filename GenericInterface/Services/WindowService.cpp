@@ -21,6 +21,13 @@
 
 #include <QListIterator>
 #include <QErrorMessage>
+#include <QDialog>
+#include <QFormLayout>
+#include <QLabel>
+#include <QDialogButtonBox>
+#include "../Widgets/ImageListBox.h"
+#include "../Widgets/ImageWidgets/StandardImageWindow.h"
+#include "../Widgets/ImageWidgets/DoubleImageWindow.h"
 
 using namespace std;
 using namespace genericinterface;
@@ -74,18 +81,18 @@ ImageWindow* WindowService::getCurrentImageWindow()
     }
 }
 
-std::vector<ImageWindow*> WindowService::getImageWindows() {
-    vector<ImageWindow*> result;
+
+std::vector<const ImageWindow*> WindowService::getImageWindows() const {
+    vector<const ImageWindow*> result;
     QList<QMdiSubWindow*> windows = _mdi->subWindowList();
     foreach(QMdiSubWindow* sw, windows) {
-        ImageWindow* siw = dynamic_cast<ImageWindow*>(sw->widget());
+        const ImageWindow* siw = dynamic_cast<const ImageWindow*>(sw->widget());
         if(siw != NULL) {
             result.push_back(siw);
         }
     }
     return result;
 }
-
 NodeId WindowService::findNodeId(QMdiSubWindow* sw) const {
     QMutexLocker locker(&_mutex);
     for(std::map<NodeId, Node*>::const_iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
@@ -223,6 +230,7 @@ void WindowService::addImage(NodeId id, ImageWindow* imgWnd, int pos)
 
     QObject::connect(imgWnd, SIGNAL(addImage(ImageWindow*,ImageWindow*)), this, SLOT(addImage(ImageWindow*,ImageWindow*)));
     QObject::connect(imgWnd, SIGNAL(addWidget(ImageWindow*,QWidget*)), this, SLOT(addWidget(ImageWindow*,QWidget*)));
+    QObject::connect(imgWnd, SIGNAL(applyBinaryMask(ImageWindow*)), this, SLOT(applyBinaryMask(ImageWindow*)));
     QObject::connect(sw, SIGNAL(aboutToActivate()), imgWnd, SLOT(activated()));
 
     QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
@@ -273,6 +281,11 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
 
 bool WindowService::addWidget(ImageWindow* srcWnd, QWidget* widget) {
    return this->addWidget(this->getNodeId(srcWnd), widget);
+}
+
+void WindowService::addText(std::string s) {
+    QMdiSubWindow* sw = _mdi->addSubWindow(new QLabel(QString::fromStdString(s)));
+    sw->show();
 }
 
 void WindowService::removeSubWindow(QMdiSubWindow* sw)
@@ -447,6 +460,97 @@ void WindowService::updateDisplay()
         _mdi->setActiveSubWindow(firstValidWindow);
     }
     
+}
+
+void WindowService::applyBinaryMask(ImageWindow* imgWnd) {
+
+    vector<const ImageWindow*> wndList =this->getImageWindows();
+    QString currentImgName = imgWnd->windowTitle();
+    map<const Image*,string> stdImgList;
+    map<const Image_t<double>*,string> dblImgList;
+    for(vector<const ImageWindow*>::const_iterator it = wndList.begin(); it != wndList.end(); ++it) {
+        if((*it)->isStandard()) {
+            const StandardImageWindow* stdImgWnd = dynamic_cast<const StandardImageWindow*>(*it);
+            stdImgList.insert(pair<const Image*, string>(stdImgWnd->getImage(), stdImgWnd->windowTitle().toStdString()));
+        }
+        else if((*it)->isDouble()) {
+            const DoubleImageWindow* dblImgWnd = dynamic_cast<const DoubleImageWindow*>(*it);
+            dblImgList.insert(pair<const Image_t<double>*, string>(dblImgWnd->getImage(), dblImgWnd->windowTitle().toStdString()));
+        }
+    }
+
+
+    QDialog* dialog = new QDialog(imgWnd);
+    dialog->setWindowTitle(currentImgName);
+    QFormLayout* layout = new QFormLayout(dialog);
+    MixImageListBox* imgBox = new MixImageListBox(dialog, currentImgName.toStdString(), stdImgList, dblImgList);
+    layout->insertRow(0, tr("Mask to apply : "), imgBox);
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel, Qt::Horizontal, dialog);
+    layout->insertRow(1, buttonBox);
+    QObject::connect(buttonBox, SIGNAL(accepted()), dialog, SLOT(accept()));
+    QObject::connect(buttonBox, SIGNAL(rejected()), dialog, SLOT(reject()));
+
+    QDialog::DialogCode code = static_cast<QDialog::DialogCode>(dialog->exec());
+
+    if(code!=QDialog::Accepted) return;
+
+    Image_t<double>* mask;
+    if(imgBox->currentType() == MixImageListBox::STDIMG) {
+        const Image* stdImg = imgBox->getStdImage(imgBox->currentText().toStdString());
+        if(stdImg == NULL) return;
+        mask = Converter<Image_t<double> >::convert(*stdImg);
+    }
+    else if(imgBox->currentType() == MixImageListBox::DBLIMG) {
+        const Image_t<double>* dblImg = imgBox->getDblImage(imgBox->currentText().toStdString());
+        if(dblImg == NULL) return;
+        mask = new Image_t<double>(*dblImg);
+    }
+    else return;
+
+    Image_t<double>* img;
+    if(imgWnd->isStandard()) {
+        StandardImageWindow* siw = dynamic_cast<StandardImageWindow*>(imgWnd);
+        img = Converter<Image_t<double> >::convert(*siw->getImage());
+    }
+    else if(imgWnd->isDouble()) {
+        DoubleImageWindow* diw = dynamic_cast<DoubleImageWindow*>(imgWnd);
+        img = new Image_t<double>(*diw->getImage());
+    }
+
+//    const double mean = (mask->max() - mask->min()) / 2.;
+    const double max = mask->max();
+    for(Image_t<double>::iterator it = mask->begin(); it < mask->end(); ++it) {
+//        *it = (*it < mean) ? 0. : 1.;
+        *it = *it / max;
+    }
+
+    const unsigned int width = min(mask->getWidth(), img->getWidth());
+    const unsigned int height = min(mask->getHeight(), img->getHeight());
+    Image_t<double>* resImg = new Image_t<double>(width, height, img->getNbChannels());
+    for(unsigned int c = 0; c < resImg->getNbChannels(); ++c) {
+        const unsigned int maskChannel = mask->getNbChannels() >= img->getNbChannels() ? c : 0;
+        for(unsigned int j = 0; j < resImg->getHeight(); ++j) {
+            for(unsigned int i = 0; i < resImg->getWidth(); ++i) {
+                resImg->pixelAt(i, j, c) = img->pixelAt(i, j, c) * mask->pixelAt(i, j, maskChannel);
+            }
+        }
+    }
+    delete img;
+    delete mask;
+
+    ImageWindow* newImgWnd;
+    if(imgWnd->isStandard()) {
+        Image* stdImg = Converter<Image>::convertAndRound(*resImg);
+        delete resImg;
+        newImgWnd = new StandardImageWindow(stdImg, imgWnd->getPath());
+    }
+    else if(imgWnd->isDouble()) {
+        DoubleImageWindow* diw = dynamic_cast<DoubleImageWindow*>(imgWnd);
+        newImgWnd = new DoubleImageWindow(resImg, diw->getPath(), diw->isNormalized(), diw->isLogScaled(), diw->getLogScale(), diw->isAbsolute());
+    }
+    newImgWnd->setWindowTitle(imgWnd->windowTitle() + tr(" - masked"));
+    this->addImage(imgWnd, newImgWnd);
+
 }
 
 SubWindowController::SubWindowController(QMdiSubWindow* sw) : _sw(sw)
