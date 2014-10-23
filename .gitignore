@@ -30,9 +30,12 @@
 
 ##Qt
 *.pro
+*.pro.user
 *.Debug
 *.Release
 moc_*.cpp
 qrc_*.cpp
 GenericInterface/Makefile
 Applications/*/Makefile
+CMakeLists.txt.user*
+/.project
