@@ -43,7 +43,12 @@ int main(int argc, char** argv)
 
   EdgeColoration_t<Image_t<double>, 2> ec;
 
-  Image* i          = new Image("samples/lena.jpg");
+  if(argc != 2) {
+      cerr << "Usage: ImageIn_main <path/to/image.png/jpg>" << endl;
+      exit(1);
+  }
+
+  Image* i = new Image(argv[1]);
   RgbToGrayscale algo;
   Image* img        = algo(i);
   Image_t<double>* i1  = c1(Converter<Image_t<double> >::convert(*img));
