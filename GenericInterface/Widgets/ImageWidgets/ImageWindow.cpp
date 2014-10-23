@@ -21,6 +21,8 @@
 
 #include "ImageWindow.h"
 #include <QSpinBox>
+#include <QDrag>
+#include <QMimeData>
 
 using namespace std;
 using namespace genericinterface;
