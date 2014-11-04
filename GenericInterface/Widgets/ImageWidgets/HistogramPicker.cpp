@@ -21,9 +21,9 @@
 
 using namespace genericinterface;
 
-HistogramPicker::HistogramPicker(QwtPlotCanvas* canvas): QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, canvas) {}
+HistogramPicker::HistogramPicker(QWidget *canvas): QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, canvas) {}
 
-HistogramPicker::HistogramPicker(RubberBand rubberBand, DisplayMode trackerMode, QwtPlotCanvas* canvas): QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, rubberBand, trackerMode, canvas) {}
+HistogramPicker::HistogramPicker(RubberBand rubberBand, DisplayMode trackerMode, QWidget* canvas): QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, rubberBand, trackerMode, canvas) {}
 
 QwtText HistogramPicker::trackerTextF(const QPointF& pos) const
 {

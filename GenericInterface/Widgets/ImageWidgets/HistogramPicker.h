@@ -48,7 +48,7 @@ namespace genericinterface
 		 * 
 		 * \param canvas The QwtPlotCanvas to supervise
 		 */
-		HistogramPicker(QwtPlotCanvas* canvas);
+        HistogramPicker(QWidget* canvas);
 		
 		/*!
 		 * \brief Default constructor
@@ -59,7 +59,7 @@ namespace genericinterface
 		 * \param trackerMode The tracker's display mode
 		 * \param canvas The QwtPlotCanvas to supervise
 		 */
-		HistogramPicker(RubberBand rubberBand, DisplayMode trackerMode, QwtPlotCanvas* canvas);
+        HistogramPicker(RubberBand rubberBand, DisplayMode trackerMode, QWidget *canvas);
 	
 		
 	signals:

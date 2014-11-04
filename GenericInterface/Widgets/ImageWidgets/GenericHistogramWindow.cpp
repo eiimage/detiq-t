@@ -24,7 +24,6 @@
 #include <qwt_picker_machine.h>
 #include <qwt_plot_histogram.h>
 #include <qwt_legend.h>
-#include <qwt_legend_item.h>
 #include <qwt_column_symbol.h>
 #include <qwt_series_data.h>
 

@@ -32,6 +32,8 @@
 
 #include "AlternativeImageView.h"
 
+#include <qwt_legend_data.h>
+
 class QwtPlot;
 class QwtPlotItem;
 
@@ -107,7 +109,7 @@ signals:
     void rightSelected(const QPointF&) const;
 
 private slots:
-    void showItem(QwtPlotItem*, bool on) const;
+    void showItem(QVariant, bool, int) const;
     void move(const QPointF&) const;
     void leftClick(const QPointF&) const;
     void rightClick(const QPointF&) const;

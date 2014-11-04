@@ -24,7 +24,7 @@
 #include <qwt_picker_machine.h>
 #include <qwt_plot_histogram.h>
 #include <qwt_legend.h>
-#include <qwt_legend_item.h>
+#include <qwt_legend_label.h>
 #include <qwt_column_symbol.h>
 #include <qwt_series_data.h>
 
@@ -62,18 +62,18 @@ void GenericHistogramView::init(const imagein::Image* image)
   _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Pixel value"));
   _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, 256);
 
-	QwtLegend* legend = new QwtLegend();
-  legend->setItemMode(QwtLegend::CheckableItem);
+  QwtLegend *legend = new QwtLegend;
+  legend->setDefaultItemMode(QwtLegendData::Checkable);
   _qwtPlot->insertLegend(legend, QwtPlot::RightLegend);
 
   populate(image);
-  
+
   _qwtPlot->canvas()->setMouseTracking(true);
   
   if(_horizontal)
-  _principalPicker = new HistogramPicker(QwtPlotPicker::HLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
+  _principalPicker = new HistogramPicker(QwtPicker::HLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
   else
-  _principalPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
+  _principalPicker = new HistogramPicker(QwtPicker::VLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
   _principalPicker->setStateMachine(new QwtPickerDragPointMachine());
   _principalPicker->setTrackerPen(QColor(Qt::black));
   _principalPicker->setRubberBandPen(QColor(Qt::yellow));
@@ -89,7 +89,7 @@ void GenericHistogramView::init(const imagein::Image* image)
   _rightPicker->setRubberBandPen(QColor(Qt::yellow));
   _rightPicker->setMousePattern(QwtPicker::MouseSelect1, Qt::RightButton);
 
-  connect(_qwtPlot, SIGNAL(legendChecked(QwtPlotItem*, bool)), this, SLOT(showItem(QwtPlotItem*, bool)));
+  connect(legend, SIGNAL(checked(QVariant,bool,int)), this, SLOT(showItem(QVariant,bool,int)));
   connect(_rightPicker, SIGNAL(selected(const QPointF&)), this, SLOT(rightClick(const QPointF&)));
   connect(_leftPicker, SIGNAL(selected(const QPointF&)), this, SLOT(leftClick(const QPointF&)));
   connect(_principalPicker, SIGNAL(moved(const QPointF&)), this, SLOT(move(const QPointF&)));
@@ -101,14 +101,13 @@ void GenericHistogramView::init(const imagein::Image* image)
 
   _qwtPlot->replot(); // creating the legend items
 
-  QwtPlotItemList items = _qwtPlot->itemList(QwtPlotItem::Rtti_PlotHistogram);
-  for(int i = 0; i < items.size(); i++)
-  {
-      QwtLegendItem* legendItem = qobject_cast<QwtLegendItem*>(legend->find(items[i]));
-      if(legendItem)
-    legendItem->setChecked(true);
-
-  items[i]->setVisible(true);
+  // By default, check each legend entry
+  foreach(QwtPlotItem * item, _qwtPlot->itemList()) {
+      QWidget *legendWidget = legend->legendWidget(_qwtPlot->itemToInfo(item));
+      QwtLegendLabel *label = qobject_cast<QwtLegendLabel *>(legendWidget);
+      if(label) {
+          label->setChecked(true);
+      }
   }
 
   _qwtPlot->setAutoReplot(true);
@@ -121,7 +120,7 @@ void GenericHistogramView::populate(const imagein::Image* image)
   grid->enableY(true);
   grid->enableXMin(false);
   grid->enableYMin(false);
-  grid->setMajPen(QPen(Qt::black, 0, Qt::DotLine));
+  grid->setPen(QPen(Qt::black, 0, Qt::DotLine));
   grid->attach(_qwtPlot);
 
 	for(unsigned int i = 0; i < image->getNbChannels(); ++i)
@@ -175,7 +174,8 @@ void GenericHistogramView::populate(const imagein::Image* image)
         }
         if(_horizontal)
 			graphicalHisto->setOrientation(Qt::Horizontal);
-		graphicalHisto->attach(_qwtPlot);
+        graphicalHisto->attach(_qwtPlot);
+
     _graphicalHistos.push_back(graphicalHisto);
 	}
 }
@@ -208,11 +208,13 @@ void GenericHistogramView::update(const imagein::Image* image, imagein::Rectangl
 	}
 }
 
-void GenericHistogramView::showItem(QwtPlotItem *item, bool on) const
+void GenericHistogramView::showItem(QVariant itemInfo, bool visible, int) const
 {
-  item->setVisible(on);
+    QwtPlotItem* item = _qwtPlot->infoToItem(itemInfo);
+    if(item) {
+        item->setVisible(visible);
+    }
 }
-
 
 std::vector<int> GenericHistogramView::getValues(unsigned int index) const {
     std::vector<int> values;
