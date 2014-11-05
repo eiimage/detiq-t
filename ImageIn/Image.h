@@ -108,7 +108,7 @@ namespace imagein
              * \param nChannels The number of channels of the image.
              * \param data The actual data matrix containing the pixels of the image.  No verification of the size of the array is performed.
              */
-            Image_t(unsigned int width, unsigned int height, unsigned int nChannels, const D* data);
+            Image_t(unsigned int width = 0, unsigned int height = 0, unsigned int nChannels = 0, const D* data = NULL);
             Image_t(unsigned int width, unsigned int height, unsigned int nChannels, D value);
             Image_t(std::vector<const Image_t<D>* >);
 
