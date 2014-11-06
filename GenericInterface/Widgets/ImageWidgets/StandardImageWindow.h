@@ -91,7 +91,6 @@ public:
 
 
 public slots:
-    void showHistogram();
     void showCumulatedHistogram();
     void showHProjectionHistogram();
     void showVProjectionHistogram();
@@ -113,7 +112,6 @@ public slots:
 protected:
     void init();
     void updateStatusBar();
-    void showGenericHistogram(GenericHistogramWindow* histogramWnd);
 
     QLabel* _lHoveredPixelInfo;
     QLabel* _lHoveredPixelPosition;

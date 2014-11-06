@@ -86,7 +86,6 @@ StandardImageWindow::StandardImageWindow(const StandardImageWindow& siw, imagein
     }
 
     this->setDisplayImage(image);
-
     this->setWindowTitle(siw.windowTitle());
 
     init();
@@ -194,23 +193,6 @@ void StandardImageWindow::updateStatusBar()
     infoLayout->addLayout(layoutHoveredPixel);
     _infoLayout->addWidget(infoWidget);
 
-}
-
-
-void StandardImageWindow::showGenericHistogram(GenericHistogramWindow* histogramWnd) {
-
-    _imageView->setSelectSrc(histogramWnd->getView());
-    QObject::connect(histogramWnd, SIGNAL(selectRectChange(imagein::Rectangle, GenericHistogramView*)), _imageView, SLOT(showSelectRect(imagein::Rectangle, GenericHistogramView*)));
-   
-//    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
-//    ws->addWidget(ws->getNodeId(this), histogramWnd);
-    emit addWidget(this, histogramWnd);
-}
-
-void StandardImageWindow::showHistogram()
-{
-    HistogramWindow* histogramWnd = new HistogramWindow( _image, selection(), this->windowTitle());
-    showGenericHistogram(histogramWnd);
 }
 
 void StandardImageWindow::showCumulatedHistogram() {

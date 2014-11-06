@@ -135,6 +135,7 @@ class ImageWindow : public QWidget
         void rename();
         void applyBinaryMask();
 
+        void showHistogram();
 
     signals:
         /*!
@@ -154,7 +155,6 @@ class ImageWindow : public QWidget
         void addWidget(ImageWindow*, QWidget*);
         void addImage(ImageWindow*, ImageWindow*);
         void applyBinaryMask(ImageWindow*);
-
 
     protected:
         void setDisplayImage(const Image* displayImg);
@@ -187,6 +187,7 @@ class ImageWindow : public QWidget
 
         virtual void showHoveredPixelInformations(int x, int y) const = 0;
         virtual void showSelectedPixelInformations(int x, int y) const = 0;
+        void showGenericHistogram(GenericHistogramWindow* histogramWnd);
 };
 
 }
