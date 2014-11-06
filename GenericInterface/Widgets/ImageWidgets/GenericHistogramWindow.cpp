@@ -134,7 +134,6 @@ void GenericHistogramWindow::showRightClickedValue(unsigned int index, std::vect
 
 QString GenericHistogramWindow::formatValues(std::vector<int> values) const
 {
-	std::ostringstream oss;
 	QString res;
 
     switch(values.size()) {

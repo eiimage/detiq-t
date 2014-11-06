@@ -39,25 +39,25 @@ namespace imagein
              *
              * Values are not initialized.
              */
-            inline Array(int width=0) : _width(width) { _array = new T[width]; };
-            inline virtual ~Array() { delete[] _array; };
+            inline Array(int width = 0) : _width(width) { _array = new T[width]; }
+            inline virtual ~Array() { delete _array; }
 
             //! Returns the size of the array.
-            inline unsigned int getWidth() const { return _width; };
-            inline unsigned int size() const { return _width; };
+            inline unsigned int getWidth() const { return _width; }
+            inline unsigned int size() const { return _width; }
             //! Access to the element at the given index.
-            inline T operator[](unsigned int index) const { return _array[index]; };
+            inline T operator[](unsigned int index) const { return _array[index]; }
             //! Constant access to the element at the given index.
-            inline T& operator[](unsigned int index) { return _array[index]; };
+            inline T& operator[](unsigned int index) { return _array[index]; }
 
             //! Returns an iterator to the first element of the array
-            inline iterator begin() { return _array; };
+            inline iterator begin() { return _array; }
             //! Returns a const_iterator to the first element of the array
-            inline const_iterator begin() const { return _array; };
+            inline const_iterator begin() const { return _array; }
             //! Returns an iterator past then end of the array
-            inline iterator end() { return _array+_width; };
+            inline iterator end() { return _array + _width; }
             //! Returns a const_iterator past then end of the array
-            inline const_iterator end() const { return _array+_width; };
+            inline const_iterator end() const { return _array + _width; }
 
         protected:
             T* _array;
