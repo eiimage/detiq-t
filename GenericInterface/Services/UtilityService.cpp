@@ -24,10 +24,10 @@ using namespace imagein;
 
 void UtilityService::display(GenericInterface* gi)
 {
-	_gi = gi;
+	_currentWindowService = gi->windowService();
 
 	//ajout des actions dans le menu show
-	_showMenu = _gi->menu(tr("&Show"));
+	_showMenu = gi->menu(tr("&Show"));
 	_showHistogram = _showMenu->addAction(tr("Histogram"));
 	_showHProjectionHistogram = _showMenu->addAction(tr("Horizontal projection histogram"));
 	_showVProjectionHistogram = _showMenu->addAction(tr("Vertical projection histogram"));
@@ -39,55 +39,49 @@ void UtilityService::display(GenericInterface* gi)
 	_showPixelsGrid->setEnabled(false);
 }
 
-void UtilityService::connect(GenericInterface* gi)
+void UtilityService::connect(GenericInterface*)
 {
-	//Connexion des actions
-	QObject::connect(_showHistogram, SIGNAL(triggered()), this, SLOT(showHistogram()));
-	QObject::connect(_showHProjectionHistogram, SIGNAL(triggered()), this, SLOT(showHProjectionHistogram()));
-	QObject::connect(_showVProjectionHistogram, SIGNAL(triggered()), this, SLOT(showVProjectionHistogram()));
-	QObject::connect(_showPixelsGrid, SIGNAL(triggered()), this, SLOT(showPixelsGrid()));
-	
-	//connexion des changements d'images
-	WindowService* ws = dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE));
-	QObject::connect(ws, SIGNAL(activeWidgetChanged(const QWidget*)), this, SLOT(checkActionsValid(const QWidget*)));
+	// If, for any reason, _currentWindowService is NULL, do not connect anything
+	if(_currentWindowService) {
+		//Connexion des actions
+		QObject::connect(_showHistogram, SIGNAL(triggered()), this, SLOT(showHistogram()));
+		QObject::connect(_showHProjectionHistogram, SIGNAL(triggered()), this, SLOT(showHProjectionHistogram()));
+		QObject::connect(_showVProjectionHistogram, SIGNAL(triggered()), this, SLOT(showVProjectionHistogram()));
+		QObject::connect(_showPixelsGrid, SIGNAL(triggered()), this, SLOT(showPixelsGrid()));
+
+		//connexion des changements d'images
+		QObject::connect(_currentWindowService, SIGNAL(activeWidgetChanged(const QWidget*)), this, SLOT(checkActionsValid(const QWidget*)));
+	}
 }
 
 void UtilityService::showHistogram()
 {
-	WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
 	StandardImageWindow* curWindow = NULL;
-	
-	if(ws && (curWindow = dynamic_cast<StandardImageWindow*>(ws->getCurrentImageWindow()))) {
+	if(curWindow = dynamic_cast<StandardImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
 		curWindow->showHistogram();
 	}
 }
 
 void UtilityService::showHProjectionHistogram()
 {
-	WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
 	StandardImageWindow* curWindow = NULL;
-	
-	if(ws && (curWindow = dynamic_cast<StandardImageWindow*>(ws->getCurrentImageWindow()))) {
-			curWindow->showHProjectionHistogram();
+	if(curWindow = dynamic_cast<StandardImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
+		curWindow->showHProjectionHistogram();
 	}
 }
 
 void UtilityService::showVProjectionHistogram()
 {
-	WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
 	StandardImageWindow* curWindow = NULL;
-	
-	if(ws && (curWindow = dynamic_cast<StandardImageWindow*>(ws->getCurrentImageWindow()))) {
+	if(curWindow = dynamic_cast<StandardImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
 		curWindow->showVProjectionHistogram();
 	}
 }
 
 void UtilityService::showPixelsGrid()
 {
-	WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
 	StandardImageWindow* curWindow = NULL;
-	
-	if(ws && (curWindow = dynamic_cast<StandardImageWindow*>(ws->getCurrentImageWindow()))) {
+	if(curWindow = dynamic_cast<StandardImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
 		curWindow->showPixelsGrid();
 	}
 }

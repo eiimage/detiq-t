@@ -30,9 +30,8 @@ namespace genericinterface
 	{
 		Q_OBJECT
 		public:
-			void display(GenericInterface* gi);
-			void connect(GenericInterface* gi);
-
+			void display(GenericInterface*);
+			void connect(GenericInterface*);
 
 		public slots:
 			
@@ -46,7 +45,7 @@ namespace genericinterface
 		signals:
 
 		private:
-			GenericInterface* _gi;
+			WindowService *_currentWindowService;
 			QMenu* _showMenu;
 			
 			QAction* _showHistogram;
