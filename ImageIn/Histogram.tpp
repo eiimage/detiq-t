@@ -24,10 +24,14 @@
 #include <iostream>
 #include <cstdlib>
 
+#include <limits>
+#include <assert.h>
+
 template <typename D>
 imagein::Histogram::Histogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect)
     : imagein::Array<unsigned int>(1 << (sizeof(D)*8))
 {
+    assert(std::numeric_limits<D>::is_integer && "Initializing an Histogram from a Image_t<double> is a non-sense!");
     this->computeHistogram(img, channel, rect);
 }
 
@@ -35,6 +39,7 @@ template <typename D>
 imagein::Histogram::Histogram(const imagein::Image_t<D>& img, const imagein::Rectangle& rect)
     : imagein::Array<unsigned int>(1 << (sizeof(D)*8))
 {
+    assert(std::numeric_limits<D>::is_integer && "Initializing an Histogram from a Image_t<double> is a non-sense!");
     this->computeHistogram(img, 0, rect);
 }
 
