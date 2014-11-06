@@ -33,6 +33,17 @@ HistogramWindow::HistogramWindow(const Image* image, imagein::Rectangle rect, QS
     }
 }
 
+HistogramWindow::HistogramWindow(const ImageDouble *image, Rectangle rect, QString name, bool cumul)
+    : GenericHistogramWindow(new HistogramView(image, rect, cumul))
+{
+    if(!cumul) {
+        this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
+    }
+    else {
+        this->setWindowTitle(name + QString(" - ") + tr("Cumulated histogram"));
+    }
+}
+
 HistogramWindow::~HistogramWindow()
 {
 }

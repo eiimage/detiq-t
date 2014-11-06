@@ -43,6 +43,17 @@ namespace genericinterface
 		 * \param rect The part of the image where the histogram is applied
 		 */
         HistogramView(const imagein::Image* image, imagein::Rectangle rect, bool cumul = false);
+
+        /*!
+         * \brief Alternative constructor
+         *
+         * Initializes and display the histogram from an ImageDouble
+         *
+         * \param image The image concerned by the histogram
+         * \param rect The part of the image where the histogram is applied
+         */
+        HistogramView(const imagein::ImageDouble* image, imagein::Rectangle rect, bool cumul = false);
+
     };
 }
 
