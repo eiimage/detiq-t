@@ -64,9 +64,7 @@ StandardImageWindow::StandardImageWindow(const QString path)
         image = new Image();
     }
 
-    _image = image;
     this->setDisplayImage(image);
-    
     this->setWindowTitle(ImageWindow::getTitleFromPath(path));
     
     init();
@@ -75,8 +73,6 @@ StandardImageWindow::StandardImageWindow(const QString path)
 StandardImageWindow::StandardImageWindow(Image* image, const QString path)
     : ImageWindow(path, image)
 {
-    _image = image;
-
     this->setWindowTitle(ImageWindow::getTitleFromPath(path));
 
     init();
@@ -86,10 +82,9 @@ StandardImageWindow::StandardImageWindow(const StandardImageWindow& siw, imagein
     : ImageWindow(siw.getPath())
 {
     if(image == NULL) {
-        image = new Image(*siw._image);
+        image = new Image(*siw._displayImg);
     }
 
-    _image = image;
     this->setDisplayImage(image);
 
     this->setWindowTitle(siw.windowTitle());
@@ -99,7 +94,6 @@ StandardImageWindow::StandardImageWindow(const StandardImageWindow& siw, imagein
 
 StandardImageWindow::~StandardImageWindow()
 {
-    delete _image;
 }
 
 
@@ -132,12 +126,12 @@ void StandardImageWindow::updateStatusBar()
     //Statistics
     QString stats("min : %1\t max : %2\t mean : %3\t standard deviation : %4");
     QString min="", max="", mean="", dev="";
-    for(unsigned int c = 0; c < _image->getNbChannels(); ++c) {
-        min += QString("%1").arg(_image->min(c));
-        max += QString("%1").arg(_image->max(c));
-        mean += QString("%1").arg(_image->mean(c), 0, 'f', 1);
-        dev += QString("%1").arg(_image->deviation(c), 0, 'f', 1);
-        if(c < _image->getNbChannels()-1)  {
+    for(unsigned int c = 0; c < _displayImg->getNbChannels(); ++c) {
+        min += QString("%1").arg(_displayImg->min(c));
+        max += QString("%1").arg(_displayImg->max(c));
+        mean += QString("%1").arg(_displayImg->mean(c), 0, 'f', 1);
+        dev += QString("%1").arg(_displayImg->deviation(c), 0, 'f', 1);
+        if(c < _displayImg->getNbChannels()-1)  {
             min+=" "; max+=" "; mean+=" "; dev+=" ";
         }
     }
@@ -220,7 +214,7 @@ void StandardImageWindow::showHistogram()
 }
 
 void StandardImageWindow::showCumulatedHistogram() {
-    HistogramWindow* histogramWnd = new HistogramWindow( _image, selection(), this->windowTitle(), true);
+    HistogramWindow* histogramWnd = new HistogramWindow( _displayImg, selection(), this->windowTitle(), true);
     showGenericHistogram(histogramWnd);
 }
 
@@ -231,7 +225,7 @@ void StandardImageWindow::showHProjectionHistogram()
 
     if (ok)
     {
-        ProjectionHistogramWindow* histogramWnd = new ProjectionHistogramWindow(_image, selection(), value, true, this->windowTitle());
+        ProjectionHistogramWindow* histogramWnd = new ProjectionHistogramWindow(_displayImg, selection(), value, true, this->windowTitle());
         showGenericHistogram(histogramWnd);
     }
 }
@@ -243,37 +237,36 @@ void StandardImageWindow::showVProjectionHistogram()
 	
 	if(ok)
 	{
-        ProjectionHistogramWindow* histogramWnd = new ProjectionHistogramWindow(_image, selection(), value, false,  this->windowTitle());
+        ProjectionHistogramWindow* histogramWnd = new ProjectionHistogramWindow(_displayImg, selection(), value, false,  this->windowTitle());
         showGenericHistogram(histogramWnd);
 	} 
 }
 
 void StandardImageWindow::showLineProfile()
 {
-    imagein::Rectangle rect(0, _selectedPixel.y(), _image->getWidth(), 1);
-    RowWindow* histogramWnd = new RowWindow(_image, rect, false, this->windowTitle() + QString(" - ") + tr("Line Profile"));
+    imagein::Rectangle rect(0, _selectedPixel.y(), _displayImg->getWidth(), 1);
+    RowWindow* histogramWnd = new RowWindow(_displayImg, rect, false, this->windowTitle() + QString(" - ") + tr("Line Profile"));
     showGenericHistogram(histogramWnd);
 }
 
 void StandardImageWindow::showColumnProfile()
 {
-    imagein::Rectangle rect(_selectedPixel.x(), 0, 1, _image->getHeight());
-    RowWindow* histogramWnd = new RowWindow(_image, rect, true, this->windowTitle() + QString(" - ")  + tr("Line Profile"));
+    imagein::Rectangle rect(_selectedPixel.x(), 0, 1, _displayImg->getHeight());
+    RowWindow* histogramWnd = new RowWindow(_displayImg, rect, true, this->windowTitle() + QString(" - ")  + tr("Line Profile"));
     showGenericHistogram(histogramWnd);
 }
 
 void StandardImageWindow::showPixelsGrid()
 {
-    GridView* grid = new GridView(_image);
+    GridView* grid = new GridView(_displayImg);
     grid->setWindowTitle(this->windowTitle() + QString(" - ")  + tr("Pixels Grid"));
     emit addWidget(this, grid);
 }
 
 void StandardImageWindow::crop() {
-    const Image* oldImg = _image;
+    const Image* oldImg = _displayImg;
     Image* newImg = oldImg->crop(_imageView->getRectangle());
     this->setDisplayImage(newImg);
-    _image = newImg;
     delete oldImg;
     view()->update();
     this->adjustSize();
@@ -281,14 +274,14 @@ void StandardImageWindow::crop() {
 }
 
 void StandardImageWindow::copycrop() {
-    const Image* oldImg = _image;
+    const Image* oldImg = _displayImg;
     Image* newImg = oldImg->crop(_imageView->getRectangle());
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
     emit addImage(this, newImgWnd);
 }
 
 void StandardImageWindow::convertToGrayscale() {
-    GrayscaleImage* newImg = RgbToGrayscale()(Converter<RgbImage>::convert(*_image));
+    GrayscaleImage* newImg = RgbToGrayscale()(Converter<RgbImage>::convert(*_displayImg));
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
 
     emit addImage(this, newImgWnd);
@@ -296,7 +289,7 @@ void StandardImageWindow::convertToGrayscale() {
 
 
 void StandardImageWindow::convertToBinary() {
-    GrayscaleImage* newImg = Otsu()(Converter<GrayscaleImage>::convert(*_image));
+    GrayscaleImage* newImg = Otsu()(Converter<GrayscaleImage>::convert(*_displayImg));
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
 
     emit addImage(this, newImgWnd);
@@ -306,10 +299,10 @@ void StandardImageWindow::showSelectedPixelInformations(int x, int y) const
 {
     _lSelectedPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
     _lSelectedPixelColor->setText(tr("Color") + " : ");
-    for(unsigned int i = 0; i < _image->getNbChannels(); i++)
+    for(unsigned int i = 0; i < _displayImg->getNbChannels(); i++)
     {
         try {
-            _lSelectedPixelColor->setText(_lSelectedPixelColor->text() + QString(" %1").arg(_image->getPixel(x, y, i)) );
+            _lSelectedPixelColor->setText(_lSelectedPixelColor->text() + QString(" %1").arg(_displayImg->getPixel(x, y, i)) );
         }
         catch(std::out_of_range&) {
         }
@@ -321,10 +314,10 @@ void StandardImageWindow::showHoveredPixelInformations(int x, int y) const
     _lHoveredPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
 
     _lHoveredPixelColor->setText(tr("Color") + " :");
-    for(unsigned int i = 0; i < _image->getNbChannels(); i++)
+    for(unsigned int i = 0; i < _displayImg->getNbChannels(); i++)
     {
         try {
-            _lHoveredPixelColor->setText(_lHoveredPixelColor->text() + QString(" %1").arg(_image->getPixel(x, y, i)) );
+            _lHoveredPixelColor->setText(_lHoveredPixelColor->text() + QString(" %1").arg(_displayImg->getPixel(x, y, i)) );
         }
         catch(std::out_of_range&) {
         }
@@ -332,5 +325,5 @@ void StandardImageWindow::showHoveredPixelInformations(int x, int y) const
 }
 
 void StandardImageWindow::updateSrc(GenericHistogramView* histo, imagein::Rectangle rect) {
-    histo->update(_image, rect);
+    histo->update(_displayImg, rect);
 }

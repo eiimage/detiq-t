@@ -83,9 +83,9 @@ public:
 
     /*!
      * \brief Returns the real Image contained in the window.
-     *
+     *	This is an alias for ImageWindow::getDisplayImage()
      */
-    inline const imagein::Image* getImage() const { return _image; }
+    inline const imagein::Image* getImage() const { return getDisplayImage(); }
     virtual bool isDouble() const { return false; }
     virtual bool isStandard() const { return true; }
 
@@ -111,8 +111,6 @@ public slots:
     virtual void updateSrc(GenericHistogramView*, imagein::Rectangle);
 
 protected:
-    const imagein::Image* _image;
-
     void init();
     void updateStatusBar();
     void showGenericHistogram(GenericHistogramWindow* histogramWnd);
