@@ -40,8 +40,39 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
 {
     _qwtPlot = new QwtPlot();
 
-    populate(image);
-    init();
+    init(image->getNbChannels());
+
+    for(unsigned int i = 0; i < _graphicalHistos.size(); ++i) {
+        GraphicalHistogram* graphicalHisto = _graphicalHistos[i];
+
+        if(_projection) {
+            graphicalHisto->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
+        } else if(_cumulated) {
+            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, i, _rectangle));
+        } else {
+            graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
+        }
+    }
+}
+
+GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
+    : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
+{
+    _qwtPlot = new QwtPlot();
+
+    init(image->getNbChannels());
+
+    for(unsigned int i = 0; i < _graphicalHistos.size(); ++i) {
+        GraphicalHistogram* graphicalHisto = _graphicalHistos[i];
+
+        if(_projection) {
+            graphicalHisto->setValues(imagein::ProjectionHistogram_t<double>(*image, _value, _horizontal, _rectangle, i));
+        } else if(_cumulated) {
+            qDebug() << "Cumulated Histogram for ImageDouble is unsupported for now";
+        } else {
+            graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
+        }
+    }
 }
 
 GenericHistogramView::~GenericHistogramView()
@@ -51,7 +82,7 @@ GenericHistogramView::~GenericHistogramView()
     delete _rightPicker;
 }
 
-void GenericHistogramView::init()
+void GenericHistogramView::init(uint nbChannels)
 {
     this->setMouseTracking(true); //Switch on mouse tracking (no need to press button)
 
@@ -111,10 +142,7 @@ void GenericHistogramView::init()
     }
 
     _qwtPlot->setAutoReplot(true);
-}
 
-void GenericHistogramView::populate(const imagein::Image* image)
-{
     QwtPlotGrid* grid = new QwtPlotGrid();
     grid->enableX(false);
     grid->enableY(true);
@@ -123,30 +151,19 @@ void GenericHistogramView::populate(const imagein::Image* image)
     grid->setPen(QPen(Qt::black, 0, Qt::DotLine));
     grid->attach(_qwtPlot);
 
-    for(unsigned int i = 0; i < image->getNbChannels(); ++i)
+    for(uint i = 0; i < nbChannels; ++i)
     {
-        /*imagein::Array<unsigned int>* histogram;
-        if(_projection)
-            histogram = new imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i);
-        else
-            histogram = new imagein::Histogram(*image, i, _rectangle);*/
-
-        /*int values[histogram->getWidth()];
-
-        for(unsigned int j = 0; j < histogram->getWidth(); ++j)
-            values[j] = (*histogram)[j];*/
-
         GraphicalHistogram* graphicalHisto;
         switch(i)
         {
         case 0:
-            if(image->getNbChannels() == 1 || image->getNbChannels() == 2)
+            if(nbChannels == 1 || nbChannels == 2)
                 graphicalHisto = new GraphicalHistogram(tr("Black"), Qt::black);
             else
                 graphicalHisto = new GraphicalHistogram(tr("Red"), Qt::red);
             break;
         case 1:
-            if(image->getNbChannels() == 1 || image->getNbChannels() == 2)
+            if(nbChannels == 1 || nbChannels == 2)
                 graphicalHisto = new GraphicalHistogram(tr("Alpha"), Qt::white);
             else
                 graphicalHisto = new GraphicalHistogram(tr("Green"), Qt::green);
@@ -160,22 +177,11 @@ void GenericHistogramView::populate(const imagein::Image* image)
         default:
             graphicalHisto = new GraphicalHistogram(tr("Channel"), Qt::black);
         }
-        //graphicalHisto->setValues(sizeof(values) / sizeof(int), values);
-        //graphicalHisto->setValues(histogram);
-        
-        if(_projection) {
-            graphicalHisto->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
-        }
-        else if(_cumulated) {
-            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, i, _rectangle));
-        }
-        else {
-            graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
-        }
-        if(_horizontal)
-            graphicalHisto->setOrientation(Qt::Horizontal);
-        graphicalHisto->attach(_qwtPlot);
 
+        if(_horizontal) {
+            graphicalHisto->setOrientation(Qt::Horizontal);
+        }
+        graphicalHisto->attach(_qwtPlot);
         _graphicalHistos.push_back(graphicalHisto);
     }
 }
