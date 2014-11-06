@@ -129,7 +129,7 @@ protected:
 private:
     bool _projection;
     bool _cumulated;
-    void init(const imagein::Image*);
+    void init();
     void populate(const imagein::Image*);
 };
 }

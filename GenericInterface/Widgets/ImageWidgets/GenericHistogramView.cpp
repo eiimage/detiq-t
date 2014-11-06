@@ -39,7 +39,9 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
     : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
 {
     _qwtPlot = new QwtPlot();
-    init(image);
+
+    populate(image);
+    init();
 }
 
 GenericHistogramView::~GenericHistogramView()
@@ -49,7 +51,7 @@ GenericHistogramView::~GenericHistogramView()
     delete _rightPicker;
 }
 
-void GenericHistogramView::init(const imagein::Image* image)
+void GenericHistogramView::init()
 {
     this->setMouseTracking(true); //Switch on mouse tracking (no need to press button)
 
@@ -65,8 +67,6 @@ void GenericHistogramView::init(const imagein::Image* image)
     QwtLegend *legend = new QwtLegend;
     legend->setDefaultItemMode(QwtLegendData::Checkable);
     _qwtPlot->insertLegend(legend, QwtPlot::RightLegend);
-
-    populate(image);
 
     _qwtPlot->canvas()->setMouseTracking(true);
 
