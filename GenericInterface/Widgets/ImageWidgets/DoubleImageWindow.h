@@ -89,6 +89,8 @@ public slots:
 
     virtual void setLogScale(int);
 
+    virtual void showHistogram();
+
 signals:
 
 protected:

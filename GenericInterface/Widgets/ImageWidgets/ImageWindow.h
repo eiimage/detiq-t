@@ -135,7 +135,7 @@ class ImageWindow : public QWidget
         void rename();
         void applyBinaryMask();
 
-        void showHistogram();
+        virtual void showHistogram();
 
     signals:
         /*!

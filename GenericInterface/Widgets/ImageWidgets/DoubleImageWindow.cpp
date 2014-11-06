@@ -279,3 +279,9 @@ void DoubleImageWindow::setLogScale(int logScale) {
     setDisplayImage(makeDisplayable(_image));
     delete tmpImg;
 }
+
+void DoubleImageWindow::showHistogram()
+{
+    HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle());
+    showGenericHistogram(histogramWnd);
+}
