@@ -56,8 +56,8 @@ void UtilityService::connect(GenericInterface*)
 
 void UtilityService::showHistogram()
 {
-	StandardImageWindow* curWindow = NULL;
-	if(curWindow = dynamic_cast<StandardImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
+	ImageWindow* curWindow = NULL;
+	if(curWindow = dynamic_cast<ImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
 		curWindow->showHistogram();
 	}
 }
@@ -88,7 +88,7 @@ void UtilityService::showPixelsGrid()
 
 void UtilityService::checkActionsValid(const QWidget* activeWidget)
 {
-	const StandardImageWindow* window = dynamic_cast<const StandardImageWindow*>(activeWidget);
+	const ImageWindow* window = dynamic_cast<const ImageWindow*>(activeWidget);
 	if(window) {
 		_showHistogram->setEnabled(true);
 		_showHProjectionHistogram->setEnabled(true);

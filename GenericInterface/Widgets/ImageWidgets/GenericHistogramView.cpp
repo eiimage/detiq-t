@@ -18,6 +18,8 @@
 */
 
 #include <qpen.h>
+#include <QtMath>
+
 #include <qwt_plot.h>
 #include <qwt_plot_layout.h>
 #include <qwt_plot_grid.h>
@@ -61,16 +63,36 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
     _qwtPlot = new QwtPlot();
 
     init(image->getNbChannels());
+    // Here we have to fix min and max for the current diagram
+    _qwtPlot->setAxisScale(QwtPlot::xBottom, qFloor(image->min()), qCeil(image->max()));
 
-    for(unsigned int i = 0; i < _graphicalHistos.size(); ++i) {
-        GraphicalHistogram* graphicalHisto = _graphicalHistos[i];
+    for(unsigned int channel = 0; channel < _graphicalHistos.size(); ++channel) {
+        GraphicalHistogram* graphicalHisto = _graphicalHistos[channel];
 
         if(_projection) {
-            graphicalHisto->setValues(imagein::ProjectionHistogram_t<double>(*image, _value, _horizontal, _rectangle, i));
+            graphicalHisto->setValues(imagein::ProjectionHistogram_t<double>(*image, _value, _horizontal, _rectangle, channel));
         } else if(_cumulated) {
             qDebug() << "Cumulated Histogram for ImageDouble is unsupported for now";
         } else {
-            graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
+            QMap<int, int> cumulativeValues;
+
+            uint maxw = rect.w > 0 ? rect.x + rect.w : image->getWidth();
+            uint maxh = rect.h > 0 ? rect.y + rect.h : image->getHeight();
+            for(uint j = rect.y; j < maxh; j++) {
+                for(uint i = rect.x; i < maxw; i++) {
+                    double pixel = image->getPixel(i, j, channel);
+                    cumulativeValues[qFloor(pixel)]++;
+                }
+            }
+
+            QVector<QwtIntervalSample> samples;
+            foreach(int key, cumulativeValues.keys()) {
+                 QwtInterval interval(key, key + 1, QwtInterval::ExcludeMaximum);
+                 QwtIntervalSample sample(cumulativeValues[key], interval);
+                 samples << sample;
+            }
+
+            graphicalHisto->setData(new QwtIntervalSeriesData(samples));
         }
     }
 }

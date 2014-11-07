@@ -55,7 +55,7 @@ void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int ch
     for(unsigned int j=rect.y; j<maxh; j++) {
         for(unsigned int i=rect.x; i<maxw; i++) {
             D pixel = img.getPixel(i, j, channel);
-            //unsigned int value = pixel >= 0 ? pixel : this->_width + pixel;
+            // D can't be a double here, so static_cast is valid
             this->_array[static_cast<unsigned int>(pixel)]++;
         }
     }
