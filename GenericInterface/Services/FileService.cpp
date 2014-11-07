@@ -54,7 +54,7 @@ void FileService::display (GenericInterface* gi)
     updateRecentFileActions();
 }
 
-bool FileService::simpleIsOpenableFileCheck(const QString &fileName)
+bool FileService::canOpen(const QString &fileName)
 {
     QFileInfo fileInfos(fileName);
     if( ! fileInfos.exists()) return false;

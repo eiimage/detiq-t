@@ -48,7 +48,7 @@ namespace genericinterface
              * @param fileName The path of the file
              * @return true if the file has a supported type and exists
              */
-            static bool simpleIsOpenableFileCheck(const QString &fileName);
+            static bool canOpen(const QString &fileName);
 
         public slots:
             void save(const QString& path = QString(), const QString& ext = QString());
