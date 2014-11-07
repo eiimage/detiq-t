@@ -95,15 +95,11 @@ StandardImageWindow::~StandardImageWindow()
 {
 }
 
-
 void StandardImageWindow::init()
 {
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
-    menu()->addAction(tr("Histogram"), this, SLOT(showHistogram()));
     menu()->addAction(tr("Cumulated histogram"), this, SLOT(showCumulatedHistogram()));
-    menu()->addAction(tr("Horizontal Projection Histogram"), this, SLOT(showHProjectionHistogram()));
-    menu()->addAction(tr("Vertical Projection Histogram"), this, SLOT(showVProjectionHistogram()));
     menu()->addAction(tr("Column Profile"), this, SLOT(showColumnProfile()));
     menu()->addAction(tr("Line Profile"), this, SLOT(showLineProfile()));
     menu()->addSeparator();
@@ -114,7 +110,6 @@ void StandardImageWindow::init()
     menu()->addAction(tr("Convert to binary"), this, SLOT(convertToBinary()));
 
     updateStatusBar();
-
 }
 
 void StandardImageWindow::updateStatusBar()
@@ -243,7 +238,6 @@ void StandardImageWindow::showPixelsGrid()
     grid->setWindowTitle(this->windowTitle() + QString(" - ")  + tr("Pixels Grid"));
     emit addWidget(this, grid);
 }
-
 void StandardImageWindow::crop() {
     const Image* oldImg = _displayImg;
     Image* newImg = oldImg->crop(_imageView->getRectangle());
