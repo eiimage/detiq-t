@@ -65,8 +65,6 @@ void DoubleImageWindow::init()
 {
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
-    menu()->addAction(tr("Pixels Grid"), this, SLOT(showPixelsGrid()));
-    menu()->addSeparator();
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
 
@@ -169,8 +167,6 @@ void DoubleImageWindow::updateStatusBar()
     }
 
 }
-
-
 
 void DoubleImageWindow::showPixelsGrid()
 {

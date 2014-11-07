@@ -104,7 +104,6 @@ void StandardImageWindow::init()
     menu()->addAction(tr("Cumulated histogram"), this, SLOT(showCumulatedHistogram()));
     menu()->addAction(tr("Horizontal Projection Histogram"), this, SLOT(showHProjectionHistogram()));
     menu()->addAction(tr("Vertical Projection Histogram"), this, SLOT(showVProjectionHistogram()));
-    menu()->addAction(tr("Pixels Grid"), this, SLOT(showPixelsGrid()));
     menu()->addAction(tr("Column Profile"), this, SLOT(showColumnProfile()));
     menu()->addAction(tr("Line Profile"), this, SLOT(showLineProfile()));
     menu()->addSeparator();

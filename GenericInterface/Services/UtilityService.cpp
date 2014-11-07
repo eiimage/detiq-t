@@ -80,8 +80,8 @@ void UtilityService::showVProjectionHistogram()
 
 void UtilityService::showPixelsGrid()
 {
-    StandardImageWindow* curWindow = NULL;
-    if(curWindow = dynamic_cast<StandardImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
+    ImageWindow* curWindow = NULL;
+    if(curWindow = dynamic_cast<ImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
         curWindow->showPixelsGrid();
     }
 }
