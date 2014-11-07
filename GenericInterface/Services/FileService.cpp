@@ -51,7 +51,7 @@ void FileService::display (GenericInterface* gi)
         recentFileActs[i]->setShortcut(QKeySequence(QString("Ctrl+%1").arg(i+1)));
         gi->menu(tr("&File"))->addAction(recentFileActs[i]);
     }
-   
+
     //gi->menu(tr("&File"))->addSeparator();
     //_open = gi->menu(tr("&File"))->addAction(tr("E&xit"));
     //_open->setIcon(gi->style()->standardIcon(QStyle::SP_DialogCloseButton));
@@ -62,41 +62,41 @@ void FileService::display (GenericInterface* gi)
 
 void FileService::connect (GenericInterface* gi)
 {
-	_gi = gi;
-	QObject::connect(_open, SIGNAL(triggered()), this, SLOT(chooseFile()));
-	//QObject::connect(_save, SIGNAL(triggered()), this, SLOT(save()));
-	QObject::connect(_saveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
+    _gi = gi;
+    QObject::connect(_open, SIGNAL(triggered()), this, SLOT(chooseFile()));
+    //QObject::connect(_save, SIGNAL(triggered()), this, SLOT(save()));
+    QObject::connect(_saveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
     for (int i = 0; i < MaxRecentFiles; ++i) {
         QObject::connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
-  
-	QObject::connect(this, SIGNAL(fileChosen(const QString&)), dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE)), SLOT(addFile(const QString&)));
-	
+
+    QObject::connect(this, SIGNAL(fileChosen(const QString&)), dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE)), SLOT(addFile(const QString&)));
+
     //connexion des changements d'images
-	WindowService* ws = dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE));
-	QObject::connect(ws, SIGNAL(activeWidgetChanged(const QWidget*)), this, SLOT(checkActionsValid(const QWidget*)));
+    WindowService* ws = dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE));
+    QObject::connect(ws, SIGNAL(activeWidgetChanged(const QWidget*)), this, SLOT(checkActionsValid(const QWidget*)));
 }
 
 void FileService::save(const QString& path, const QString& ext)
 {
-	if(path == "") {
-		this->saveAs();
-	}
-	else {
+    if(path == "") {
+        this->saveAs();
+    }
+    else {
         try {
             WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
             if(ws != NULL) {
                 ImageWindow* imw = dynamic_cast<ImageWindow*>(ws->getCurrentImageWindow());
                 if(imw != NULL) {
-					try {
+                    try {
                         imw->getDisplayImage()->save(path.toStdString());
-					}
-					catch(const UnknownFormatException& e) {
-						if(ext == "")
-							throw e;
-						
+                    }
+                    catch(const UnknownFormatException& e) {
+                        if(ext == "")
+                            throw e;
+
                         imw->getDisplayImage()->save((path+ext).toStdString());
-					}
+                    }
                 }
                 else {
                     QMessageBox::critical(_gi, tr("Bad object type"), tr("Only images can be saved to a file."));
@@ -104,15 +104,15 @@ void FileService::save(const QString& path, const QString& ext)
             }
         }
         catch(const char* s) {
-                QMessageBox::information(_gi, tr("Unknown exception"), s);
+            QMessageBox::information(_gi, tr("Unknown exception"), s);
         }
-	}
+    }
 }
 
 void FileService::saveAs()
 {
     QString path;
-	WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
     ImageWindow* currentWindow = ws->getCurrentImageWindow();
     if(currentWindow != NULL) {
         path = currentWindow->getPath();
@@ -120,12 +120,12 @@ void FileService::saveAs()
     QString selectedFilter;
     QString file = QFileDialog::getSaveFileName(_gi, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)"), &selectedFilter);
 
-	QString ext = selectedFilter.right(5).left(4);
+    QString ext = selectedFilter.right(5).left(4);
 
-	if(file != "") {
-	    if(!file.contains('.')) file += ext;
+    if(file != "") {
+        if(!file.contains('.')) file += ext;
         this->save(file, ext);
-	}
+    }
 }
 
 void FileService::loadFiles(const QStringList &filenames) {
@@ -167,7 +167,7 @@ void FileService::updateRecentFileActions() {
 void FileService::chooseFile()
 {
     QString path;
-	WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
     ImageWindow* currentWindow = ws->getCurrentImageWindow();
     if(currentWindow != NULL) {
         path = currentWindow->getPath();
@@ -189,10 +189,10 @@ void FileService::checkActionsValid(const QWidget* activeWidget)
 {
     std::cout << "WindowService::activeWidgetChanged(" << reinterpret_cast<intptr_t>(activeWidget) << ")" << std::endl;
     const ImageWindow* window = dynamic_cast<const ImageWindow*>(activeWidget);
-	if(window) {
-		_saveAs->setEnabled(true);
-	}
-	else {
-		_saveAs->setEnabled(false);
-	}
+    if(window) {
+        _saveAs->setEnabled(true);
+    }
+    else {
+        _saveAs->setEnabled(false);
+    }
 }

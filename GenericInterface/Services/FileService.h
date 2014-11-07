@@ -32,39 +32,39 @@ namespace genericinterface {
 
 namespace genericinterface
 {
-	class FileService : public QObject, public Service
-	{
-		Q_OBJECT
-		public:
-			void connect (GenericInterface* gi);
-			void display (GenericInterface* gi);
+    class FileService : public QObject, public Service
+    {
+        Q_OBJECT
+        public:
+            void connect (GenericInterface* gi);
+            void display (GenericInterface* gi);
 
-		public slots:
-			void save(const QString& path = QString(), const QString& ext = QString());
-			void saveAs();
-	        void checkActionsValid(const QWidget* activeWidget);
-		
-		private slots:
-			void chooseFile();
+        public slots:
+            void save(const QString& path = QString(), const QString& ext = QString());
+            void saveAs();
+            void checkActionsValid(const QWidget* activeWidget);
+
+        private slots:
+            void chooseFile();
             void openRecentFile();
 
-		signals:
-			void fileChosen(const QString& path);
+        signals:
+            void fileChosen(const QString& path);
 
-		private:
+        private:
 
             void loadFiles(const QStringList &fileNames);
             void updateRecentFileActions();
 
-			QAction* _open;
-			QAction* _save;
-			QAction* _saveAs;
+            QAction* _open;
+            QAction* _save;
+            QAction* _saveAs;
 
-			GenericInterface* _gi;
+            GenericInterface* _gi;
             enum { MaxRecentFiles = 5 };
             QAction *recentFileActs[MaxRecentFiles];
             QAction* separatorAct;
-	};
+    };
 }
 
 #endif
