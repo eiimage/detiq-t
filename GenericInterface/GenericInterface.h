@@ -184,6 +184,18 @@ namespace genericinterface
     inline QSettings* settings() { return _settings; }
     inline bool running() { return _running; }
 
+    /**
+     * @brief Check if the drop action can be trigered.
+     *
+     * Check if objects to drop are files, and are openable. If at least 1
+     * file can be opened, this methods accepts the drop event.
+     */
+    void dragEnterEvent(QDragEnterEvent *);
+
+    /**
+     * @brief Load the files into the current Window
+     */
+    void dropEvent(QDropEvent *);
 
   protected:
     /**

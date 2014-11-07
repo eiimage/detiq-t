@@ -17,6 +17,8 @@
  * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QMimeData>
+
 #include "GenericInterface.h"
 
 using namespace std;
@@ -35,14 +37,15 @@ GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _n
     _settings = new QSettings(org, app);
 
     addService(FILE_SERVICE, new FileService);
-    WindowService *ws = new WindowService(navPos);
-    addService(WINDOW_SERVICE, ws);
+    addService(WINDOW_SERVICE, new WindowService(navPos));
     addService(UTILITY_SERVICE, new UtilityService);
 
     this->setWindowIcon(QIcon(":/images/image-x-generic.png"));
 
     if (name != "")
         setWindowTitle(name);
+
+    setAcceptDrops(true);
 }
 
 GenericInterface::~GenericInterface() {
@@ -240,6 +243,25 @@ QToolBar* GenericInterface::toolBar(QString name)
     }
 
     return res;
+}
+
+void GenericInterface::dragEnterEvent(QDragEnterEvent * event)
+{
+    foreach(QUrl url, event->mimeData()->urls()) {
+        // At least 1 file can be opened, it's okay!
+        if(FileService::canOpen(url.toLocalFile())) {
+            event->acceptProposedAction();
+        }
+    }
+}
+
+void GenericInterface::dropEvent(QDropEvent * event)
+{
+    QStringList fileNames;
+    foreach(QUrl url, event->mimeData()->urls()) {
+        fileNames << url.toLocalFile();
+    }
+    fileService()->loadFiles(fileNames);
 }
 
 void GenericInterface::finalizeInterface()

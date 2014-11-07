@@ -54,11 +54,22 @@ void FileService::display (GenericInterface* gi)
     updateRecentFileActions();
 }
 
+bool FileService::simpleIsOpenableFileCheck(const QString &fileName)
+{
+    QFileInfo fileInfos(fileName);
+    if( ! fileInfos.exists()) return false;
+
+    QSet<QString> allowedSuffixes;
+    allowedSuffixes << "png" << "bmp" << "jpg" << "jpeg" << "vff";
+    if( ! allowedSuffixes.contains(fileInfos.suffix())) return false;
+
+    return true;
+}
+
 void FileService::connect (GenericInterface* gi)
 {
     _gi = gi;
     QObject::connect(_open, SIGNAL(triggered()), this, SLOT(chooseFile()));
-    //QObject::connect(_save, SIGNAL(triggered()), this, SLOT(save()));
     QObject::connect(_saveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
     for (int i = 0; i < MaxRecentFiles; ++i) {
         QObject::connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));

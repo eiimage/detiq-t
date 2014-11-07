@@ -39,10 +39,22 @@ namespace genericinterface
             void connect (GenericInterface* gi);
             void display (GenericInterface* gi);
 
+            /**
+             * @brief Check if the given fileName path can be opened.
+             *
+             * This perform a simple check on file existency and suffix support.
+             * The file is not read by this method.
+             *
+             * @param fileName The path of the file
+             * @return true if the file has a supported type and exists
+             */
+            static bool simpleIsOpenableFileCheck(const QString &fileName);
+
         public slots:
             void save(const QString& path = QString(), const QString& ext = QString());
             void saveAs();
             void checkActionsValid(const QWidget* activeWidget);
+            void loadFiles(const QStringList &fileNames);
 
         private slots:
             void chooseFile();
@@ -52,8 +64,6 @@ namespace genericinterface
             void fileChosen(const QString& path);
 
         private:
-
-            void loadFiles(const QStringList &fileNames);
             void updateRecentFileActions();
 
             QAction* _open;
