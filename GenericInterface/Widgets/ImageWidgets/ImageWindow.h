@@ -108,7 +108,7 @@ class ImageWindow : public QWidget
          */
         const imagein::Rectangle selection() const { return _imageView->getRectangle(); }
 
-        inline QMenu* menu() { return _menu; }
+        inline QMenu* menu() const { return _menu; }
         inline QPoint selectedPixel() const { return _selectedPixel; }
 
         inline ImageView* view() { return _imageView; }

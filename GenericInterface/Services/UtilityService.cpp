@@ -94,6 +94,12 @@ void UtilityService::checkActionsValid(const QWidget* activeWidget)
         _showHProjectionHistogram->setEnabled(true);
         _showVProjectionHistogram->setEnabled(true);
         _showPixelsGrid->setEnabled(true);
+
+        window->menu()->addSeparator();
+        window->menu()->addAction(_showHistogram);
+        window->menu()->addAction(_showHProjectionHistogram);
+        window->menu()->addAction(_showVProjectionHistogram);
+        window->menu()->addAction(_showPixelsGrid);
     }
     else {
         _showHistogram->setEnabled(false);
