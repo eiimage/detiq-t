@@ -132,15 +132,6 @@ void GenericHistogramView::init(uint nbChannels)
 
     _qwtPlot->replot(); // creating the legend items
 
-    // By default, check each legend entry
-    foreach(QwtPlotItem * item, _qwtPlot->itemList()) {
-        QWidget *legendWidget = legend->legendWidget(_qwtPlot->itemToInfo(item));
-        QwtLegendLabel *label = qobject_cast<QwtLegendLabel *>(legendWidget);
-        if(label) {
-            label->setChecked(true);
-        }
-    }
-
     _qwtPlot->setAutoReplot(true);
 
     QwtPlotGrid* grid = new QwtPlotGrid();
@@ -183,6 +174,14 @@ void GenericHistogramView::init(uint nbChannels)
         }
         graphicalHisto->attach(_qwtPlot);
         _graphicalHistos.push_back(graphicalHisto);
+
+        // By default, check each legend entry
+        QWidget *legendWidget = legend->legendWidget(_qwtPlot->itemToInfo(graphicalHisto));
+        QwtLegendLabel *label = qobject_cast<QwtLegendLabel *>(legendWidget);
+        if(label) {
+            label->setChecked(true);
+        }
+
     }
 }
 
