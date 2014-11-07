@@ -62,13 +62,15 @@ void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int ch
 }
 
 template <typename D>
-imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect) : imagein::Array<double>(1 << (sizeof(D)*8))
+imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect)
+    : imagein::Array<double>(1 << (sizeof(D)*8))
 {
     this->computeHistogram(img, channel, rect);
 }
 
 template <typename D>
-imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, const imagein::Rectangle& rect) : imagein::Array<double>(1 << (sizeof(D)*8))
+imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, const imagein::Rectangle& rect)
+    : imagein::Array<double>(1 << (sizeof(D)*8))
 {
     this->computeHistogram(img, 0, rect);
 }
