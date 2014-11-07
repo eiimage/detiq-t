@@ -60,7 +60,7 @@ int GenericInterface::addService(Service* s)
             return it->first;
         }
     }
-	
+
     int id = this->_nbServices++;
 	this->addService(id, s);
 
@@ -78,8 +78,7 @@ int GenericInterface::addService(Service* s)
           tr("An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations."));
         }
     }
-	return id;
-    
+    return id;
 }
 
 bool GenericInterface::removeService(Service* s) {

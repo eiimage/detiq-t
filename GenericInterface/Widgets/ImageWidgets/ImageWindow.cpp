@@ -318,6 +318,20 @@ void ImageWindow::applyBinaryMask() {
     emit applyBinaryMask(this);
 }
 
+void ImageWindow::showHistogram()
+{
+    HistogramWindow* histogramWnd = new HistogramWindow(_displayImg, selection(), this->windowTitle());
+    showGenericHistogram(histogramWnd);
+}
+
+void ImageWindow::showGenericHistogram(GenericHistogramWindow* histogramWnd) {
+
+    _imageView->setSelectSrc(histogramWnd->getView());
+    QObject::connect(histogramWnd, SIGNAL(selectRectChange(imagein::Rectangle, GenericHistogramView*)), _imageView, SLOT(showSelectRect(imagein::Rectangle, GenericHistogramView*)));
+
+    emit addWidget(this, histogramWnd);
+}
+
 void ImageWindow::keyPressEvent ( QKeyEvent * /*event*/ ) {
 //    if(event->
 }

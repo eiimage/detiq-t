@@ -36,32 +36,42 @@
 
 namespace genericinterface
 {
-	/*!
+    /*!
      * \brief Contains the HistogramView
      *
      * Creates and display the HistogramView, and update the status bar.
      */
     class HistogramWindow : public GenericHistogramWindow
     {
-		Q_OBJECT
+        Q_OBJECT
     public:
-      /*!
-       * \brief Default constructor
-       * 
-       * Initializes and display the HistogramView from the parameters. 
-       * 
-       * \param image The image concerned by the histogram
-       * \param rect The part of the image where the histogram is applied
-       */
-      HistogramWindow(const imagein::Image* image, imagein::Rectangle rect, QString name = "", bool cumul = false);
-        
-      /*!
+        /*!
+         * \brief Default constructor
+         *
+         * Initializes and display the HistogramView from the parameters.
+         *
+         * \param image The image concerned by the histogram
+         * \param rect The part of the image where the histogram is applied
+         */
+        HistogramWindow(const imagein::Image* image, imagein::Rectangle rect, QString name = "", bool cumul = false);
+
+        /*!
+         * \brief Alternative constructor
+         *
+         * Initializes and display the HistogramView from an ImageDouble
+         *
+         * \param image The image concerned by the histogram
+         * \param rect The part of the image where the histogram is applied
+         */
+        HistogramWindow(const imagein::ImageDouble* image, imagein::Rectangle rect, QString name = "", bool cumul = false);
+
+        /*!
        * \brief HistogramWindow destructor.
        *
        * The HistogramView is deleted too
        */
-      virtual ~HistogramWindow();
-      
+        virtual ~HistogramWindow();
+
     private:
     };
 }

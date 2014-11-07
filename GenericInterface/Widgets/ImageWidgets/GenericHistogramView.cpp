@@ -1,23 +1,25 @@
 /*
  * Copyright 2011-2012 Benoit Averty, Samuel Babin, Matthieu Bergere, Thomas Letan, Sacha Percot-Tétu, Florian Teyssier
- * 
+ *
  * This file is part of DETIQ-T.
- * 
+ *
  * DETIQ-T is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * DETIQ-T is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <qpen.h>
+#include <QtMath>
+
 #include <qwt_plot.h>
 #include <qwt_plot_layout.h>
 #include <qwt_plot_grid.h>
@@ -38,174 +40,199 @@ using namespace imagein;
 GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
     : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
 {
-	_qwtPlot = new QwtPlot();
-	init(image);
+    _qwtPlot = new QwtPlot();
+
+    init(image->getNbChannels());
+
+    for(unsigned int i = 0; i < _graphicalHistos.size(); ++i) {
+        GraphicalHistogram* graphicalHisto = _graphicalHistos[i];
+
+        if(_projection) {
+            graphicalHisto->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
+        } else if(_cumulated) {
+            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, i, _rectangle));
+        } else {
+            graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
+        }
+    }
+}
+
+GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
+    : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
+{
+    _qwtPlot = new QwtPlot();
+
+    init(image->getNbChannels());
+    // Here we have to fix min and max for the current diagram
+    _qwtPlot->setAxisScale(QwtPlot::xBottom, qFloor(image->min()), qCeil(image->max()));
+
+    for(unsigned int channel = 0; channel < _graphicalHistos.size(); ++channel) {
+        GraphicalHistogram* graphicalHisto = _graphicalHistos[channel];
+
+        if(_projection) {
+            graphicalHisto->setValues(imagein::ProjectionHistogram_t<double>(*image, _value, _horizontal, _rectangle, channel));
+        } else if(_cumulated) {
+            qDebug() << "Cumulated Histogram for ImageDouble is unsupported for now";
+        } else {
+            QMap<int, int> cumulativeValues;
+
+            uint maxw = rect.w > 0 ? rect.x + rect.w : image->getWidth();
+            uint maxh = rect.h > 0 ? rect.y + rect.h : image->getHeight();
+            for(uint j = rect.y; j < maxh; j++) {
+                for(uint i = rect.x; i < maxw; i++) {
+                    double pixel = image->getPixel(i, j, channel);
+                    cumulativeValues[qFloor(pixel)]++;
+                }
+            }
+
+            QVector<QwtIntervalSample> samples;
+            foreach(int key, cumulativeValues.keys()) {
+                 QwtInterval interval(key, key + 1, QwtInterval::ExcludeMaximum);
+                 QwtIntervalSample sample(cumulativeValues[key], interval);
+                 samples << sample;
+            }
+
+            graphicalHisto->setData(new QwtIntervalSeriesData(samples));
+        }
+    }
 }
 
 GenericHistogramView::~GenericHistogramView()
 {
-	delete _principalPicker;
-	delete _leftPicker;
-	delete _rightPicker;
+    delete _principalPicker;
+    delete _leftPicker;
+    delete _rightPicker;
 }
 
-void GenericHistogramView::init(const imagein::Image* image)
+void GenericHistogramView::init(uint nbChannels)
 {
-  this->setMouseTracking(true); //Switch on mouse tracking (no need to press button)
+    this->setMouseTracking(true); //Switch on mouse tracking (no need to press button)
 
-  _qwtPlot->setTitle(tr("Histogram"));
-  
-  _qwtPlot->setCanvasBackground(QColor(255,255,255));
-  _qwtPlot->plotLayout()->setAlignCanvasToScales(true);
+    _qwtPlot->setTitle(tr("Histogram"));
 
-  _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Number of specimen"));
-  _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Pixel value"));
-  _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, 256);
+    _qwtPlot->setCanvasBackground(QColor(255,255,255));
+    _qwtPlot->plotLayout()->setAlignCanvasToScales(true);
 
-  QwtLegend *legend = new QwtLegend;
-  legend->setDefaultItemMode(QwtLegendData::Checkable);
-  _qwtPlot->insertLegend(legend, QwtPlot::RightLegend);
+    _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Number of specimen"));
+    _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Pixel value"));
+    _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, 256);
 
-  populate(image);
+    QwtLegend *legend = new QwtLegend;
+    legend->setDefaultItemMode(QwtLegendData::Checkable);
+    _qwtPlot->insertLegend(legend, QwtPlot::RightLegend);
 
-  _qwtPlot->canvas()->setMouseTracking(true);
-  
-  if(_horizontal)
-  _principalPicker = new HistogramPicker(QwtPicker::HLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
-  else
-  _principalPicker = new HistogramPicker(QwtPicker::VLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
-  _principalPicker->setStateMachine(new QwtPickerDragPointMachine());
-  _principalPicker->setTrackerPen(QColor(Qt::black));
-  _principalPicker->setRubberBandPen(QColor(Qt::yellow));
-  
-  _leftPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
-  _leftPicker->setStateMachine(new QwtPickerDragPointMachine());
-  _leftPicker->setRubberBand(QwtPlotPicker::VLineRubberBand);
-  _leftPicker->setRubberBandPen(QColor(Qt::yellow));
-  
-  _rightPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
-  _rightPicker->setStateMachine(new QwtPickerDragPointMachine());
-  _rightPicker->setRubberBand(QwtPlotPicker::VLineRubberBand);
-  _rightPicker->setRubberBandPen(QColor(Qt::yellow));
-  _rightPicker->setMousePattern(QwtPicker::MouseSelect1, Qt::RightButton);
+    _qwtPlot->canvas()->setMouseTracking(true);
 
-  connect(legend, SIGNAL(checked(QVariant,bool,int)), this, SLOT(showItem(QVariant,bool,int)));
-  connect(_rightPicker, SIGNAL(selected(const QPointF&)), this, SLOT(rightClick(const QPointF&)));
-  connect(_leftPicker, SIGNAL(selected(const QPointF&)), this, SLOT(leftClick(const QPointF&)));
-  connect(_principalPicker, SIGNAL(moved(const QPointF&)), this, SLOT(move(const QPointF&)));
-  
-  connect(_leftPicker, SIGNAL(selected(const QPointF&)), this, SIGNAL(leftSelected(const QPointF&)));
-  connect(_rightPicker, SIGNAL(selected(const QPointF&)), this, SIGNAL(rightSelected(const QPointF&)));
-  connect(_leftPicker, SIGNAL(moved(const QPointF&)), this, SIGNAL(leftMoved(const QPointF&)));
-  connect(_rightPicker, SIGNAL(moved(const QPointF&)), this, SIGNAL(rightMoved(const QPointF&)));
+    if(_horizontal)
+        _principalPicker = new HistogramPicker(QwtPicker::HLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
+    else
+        _principalPicker = new HistogramPicker(QwtPicker::VLineRubberBand, QwtPicker::AlwaysOn, _qwtPlot->canvas());
+    _principalPicker->setStateMachine(new QwtPickerDragPointMachine());
+    _principalPicker->setTrackerPen(QColor(Qt::black));
+    _principalPicker->setRubberBandPen(QColor(Qt::yellow));
 
-  _qwtPlot->replot(); // creating the legend items
+    _leftPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
+    _leftPicker->setStateMachine(new QwtPickerDragPointMachine());
+    _leftPicker->setRubberBand(QwtPlotPicker::VLineRubberBand);
+    _leftPicker->setRubberBandPen(QColor(Qt::yellow));
 
-  // By default, check each legend entry
-  foreach(QwtPlotItem * item, _qwtPlot->itemList()) {
-      QWidget *legendWidget = legend->legendWidget(_qwtPlot->itemToInfo(item));
-      QwtLegendLabel *label = qobject_cast<QwtLegendLabel *>(legendWidget);
-      if(label) {
-          label->setChecked(true);
-      }
-  }
+    _rightPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
+    _rightPicker->setStateMachine(new QwtPickerDragPointMachine());
+    _rightPicker->setRubberBand(QwtPlotPicker::VLineRubberBand);
+    _rightPicker->setRubberBandPen(QColor(Qt::yellow));
+    _rightPicker->setMousePattern(QwtPicker::MouseSelect1, Qt::RightButton);
 
-  _qwtPlot->setAutoReplot(true);
-}
+    connect(legend, SIGNAL(checked(QVariant,bool,int)), this, SLOT(showItem(QVariant,bool,int)));
+    connect(_rightPicker, SIGNAL(selected(const QPointF&)), this, SLOT(rightClick(const QPointF&)));
+    connect(_leftPicker, SIGNAL(selected(const QPointF&)), this, SLOT(leftClick(const QPointF&)));
+    connect(_principalPicker, SIGNAL(moved(const QPointF&)), this, SLOT(move(const QPointF&)));
 
-void GenericHistogramView::populate(const imagein::Image* image)
-{
-  QwtPlotGrid* grid = new QwtPlotGrid();
-  grid->enableX(false);
-  grid->enableY(true);
-  grid->enableXMin(false);
-  grid->enableYMin(false);
-  grid->setPen(QPen(Qt::black, 0, Qt::DotLine));
-  grid->attach(_qwtPlot);
+    connect(_leftPicker, SIGNAL(selected(const QPointF&)), this, SIGNAL(leftSelected(const QPointF&)));
+    connect(_rightPicker, SIGNAL(selected(const QPointF&)), this, SIGNAL(rightSelected(const QPointF&)));
+    connect(_leftPicker, SIGNAL(moved(const QPointF&)), this, SIGNAL(leftMoved(const QPointF&)));
+    connect(_rightPicker, SIGNAL(moved(const QPointF&)), this, SIGNAL(rightMoved(const QPointF&)));
 
-	for(unsigned int i = 0; i < image->getNbChannels(); ++i)
-	{
-		/*imagein::Array<unsigned int>* histogram;
-		if(_projection)
-			histogram = new imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i);
-		else
-			histogram = new imagein::Histogram(*image, i, _rectangle);*/
-		
-		/*int values[histogram->getWidth()];
+    _qwtPlot->replot(); // creating the legend items
 
-		for(unsigned int j = 0; j < histogram->getWidth(); ++j)
-			values[j] = (*histogram)[j];*/
-		
-		GraphicalHistogram* graphicalHisto;
-		switch(i)
-		{
-			case 0:
-				if(image->getNbChannels() == 1 || image->getNbChannels() == 2)
-					graphicalHisto = new GraphicalHistogram(tr("Black"), Qt::black);
-				else
-					graphicalHisto = new GraphicalHistogram(tr("Red"), Qt::red);
-			break;
-			case 1:
-				if(image->getNbChannels() == 1 || image->getNbChannels() == 2)
-					graphicalHisto = new GraphicalHistogram(tr("Alpha"), Qt::white);
-				else
-					graphicalHisto = new GraphicalHistogram(tr("Green"), Qt::green);
-			break;
-			case 2:
-				graphicalHisto = new GraphicalHistogram(tr("Blue"), Qt::blue);
-			break;
-			case 3:
-				graphicalHisto = new GraphicalHistogram(tr("Alpha"), Qt::black);
-			break;
-			default:
-				graphicalHisto = new GraphicalHistogram(tr("Channel"), Qt::black);
-		}
-		//graphicalHisto->setValues(sizeof(values) / sizeof(int), values);
-		//graphicalHisto->setValues(histogram);
-        
-        if(_projection) {
-            graphicalHisto->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
+    _qwtPlot->setAutoReplot(true);
+
+    QwtPlotGrid* grid = new QwtPlotGrid();
+    grid->enableX(false);
+    grid->enableY(true);
+    grid->enableXMin(false);
+    grid->enableYMin(false);
+    grid->setPen(QPen(Qt::black, 0, Qt::DotLine));
+    grid->attach(_qwtPlot);
+
+    for(uint i = 0; i < nbChannels; ++i)
+    {
+        GraphicalHistogram* graphicalHisto;
+        switch(i)
+        {
+        case 0:
+            if(nbChannels == 1 || nbChannels == 2)
+                graphicalHisto = new GraphicalHistogram(tr("Black"), Qt::black);
+            else
+                graphicalHisto = new GraphicalHistogram(tr("Red"), Qt::red);
+            break;
+        case 1:
+            if(nbChannels == 1 || nbChannels == 2)
+                graphicalHisto = new GraphicalHistogram(tr("Alpha"), Qt::white);
+            else
+                graphicalHisto = new GraphicalHistogram(tr("Green"), Qt::green);
+            break;
+        case 2:
+            graphicalHisto = new GraphicalHistogram(tr("Blue"), Qt::blue);
+            break;
+        case 3:
+            graphicalHisto = new GraphicalHistogram(tr("Alpha"), Qt::black);
+            break;
+        default:
+            graphicalHisto = new GraphicalHistogram(tr("Channel"), Qt::black);
         }
-        else if(_cumulated) {
-            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, i, _rectangle));
+
+        if(_horizontal) {
+            graphicalHisto->setOrientation(Qt::Horizontal);
         }
-        else {
-            graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
-        }
-        if(_horizontal)
-			graphicalHisto->setOrientation(Qt::Horizontal);
         graphicalHisto->attach(_qwtPlot);
+        _graphicalHistos.push_back(graphicalHisto);
 
-    _graphicalHistos.push_back(graphicalHisto);
-	}
+        // By default, check each legend entry
+        QWidget *legendWidget = legend->legendWidget(_qwtPlot->itemToInfo(graphicalHisto));
+        QwtLegendLabel *label = qobject_cast<QwtLegendLabel *>(legendWidget);
+        if(label) {
+            label->setChecked(true);
+        }
+
+    }
 }
 
 void GenericHistogramView::update(const imagein::Image* image, imagein::Rectangle rect)
 {
-  _rectangle = rect;
-  
-  emit(updateApplicationArea(rect));
-  
-  for(unsigned int i = 0; i < image->getNbChannels(); ++i)
-	{
-		/*const imagein::Array<unsigned int>& histogram;
-		if(_projection)
-			histogram = imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i);
-		else
-			histogram = imagein::Histogram(*image, i, _rectangle);
-            */
-		
-		/*int values[histogram->getWidth()];
+    _rectangle = rect;
 
-		for(unsigned int j = 0; j < histogram->getWidth(); ++j)
-			values[j] = (*histogram)[j];
-		
-		_graphicalHistos[i]->setValues(sizeof(values) / sizeof(int), values);*/
-		if(_projection)
+    emit(updateApplicationArea(rect));
+
+    for(unsigned int i = 0; i < image->getNbChannels(); ++i)
+    {
+        /*const imagein::Array<unsigned int>& histogram;
+        if(_projection)
+            histogram = imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i);
+        else
+            histogram = imagein::Histogram(*image, i, _rectangle);
+            */
+
+        /*int values[histogram->getWidth()];
+
+        for(unsigned int j = 0; j < histogram->getWidth(); ++j)
+            values[j] = (*histogram)[j];
+
+        _graphicalHistos[i]->setValues(sizeof(values) / sizeof(int), values);*/
+        if(_projection)
             _graphicalHistos[i]->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
-		else
+        else
             _graphicalHistos[i]->setValues(imagein::Histogram(*image, i, _rectangle));
-	}
+    }
 }
 
 void GenericHistogramView::showItem(QVariant itemInfo, bool visible, int) const

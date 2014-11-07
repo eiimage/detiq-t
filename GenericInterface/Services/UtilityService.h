@@ -26,33 +26,33 @@
 
 namespace genericinterface
 {
-	class UtilityService : public QObject, public Service
-	{
-		Q_OBJECT
-		public:
-			void display(GenericInterface*);
-			void connect(GenericInterface*);
+    class UtilityService : public QObject, public Service
+    {
+        Q_OBJECT
+        public:
+            void display(GenericInterface*);
+            void connect(GenericInterface*);
 
-		public slots:
-			
-			//These are the slots for actions on StandardImageWindow
-			void showHistogram();
-			void showHProjectionHistogram();
-			void showVProjectionHistogram();
-			void showPixelsGrid();
-			
-			void checkActionsValid(const QWidget* activeWidget);
-		signals:
+        public slots:
 
-		private:
-			WindowService *_currentWindowService;
-			QMenu* _showMenu;
-			
-			QAction* _showHistogram;
-			QAction* _showHProjectionHistogram;
-			QAction* _showVProjectionHistogram;
-			QAction* _showPixelsGrid;
-	};
+            //These are the slots for actions on StandardImageWindow
+            void showHistogram();
+            void showHProjectionHistogram();
+            void showVProjectionHistogram();
+            void showPixelsGrid();
+
+            void checkActionsValid(const QWidget* activeWidget);
+        signals:
+
+        private:
+            WindowService *_currentWindowService;
+            QMenu* _showMenu;
+
+            QAction* _showHistogram;
+            QAction* _showHProjectionHistogram;
+            QAction* _showVProjectionHistogram;
+            QAction* _showPixelsGrid;
+    };
 }
 
 #endif

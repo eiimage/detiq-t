@@ -108,7 +108,7 @@ class ImageWindow : public QWidget
          */
         const imagein::Rectangle selection() const { return _imageView->getRectangle(); }
 
-        inline QMenu* menu() { return _menu; }
+        inline QMenu* menu() const { return _menu; }
         inline QPoint selectedPixel() const { return _selectedPixel; }
 
         inline ImageView* view() { return _imageView; }
@@ -135,6 +135,8 @@ class ImageWindow : public QWidget
         void rename();
         void applyBinaryMask();
 
+        virtual void showHistogram();
+        virtual void showPixelsGrid() = 0;
 
     signals:
         /*!
@@ -154,7 +156,6 @@ class ImageWindow : public QWidget
         void addWidget(ImageWindow*, QWidget*);
         void addImage(ImageWindow*, ImageWindow*);
         void applyBinaryMask(ImageWindow*);
-
 
     protected:
         void setDisplayImage(const Image* displayImg);
@@ -187,6 +188,7 @@ class ImageWindow : public QWidget
 
         virtual void showHoveredPixelInformations(int x, int y) const = 0;
         virtual void showSelectedPixelInformations(int x, int y) const = 0;
+        void showGenericHistogram(GenericHistogramWindow* histogramWnd);
 };
 
 }

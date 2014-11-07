@@ -23,7 +23,19 @@
 using namespace genericinterface;
 using namespace imagein;
 
-HistogramView::HistogramView(const Image* image, imagein::Rectangle rect, bool cumul): GenericHistogramView(image, rect, false, 0, false, cumul)
+HistogramView::HistogramView(const Image* image, imagein::Rectangle rect, bool cumul)
+    : GenericHistogramView(image, rect, false, 0, false, cumul)
+{
+    if(!cumul) {
+        _qwtPlot->setTitle(tr("Histogram"));
+    }
+    else {
+        _qwtPlot->setTitle(tr("Cumulated histogram"));
+    }
+}
+
+HistogramView::HistogramView(const ImageDouble *image, Rectangle rect, bool cumul)
+    : GenericHistogramView(image, rect, false, 0, false, cumul)
 {
     if(!cumul) {
         _qwtPlot->setTitle(tr("Histogram"));

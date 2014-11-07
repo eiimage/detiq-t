@@ -301,6 +301,8 @@ namespace imagein
     typedef Image_t<depth16_t> Image_16; //!< 8 bits depth Image. Provided for convenience.
     typedef Image_t<depth32_t> Image_32; //!< 8 bits depth Image. Provided for convenience.
     typedef Image_t<depth_default_t> Image; //!< Standard Image is 8 bits depth.
+
+    typedef Image_t<double> ImageDouble; //!< Standard Image with double values for each pixel
 }
 
 #include "Image.tpp"

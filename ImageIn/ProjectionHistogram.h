@@ -60,7 +60,7 @@ namespace imagein
 			/*!
 			 * \brief Classical destructor for ProjectionHistogram_t.
 			 */
-            inline virtual ~ProjectionHistogram_t() {};
+            inline virtual ~ProjectionHistogram_t() {}
     };
 
     typedef ProjectionHistogram_t<depth8_t> ProjectionHistogram_8; //!< 8 bits depth Projection Histogram. Provided for convenience.

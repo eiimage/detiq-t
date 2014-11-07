@@ -65,8 +65,6 @@ void DoubleImageWindow::init()
 {
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
-    menu()->addAction(tr("Pixels Grid"), this, SLOT(showPixelsGrid()));
-    menu()->addSeparator();
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
 
@@ -169,8 +167,6 @@ void DoubleImageWindow::updateStatusBar()
     }
 
 }
-
-
 
 void DoubleImageWindow::showPixelsGrid()
 {
@@ -278,4 +274,10 @@ void DoubleImageWindow::setLogScale(int logScale) {
     _logConstantScale = std::pow(8, logScale/2. - 3.);
     setDisplayImage(makeDisplayable(_image));
     delete tmpImg;
+}
+
+void DoubleImageWindow::showHistogram()
+{
+    HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle());
+    showGenericHistogram(histogramWnd);
 }
