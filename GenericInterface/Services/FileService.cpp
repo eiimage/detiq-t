@@ -30,7 +30,6 @@ using namespace genericinterface;
 
 void FileService::display (GenericInterface* gi)
 {
-
     _gi = gi;
     gi->toolBar("Tools")->setIconSize(QSize(16,16));
     
@@ -52,11 +51,6 @@ void FileService::display (GenericInterface* gi)
         gi->menu(tr("&File"))->addAction(recentFileActs[i]);
     }
 
-    //gi->menu(tr("&File"))->addSeparator();
-    //_open = gi->menu(tr("&File"))->addAction(tr("E&xit"));
-    //_open->setIcon(gi->style()->standardIcon(QStyle::SP_DialogCloseButton));
-    //_open->setShortcut(QKeySequence::Quit);
-
     updateRecentFileActions();
 }
 
@@ -70,10 +64,9 @@ void FileService::connect (GenericInterface* gi)
         QObject::connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
 
-    QObject::connect(this, SIGNAL(fileChosen(const QString&)), dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE)), SLOT(addFile(const QString&)));
-
     //connexion des changements d'images
-    WindowService* ws = dynamic_cast<WindowService*>(gi->getService(GenericInterface::WINDOW_SERVICE));
+    WindowService* ws = gi->windowService();
+    QObject::connect(this, SIGNAL(fileChosen(const QString&)), ws, SLOT(addFile(const QString&)));
     QObject::connect(ws, SIGNAL(activeWidgetChanged(const QWidget*)), this, SLOT(checkActionsValid(const QWidget*)));
 }
 
@@ -84,7 +77,7 @@ void FileService::save(const QString& path, const QString& ext)
     }
     else {
         try {
-            WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+            WindowService* ws = _gi->windowService();
             if(ws != NULL) {
                 ImageWindow* imw = dynamic_cast<ImageWindow*>(ws->getCurrentImageWindow());
                 if(imw != NULL) {
@@ -112,7 +105,7 @@ void FileService::save(const QString& path, const QString& ext)
 void FileService::saveAs()
 {
     QString path;
-    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    WindowService* ws = _gi->windowService();
     ImageWindow* currentWindow = ws->getCurrentImageWindow();
     if(currentWindow != NULL) {
         path = currentWindow->getPath();
@@ -129,7 +122,7 @@ void FileService::saveAs()
 }
 
 void FileService::loadFiles(const QStringList &filenames) {
-    
+
     QStringList recentFiles = _gi->settings()->value("recentFileList").toStringList();
 
     foreach(QString filename, filenames) {
@@ -141,7 +134,7 @@ void FileService::loadFiles(const QStringList &filenames) {
             emit fileChosen(filename);
         }
     }
-    
+
     _gi->settings()->setValue("recentFileList", recentFiles);
     updateRecentFileActions();
 }
@@ -167,7 +160,7 @@ void FileService::updateRecentFileActions() {
 void FileService::chooseFile()
 {
     QString path;
-    WindowService* ws = dynamic_cast<WindowService*>(_gi->getService(GenericInterface::WINDOW_SERVICE));
+    WindowService* ws = _gi->windowService();
     ImageWindow* currentWindow = ws->getCurrentImageWindow();
     if(currentWindow != NULL) {
         path = currentWindow->getPath();
@@ -183,7 +176,6 @@ void FileService::openRecentFile()
         loadFiles(QStringList(action->data().toString()));
     }
 }
-
 
 void FileService::checkActionsValid(const QWidget* activeWidget)
 {
