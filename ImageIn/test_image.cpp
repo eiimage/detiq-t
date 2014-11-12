@@ -74,6 +74,7 @@ int main(int, char*[])
     }
     Image ref(width, height, nbChannels, dataRgb);
     ref.save("test/ref_image.bmp");
+    ref.save("test/ref_image.png");
 
     Image::const_iterator b1, b2, e1, e2;
     int nTest = 0, nFail = 0;
@@ -108,8 +109,7 @@ int main(int, char*[])
 
         b1 = ref.begin(); b2 = pngTest.begin(); e1 = ref.end(); e2 = pngTest.end();
 
-        if(
-                std::equal(b1, e1, b2) //Matrices are equals
+        if(std::equal(b1, e1, b2) //Matrices are equals
                 && (e2-b2 == e1-b1) //Matrices are same size
                 && ref.getWidth() == pngTest.getWidth() //Class attributes are equals
                 && ref.getHeight() == pngTest.getHeight()
@@ -128,8 +128,8 @@ int main(int, char*[])
 
         //Testing bmp writing
         nTest++;
-        ref.save("test/temp/test_bmp.bmp");
-        Image bmpTest("test/temp/test_bmp.bmp");
+        ref.save("test/test_bmp.bmp");
+        Image bmpTest("test/test_bmp.bmp");
 
         b1 = ref.begin(); b2 = bmpTest.begin(); e1 = ref.end(); e2 = bmpTest.end();
 
@@ -149,8 +149,8 @@ int main(int, char*[])
 
         //Testing png writing
         nTest++;
-        ref.save("test/temp/test_png.png");
-        Image pngTest("test/temp/test_png.png");
+        ref.save("test/test_png.png");
+        Image pngTest("test/test_png.png");
 
         b1 = ref.begin(); b2 = pngTest.begin(); e1 = ref.end(); e2 = pngTest.end();
 

@@ -94,3 +94,5 @@ target_link_libraries(ImageIn_main ImageIn ${JPEG_LIB} ${PNG_LIB} ${CMAKE_THREAD
 
 add_executable(ImageIn_test test_image.cpp)
 target_link_libraries(ImageIn_test ImageIn ${JPEG_LIB} ${PNG_LIB} ${CMAKE_THREAD_LIBS_INIT})
+# Needed to execute the tester
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test)
