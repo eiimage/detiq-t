@@ -26,7 +26,7 @@
 using namespace imagein;
 using namespace std;
 
-int main(int argc, char* argv[])
+int main(int, char*[])
 {
     /*
      * Test I/O jpg, bmp, png
@@ -48,27 +48,26 @@ int main(int argc, char* argv[])
 
 
         double offset = max(max((double)red/255.0, (double)green/255.0), (double)blue/255.0);
-	if(offset<1) red /= offset; green /=offset; blue/=offset;
+        if(offset<1) red /= offset; green /=offset; blue/=offset;
 
-    	for(int j = 0 ; j < height ; ++j) {
-	    short r = red, g = green, b = blue;
+        for(int j = 0 ; j < height ; ++j) {
+            short r = red, g = green, b = blue;
             if(j<256) {
-            	r = min(r+256-j, 255);
-            	g = min(g+256-j, 255);
-            	b = min(b+256-j,255);
+                r = min(r+256-j, 255);
+                g = min(g+256-j, 255);
+                b = min(b+256-j,255);
             }
-	    else {
+            else {
+                r = max(r+256-j, 0);
+                g = max(g+256-j, 0);
+                b = max(b+256-j,0);
+                //r = r*((double)(512-j)/(double)height*2.0);
+                //g = g*((double)(512-j)/(double)height*2.0);
+                //b = b*((double)(512-j)/(double)height*2.0);
+            }
 
-            	r = max(r+256-j, 0);
-            	g = max(g+256-j, 0);
-            	b = max(b+256-j,0);
-		//r = r*((double)(512-j)/(double)height*2.0);
-            	//g = g*((double)(512-j)/(double)height*2.0);
-            	//b = b*((double)(512-j)/(double)height*2.0);
-	    }
 
-
-	    dataRgb[j*width*nbChannels + i*nbChannels] = r;
+            dataRgb[j*width*nbChannels + i*nbChannels] = r;
             dataRgb[j*width*nbChannels + i*nbChannels + 1] = g;
             dataRgb[j*width*nbChannels + i*nbChannels + 2] = b;
         }
@@ -91,11 +90,11 @@ int main(int argc, char* argv[])
 
         if(
                 std::equal(b1, e1, b2) //Matrices are equals
-             && (e2-b2 == e1-b1) //Matrices are same size
-             && ref.getWidth() == bmpTest.getWidth() //Class attributes are equals
-             && ref.getHeight() == bmpTest.getHeight()
-             && ref.getNbChannels() == bmpTest.getNbChannels()
-          ) {
+                && (e2-b2 == e1-b1) //Matrices are same size
+                && ref.getWidth() == bmpTest.getWidth() //Class attributes are equals
+                && ref.getHeight() == bmpTest.getHeight()
+                && ref.getNbChannels() == bmpTest.getNbChannels()
+                ) {
             cout << "[OK]   bmp reading" << endl;
         }
         else {
@@ -111,11 +110,11 @@ int main(int argc, char* argv[])
 
         if(
                 std::equal(b1, e1, b2) //Matrices are equals
-             && (e2-b2 == e1-b1) //Matrices are same size
-             && ref.getWidth() == pngTest.getWidth() //Class attributes are equals
-             && ref.getHeight() == pngTest.getHeight()
-             && ref.getNbChannels() == pngTest.getNbChannels()
-          ) {
+                && (e2-b2 == e1-b1) //Matrices are same size
+                && ref.getWidth() == pngTest.getWidth() //Class attributes are equals
+                && ref.getHeight() == pngTest.getHeight()
+                && ref.getNbChannels() == pngTest.getNbChannels()
+                ) {
             cout << "[OK]   png reading" << endl;
         }
         else {
@@ -136,11 +135,11 @@ int main(int argc, char* argv[])
 
         if(
                 std::equal(b1, e1, b2) //Matrices are equals
-             && (e2-b2 == e1-b1) //Matrices are same size
-             && ref.getWidth() == bmpTest.getWidth() //Class attributes are equals
-             && ref.getHeight() == bmpTest.getHeight()
-             && ref.getNbChannels() == bmpTest.getNbChannels()
-          ) {
+                && (e2-b2 == e1-b1) //Matrices are same size
+                && ref.getWidth() == bmpTest.getWidth() //Class attributes are equals
+                && ref.getHeight() == bmpTest.getHeight()
+                && ref.getNbChannels() == bmpTest.getNbChannels()
+                ) {
             cout << "[OK]   bmp writing" << endl;
         }
         else {
@@ -157,11 +156,11 @@ int main(int argc, char* argv[])
 
         if(
                 std::equal(b1, e1, b2) //Matrices are equals
-             && (e2-b2 == e1-b1) //Matrices are same size
-             && ref.getWidth() == pngTest.getWidth() //Class attributes are equals
-             && ref.getHeight() == pngTest.getHeight()
-             && ref.getNbChannels() == pngTest.getNbChannels()
-          ) {
+                && (e2-b2 == e1-b1) //Matrices are same size
+                && ref.getWidth() == pngTest.getWidth() //Class attributes are equals
+                && ref.getHeight() == pngTest.getHeight()
+                && ref.getNbChannels() == pngTest.getNbChannels()
+                ) {
             cout << "[OK]   png writing" << endl;
         }
         else {
@@ -171,9 +170,9 @@ int main(int argc, char* argv[])
 
     }
 
-	/*
-	 * Testing tools
-	 */
+    /*
+     * Testing tools
+     */
 
     {//copy ctor
 
@@ -186,11 +185,11 @@ int main(int argc, char* argv[])
 
         if(
                 std::equal(b1, e1, b2) //Matrices are equals
-             && (e2-b2 == e1-b1) //Matrices are same size
-             && ref.getWidth() == test.getWidth() //Class attributes are equals
-             && ref.getHeight() == test.getHeight()
-             && ref.getNbChannels() == test.getNbChannels()
-          ) {
+                && (e2-b2 == e1-b1) //Matrices are same size
+                && ref.getWidth() == test.getWidth() //Class attributes are equals
+                && ref.getHeight() == test.getHeight()
+                && ref.getNbChannels() == test.getNbChannels()
+                ) {
             cout << "[OK]   copy constructor" << endl;
         }
         else {
@@ -216,8 +215,8 @@ int main(int argc, char* argv[])
                 unsigned char red, green, blue;
 
                 if(     ((j == 27 || j == 100) && i > 3 && i < 42)
-                    ||  ((i == 4 || i == 41) && j < 26 && j < 101)
-                  ) {
+                        ||  ((i == 4 || i == 41) && j < 26 && j < 101)
+                        ) {
 
                     red = 1;
                     green = 2;
@@ -270,11 +269,11 @@ int main(int argc, char* argv[])
 
         if(
                 std::equal(b1, e1, b2) //Matrices are equals
-             && (e2-b2 == e1-b1) //Matrices are same size
-             && refCrop->getWidth() == testCrop.getWidth() //Class attributes are equals
-             && refCrop->getHeight() == testCrop.getHeight()
-             && refCrop->getNbChannels() == testCrop.getNbChannels()
-          ) {
+                && (e2-b2 == e1-b1) //Matrices are same size
+                && refCrop->getWidth() == testCrop.getWidth() //Class attributes are equals
+                && refCrop->getHeight() == testCrop.getHeight()
+                && refCrop->getNbChannels() == testCrop.getNbChannels()
+                ) {
             cout << "[OK]   crop" << endl;
         }
         else {
@@ -283,43 +282,43 @@ int main(int argc, char* argv[])
         }
     }
 
-	{ // Projection histogram
-		//reference data
-		int width = 320;
-		int height = 240;
-		int nbChannels = 3;
-		unsigned char* dataProj = new unsigned char[width * height * nbChannels];
-		for(int i = 0 ; i < width ; ++i) {
-			for(int j = 0; j < height ; ++j) {
-				if(j>i) {
-					dataProj[j*width*nbChannels + i*nbChannels] = 0;
-					dataProj[j*width*nbChannels + i*nbChannels +1] = 0;
-					dataProj[j*width*nbChannels + i*nbChannels +2] = 0;
-				}
-				else {
-					dataProj[j*width*nbChannels + i*nbChannels] = 255;
-					dataProj[j*width*nbChannels + i*nbChannels +1] = 255;
-					dataProj[j*width*nbChannels + i*nbChannels +2] = 255;
-				}
-			}
-		}
-		Image refProj(width, height, nbChannels, dataProj);
-		// testing horizontal histogram
-		bool verifH = true;
-		ProjectionHistogram_t<uint8_t> ph(refProj,0,true);
-		for(int i = 0; i < ph.getWidth() ; ++i) {
-			if(ph[i]!=i) verifH = false;
-		}
-		// testing vertical histogram
-		bool verifV = true;
-		ProjectionHistogram_t<uint8_t> pv(refProj,0,false);
-		for(int i = 0; i < pv.getWidth() ; ++i) {
-			if(pv[i]!=max((height-1)-i,0)) verifV = false;
-		}
-		// conclusion
-		if(verifH && verifV)
-			cout << "[OK]   projection" << endl;
-		else
-			cout << "[FAIL] projection" << endl;
-	}
+    { // Projection histogram
+        //reference data
+        int width = 320;
+        int height = 240;
+        int nbChannels = 3;
+        unsigned char* dataProj = new unsigned char[width * height * nbChannels];
+        for(int i = 0 ; i < width ; ++i) {
+            for(int j = 0; j < height ; ++j) {
+                if(j>i) {
+                    dataProj[j*width*nbChannels + i*nbChannels] = 0;
+                    dataProj[j*width*nbChannels + i*nbChannels +1] = 0;
+                    dataProj[j*width*nbChannels + i*nbChannels +2] = 0;
+                }
+                else {
+                    dataProj[j*width*nbChannels + i*nbChannels] = 255;
+                    dataProj[j*width*nbChannels + i*nbChannels +1] = 255;
+                    dataProj[j*width*nbChannels + i*nbChannels +2] = 255;
+                }
+            }
+        }
+        Image refProj(width, height, nbChannels, dataProj);
+        // testing horizontal histogram
+        bool verifH = true;
+        ProjectionHistogram_t<uint8_t> ph(refProj,0,true);
+        for(int i = 0; i < ph.getWidth() ; ++i) {
+            if(ph[i]!=i) verifH = false;
+        }
+        // testing vertical histogram
+        bool verifV = true;
+        ProjectionHistogram_t<uint8_t> pv(refProj,0,false);
+        for(int i = 0; i < pv.getWidth() ; ++i) {
+            if(pv[i]!=max((height-1)-i,0)) verifV = false;
+        }
+        // conclusion
+        if(verifH && verifV)
+            cout << "[OK]   projection" << endl;
+        else
+            cout << "[FAIL] projection" << endl;
+    }
 }
