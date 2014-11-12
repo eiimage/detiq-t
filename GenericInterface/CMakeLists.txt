@@ -25,6 +25,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
 
 set(GenInterface_SOURCES
+	config.h.in
 	Exceptions.h
 	GenericInterface.cpp
 	GenericInterface.h
@@ -100,6 +101,13 @@ set(GenInterface_SOURCES
 	Widgets/NavBar/NodeListModel.cpp
 	Widgets/NavBar/NodeListModel.h
 )
+
+if(NOT ${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
+	# When the project is built in Release mode (or RelWithDebInfo, MinSizeRel, or nothing), we 'touch' AboutDialog.cpp.
+	# With this trick, the file will always be built, and the constants __DATE__ and __TIME__ it contains will be replaced
+	# by the real compilation date and time.
+	add_custom_target(DoRebuildAbout ALL ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_SOURCE_DIR}/Widgets/AboutDialog.cpp)
+endif()
 
 qt5_add_resources(RCC_FILES "res.qrc")
 

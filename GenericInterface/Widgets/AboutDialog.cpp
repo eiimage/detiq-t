@@ -16,5 +16,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     theText.append("Benoit Averty, Samuel Babin, "
                    "Matthieu Bergère, Thomas Letan, "
                    "Sacha Percot-Tétu, Florian Teyssier");
+    theText.append(NEWLINE).append(NEWLINE);
+    theText.append(tr("Compiled on %1 at %2").arg(__DATE__, __TIME__));
     setText(theText);
 }
