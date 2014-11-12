@@ -25,7 +25,6 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
 
 set(GenInterface_SOURCES
-	config.h.in
 	Exceptions.h
 	GenericInterface.cpp
 	GenericInterface.h
