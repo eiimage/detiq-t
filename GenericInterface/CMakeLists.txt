@@ -43,6 +43,8 @@ set(GenInterface_SOURCES
 	Utilities/Log.cpp
 	Utilities/Log.h
 	Widgets/ImageListBox.h
+	Widgets/AboutDialog.h
+	Widgets/AboutDialog.cpp
 	Widgets/ImageWidgets/AlternativeImageView.cpp
 	Widgets/ImageWidgets/AlternativeImageView.h
 	Widgets/ImageWidgets/DoubleImageWindow.cpp
@@ -117,6 +119,6 @@ target_link_libraries(GenericInterface
 	${JPEG_LIB}
 	${PNG_LIB}
 	${CMAKE_THREAD_LIBS_INIT}
-     ${QWT_LIBRARY}
-     ${QWT_LIBRARIES}
+	${QWT_LIBRARY}
+	${QWT_LIBRARIES}
 )

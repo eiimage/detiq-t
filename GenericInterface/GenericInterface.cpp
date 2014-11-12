@@ -20,6 +20,7 @@
 #include <QMimeData>
 
 #include "GenericInterface.h"
+#include "Widgets/AboutDialog.h"
 
 using namespace std;
 using namespace genericinterface;
@@ -47,7 +48,9 @@ GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _n
 
     setAcceptDrops(true);
 
-    QAction *aboutAction = menu(tr("&Help"))->addAction("&About");
+    // Initialize the "Help" menu. Adds an "About" action entry in this menu. Directly
+    // connect this action to the "show()" slot of the About dialog. Since About
+    menu(tr("&Help"))->addAction("&About", new AboutDialog(this), SLOT(show()));
 }
 
 GenericInterface::~GenericInterface() {
