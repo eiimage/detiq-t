@@ -46,6 +46,8 @@ GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _n
         setWindowTitle(name);
 
     setAcceptDrops(true);
+
+    QAction *aboutAction = menu(tr("&Help"))->addAction("&About");
 }
 
 GenericInterface::~GenericInterface() {
@@ -209,20 +211,25 @@ QMenu* GenericInterface::menu(QString name)
 {
     QMenu* res;
 
-    if (_menus.find(name) != _menus.end())
-    {
+    if (_menus.find(name) != _menus.end()) {
         res = _menus[name];
-    }
-    else
-    {
-        if(_menus.find(tr("&Window")) != _menus.end()) {
-            res = new QMenu(name, this);
-            menuBar()->insertMenu(_menus[tr("&Window")]->menuAction(), res);
-        }
-        else {
-            res = menuBar()->addMenu(name);
-        }
+    } else {
+        // Create the resulting menu
+        res = new QMenu(name, this);
+        // Adds it to the current menu bar
+        menuBar()->addMenu(res);
+        // Save it for later use
         _menus[name] = res;
+
+        // Ensure the "Window" and "Help" menus will be the latest ones
+        // Note: A menu can be added only once in a menuBar. Calling addMenu()
+        // with an existing menu pushes it at the end
+        if(_menus.find(tr("&Window")) != _menus.end()) {
+            menuBar()->addMenu(_menus[tr("&Window")]);
+        }
+        if(_menus.find(tr("&Help")) != _menus.end()) {
+            menuBar()->addMenu(_menus[tr("&Help")]);
+        }
     }
 
     return res;
