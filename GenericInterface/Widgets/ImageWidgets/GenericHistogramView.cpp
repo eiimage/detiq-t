@@ -86,10 +86,9 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
             }
 
             QVector<QwtIntervalSample> samples;
-            foreach(int key, cumulativeValues.keys()) {
-                 QwtInterval interval(key, key + 1, QwtInterval::ExcludeMaximum);
-                 QwtIntervalSample sample(cumulativeValues[key], interval);
-                 samples << sample;
+            for(int i = qFloor(image->min()); i <= qFloor(image->max()); ++i) {
+                QwtIntervalSample sample(cumulativeValues.value(i, 0), i, i + 1);
+                samples << sample;
             }
 
             graphicalHisto->setData(new QwtIntervalSeriesData(samples));
