@@ -67,7 +67,7 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
 
     init(image->getNbChannels());
     // Here we have to fix min and max for the current diagram
-    _qwtPlot->setAxisScale(QwtPlot::xBottom, qFloor(image->min()), qCeil(image->max()));
+    _qwtPlot->setAxisAutoScale(QwtPlot::xBottom);
 
     for(unsigned int channel = 0; channel < _graphicalHistos.size(); ++channel) {
         GraphicalHistogram* graphicalHisto = _graphicalHistos[channel];
@@ -99,7 +99,7 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
     }
 
     // Store the origin, to apply on indexes passed when cursor moves on histogram or click on it
-    _originValue = image->min();
+    _originValue = qFloor(image->min());
 }
 
 GenericHistogramView::~GenericHistogramView()
@@ -251,7 +251,7 @@ void GenericHistogramView::showItem(QVariant itemInfo, bool visible, int) const
 std::vector<int> GenericHistogramView::getValues(int index) const {
     std::vector<int> values;
 
-    uint dataIndex = index - _originValue + 1;
+    uint dataIndex = index - _originValue;
     for(unsigned int i = 0; i < _graphicalHistos.size(); ++i) {
         const QwtSeriesData<QwtIntervalSample> *data = _graphicalHistos[i]->data();
         if(dataIndex < data->size()) {
