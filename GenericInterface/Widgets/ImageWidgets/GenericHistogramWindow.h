@@ -56,9 +56,9 @@ namespace genericinterface
         QString formatValues(std::vector<int> values) const;
         
     public slots:
-        void showHoveredValue(unsigned int index, std::vector<int> values) const;
-        void showLeftClickedValue(unsigned int index, std::vector<int> values) const;
-        void showRightClickedValue(unsigned int index, std::vector<int> values) const;
+        void showHoveredValue(int index, std::vector<int> values) const;
+        void showLeftClickedValue(int index, std::vector<int> values) const;
+        void showRightClickedValue(int index, std::vector<int> values) const;
         void activated();
     signals:
         /*!

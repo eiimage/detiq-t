@@ -55,6 +55,9 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
             graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
         }
     }
+
+    // The origin of the histogram will be 0 on the x axis
+    _originValue = 0;
 }
 
 GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
@@ -94,6 +97,9 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
             graphicalHisto->setData(new QwtIntervalSeriesData(samples));
         }
     }
+
+    // Store the origin, to apply on indexes passed when cursor moves on histogram or click on it
+    _originValue = image->min();
 }
 
 GenericHistogramView::~GenericHistogramView()
@@ -242,12 +248,14 @@ void GenericHistogramView::showItem(QVariant itemInfo, bool visible, int) const
     }
 }
 
-std::vector<int> GenericHistogramView::getValues(unsigned int index) const {
+std::vector<int> GenericHistogramView::getValues(int index) const {
     std::vector<int> values;
-    for(unsigned int i =0; i < _graphicalHistos.size(); ++i) {
+
+    uint dataIndex = index - _originValue + 1;
+    for(unsigned int i = 0; i < _graphicalHistos.size(); ++i) {
         const QwtSeriesData<QwtIntervalSample> *data = _graphicalHistos[i]->data();
-        if(index < data->size()) {
-            values.push_back(static_cast<int>(data->sample(index).value));
+        if(dataIndex < data->size()) {
+            values.push_back(static_cast<int>(data->sample(dataIndex).value));
         }
     }
     return values;
@@ -255,8 +263,7 @@ std::vector<int> GenericHistogramView::getValues(unsigned int index) const {
 
 void GenericHistogramView::leftClick(const QPointF& pos) const
 {
-    if(pos.x() < 0) return;
-    unsigned int index = static_cast<unsigned int>(pos.toPoint().x());
+    int index = qFloor(pos.x());
     std::vector<int> values = getValues(index);
     if(values.size() == _graphicalHistos.size()) {
         emit(leftClickedValue(index, values));
@@ -265,8 +272,7 @@ void GenericHistogramView::leftClick(const QPointF& pos) const
 
 void GenericHistogramView::rightClick(const QPointF& pos) const
 {
-    if(pos.x() < 0) return;
-    unsigned int index = static_cast<unsigned int>(pos.toPoint().x());
+    int index = qFloor(pos.x());
     std::vector<int> values = getValues(index);
     if(values.size() == _graphicalHistos.size()) {
         emit(rightClickedValue(index, values));
@@ -275,9 +281,9 @@ void GenericHistogramView::rightClick(const QPointF& pos) const
 
 void GenericHistogramView::move(const QPointF& pos) const
 {
-    if(pos.x() < 0) return;
-    unsigned int index = static_cast<unsigned int>(pos.toPoint().x());
+    int index = qFloor(pos.x());
     std::vector<int> values = getValues(index);
+
     if(values.size() == _graphicalHistos.size()) {
         emit(hoveredValue(index, values));
     }

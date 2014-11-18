@@ -46,9 +46,9 @@ GenericHistogramWindow::GenericHistogramWindow(GenericHistogramView* view) : _vi
     layout->addWidget(_statusBar);
     this->setLayout(layout);
 
-    connect(_view, SIGNAL(leftClickedValue(unsigned int, std::vector<int>)), this, SLOT(showLeftClickedValue(unsigned int, std::vector<int>)));
-    connect(_view, SIGNAL(rightClickedValue(unsigned int, std::vector<int>)), this, SLOT(showRightClickedValue(unsigned int, std::vector<int>)));
-    connect(_view, SIGNAL(hoveredValue(unsigned int, std::vector<int>)), this, SLOT(showHoveredValue(unsigned int, std::vector<int>)));
+    connect(_view, SIGNAL(leftClickedValue(int, std::vector<int>)), this, SLOT(showLeftClickedValue(int, std::vector<int>)));
+    connect(_view, SIGNAL(rightClickedValue(int, std::vector<int>)), this, SLOT(showRightClickedValue(int, std::vector<int>)));
+    connect(_view, SIGNAL(hoveredValue(int, std::vector<int>)), this, SLOT(showHoveredValue(int, std::vector<int>)));
 }
 
 GenericHistogramWindow::~GenericHistogramWindow()
@@ -114,20 +114,17 @@ void GenericHistogramWindow::initStatusBar()
     _statusBar->addWidget(widget);
 }
 
-void GenericHistogramWindow::showHoveredValue(unsigned int index, std::vector<int> values) const
+void GenericHistogramWindow::showHoveredValue(int index, std::vector<int> values) const
 {
 	_lHoveredValue->setText(tr("Hovered") + QString(" : %1\t").arg(index) + formatValues(values));
 }
 
-void GenericHistogramWindow::showLeftClickedValue(unsigned int index, std::vector<int> values) const
+void GenericHistogramWindow::showLeftClickedValue(int index, std::vector<int> values) const
 {
-	std::ostringstream oss;
-    oss << index;
-    std::string xs = oss.str();
 	_lSelectedValue1->setText(tr("Value 1") + QString(" : %1\t").arg(index) + formatValues(values));
 }
 
-void GenericHistogramWindow::showRightClickedValue(unsigned int index, std::vector<int> values) const
+void GenericHistogramWindow::showRightClickedValue(int index, std::vector<int> values) const
 {
 	_lSelectedValue2->setText(tr("Value 2") + QString(" : %1\t").arg(index) + formatValues(values));
 }
@@ -142,10 +139,10 @@ QString GenericHistogramWindow::formatValues(std::vector<int> values) const
         case 3 : res = tr("R: %1, G: %2, B: %3"); break;
         default: res = tr("R: %1, G: %2, B: %3, A: %4");
     }
-    
+
     for(unsigned int i = 0; i<values.size() && i<4; ++i) {
         res = res.arg(values[i]);
     }
-  
+
 	return res;
 }

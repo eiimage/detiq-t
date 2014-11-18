@@ -95,21 +95,21 @@ signals:
      *
      * \param value Value selected
      */
-    void leftClickedValue(unsigned int index, std::vector<int> values) const;
+    void leftClickedValue(int index, std::vector<int> values) const;
 
     /*!
      * \brief Signal emits when the mouse right button is clicked
      *
      * \param value Value selected
      */
-    void rightClickedValue(unsigned int index, std::vector<int> values) const;
+    void rightClickedValue(int index, std::vector<int> values) const;
 
     /*!
      * \brief Signal emits when the mouse move over the histogram
      *
      * \param value Value hovered
      */
-    void hoveredValue(unsigned int index, std::vector<int> values) const;
+    void hoveredValue(int index, std::vector<int> values) const;
     
     void updateApplicationArea(imagein::Rectangle rect) const;
 
@@ -134,12 +134,15 @@ protected:
     HistogramPicker* _rightPicker;
     std::vector<GraphicalHistogram*> _graphicalHistos;
     unsigned int nChannel;
-    std::vector<int> getValues(unsigned int index) const;
+    std::vector<int> getValues(int index) const;
 
 private:
     bool _projection;
     bool _cumulated;
     void init(uint nbChannels);
+    // This is the origin value for the x axis. It is 0 by default on classical images,
+    // but can be negative if the input image has negative values
+    int _originValue;
 };
 }
 
