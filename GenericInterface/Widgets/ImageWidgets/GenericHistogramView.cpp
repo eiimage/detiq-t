@@ -131,14 +131,14 @@ void GenericHistogramView::init(uint nbChannels)
     _principalPicker->setTrackerPen(QColor(Qt::black));
     _principalPicker->setRubberBandPen(QColor(Qt::yellow));
 
-    _leftPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
+    _leftPicker = new HistogramPicker(QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
     _leftPicker->setStateMachine(new QwtPickerDragPointMachine());
-    _leftPicker->setRubberBand(QwtPlotPicker::VLineRubberBand);
+    _leftPicker->setRubberBand(QwtPlotPicker::CrossRubberBand);
     _leftPicker->setRubberBandPen(QColor(Qt::yellow));
 
-    _rightPicker = new HistogramPicker(QwtPlotPicker::VLineRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
+    _rightPicker = new HistogramPicker(QwtPlotPicker::CrossRubberBand, QwtPicker::ActiveOnly, _qwtPlot->canvas());
     _rightPicker->setStateMachine(new QwtPickerDragPointMachine());
-    _rightPicker->setRubberBand(QwtPlotPicker::VLineRubberBand);
+    _rightPicker->setRubberBand(QwtPlotPicker::CrossRubberBand);
     _rightPicker->setRubberBandPen(QColor(Qt::yellow));
     _rightPicker->setMousePattern(QwtPicker::MouseSelect1, Qt::RightButton);
 
