@@ -6,30 +6,12 @@ include_directories(../ImageIn)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
-find_package(JPEG)
-if(JPEG_FOUND)
-	include_directories(${JPEG_INCLUDE_DIRS})
-else()
-	message(FATAL_ERROR "Cannot find JPEG library. Please add the JPEG library directory to CMAKE_PREFIX_PATH.")
-endif()
-
-find_package(PNG)
-if(PNG_FOUND)
-	message(STATUS "PNG library version ${PNG_VERSION_STRING}")
-	include_directories(${PNG_INCLUDE_DIRS})
-else()
-	message(FATAL_ERROR "Cannot find PNG library. Please add the PNG library directory to CMAKE_PREFIX_PATH.")
-endif()
-
 find_package(Qwt 6.0 REQUIRED)
 if(QWT_FOUND)
-	message(STATUS "Qwt library version ${QWT_VERSION_STRING}")
 	include_directories(${QWT_INCLUDE_DIRS})
 else()
 	message(FATAL_ERROR "Cannot find Qwt library. Please add the Qwt library directory to CMAKE_PREFIX_PATH.")
 endif()
-
-find_package(Threads REQUIRED)
 
 # Find the Qt libraries
 find_package(Qt5Core REQUIRED)
@@ -136,9 +118,6 @@ target_link_libraries(GenericInterface
 	Qt5::Core
 	Qt5::Widgets
 	Qt5::Gui
-	${JPEG_LIB}
-	${PNG_LIB}
-	${CMAKE_THREAD_LIBS_INIT}
 	${QWT_LIBRARY}
 	${QWT_LIBRARIES}
 )

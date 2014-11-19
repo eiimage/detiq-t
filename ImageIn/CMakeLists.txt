@@ -3,14 +3,13 @@ cmake_minimum_required(VERSION 2.8.11)
 
 find_package(JPEG)
 if(JPEG_FOUND)
-	include_directories(${JPEG_INCLUDE_DIRS})
+	include_directories(${JPEG_INCLUDE_DIR})
 else()
 	message(FATAL_ERROR "Cannot find JPEG library. Please add the JPEG library directory to CMAKE_PREFIX_PATH.")
 endif()
 
 find_package(PNG)
 if(PNG_FOUND)
-	message(STATUS "PNG library version ${PNG_VERSION_STRING}")
 	include_directories(${PNG_INCLUDE_DIRS})
 else()
 	message(FATAL_ERROR "Cannot find PNG library. Please add the PNG library directory to CMAKE_PREFIX_PATH.")
@@ -95,12 +94,12 @@ set(ImageIn_SOURCES
 )
 
 add_library(ImageIn STATIC ${ImageIn_SOURCES})
-target_link_libraries(ImageIn ${JPEG_LIB} ${PNG_LIB} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(ImageIn ${JPEG_LIBRARY} ${PNG_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(ImageIn_main main.cpp)
-target_link_libraries(ImageIn_main ImageIn ${JPEG_LIB} ${PNG_LIB} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(ImageIn_main ImageIn)
 
 add_executable(ImageIn_test test_image.cpp)
-target_link_libraries(ImageIn_test ImageIn ${JPEG_LIB} ${PNG_LIB} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(ImageIn_test ImageIn)
 # Needed to execute the tester
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test)
