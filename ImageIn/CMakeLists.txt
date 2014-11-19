@@ -1,11 +1,19 @@
 project(ImageIn C CXX)
 cmake_minimum_required(VERSION 2.8.11)
 
-find_library(JPEG_LIB NAMES jpeg)
-find_library(PNG_LIB NAMES png)
+find_package(JPEG)
+if(JPEG_FOUND)
+	include_directories(${JPEG_INCLUDE_DIRS})
+else()
+	message(FATAL_ERROR "Cannot find JPEG library. Please add the JPEG library directory to CMAKE_PREFIX_PATH.")
+endif()
 
-if(NOT (JPEG_LIB AND PNG_LIB))
-	message(FATAL_ERROR "JPEG and PNG librarys hasn't been found. You have to install them before running the compilation of this software")
+find_package(PNG)
+if(PNG_FOUND)
+	message(STATUS "PNG library version ${PNG_VERSION_STRING}")
+	include_directories(${PNG_INCLUDE_DIRS})
+else()
+	message(FATAL_ERROR "Cannot find PNG library. Please add the PNG library directory to CMAKE_PREFIX_PATH.")
 endif()
 
 find_package(Threads REQUIRED)
