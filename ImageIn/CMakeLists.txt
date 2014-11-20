@@ -17,8 +17,11 @@ endif()
 
 find_package(Threads REQUIRED)
 
-if(UNIX OR CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+# On Unix platforms, ImageIn library have to be compiled with Positional Independent code flag.
+# This ensure the shared libraries built in 'plugins' folder will link with ImageIn
+# This flag is useless on Windows (MSVC or MinGW compilers)
+if(UNIX)
+	set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -fPIC)
 endif()
 
 set(ImageIn_SOURCES
