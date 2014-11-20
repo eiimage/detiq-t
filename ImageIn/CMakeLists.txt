@@ -17,6 +17,10 @@ endif()
 
 find_package(Threads REQUIRED)
 
+if(UNIX OR CMAKE_COMPILER_IS_GNUCXX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
 set(ImageIn_SOURCES
 	Algorithm.h
 	Algorithm.tpp
