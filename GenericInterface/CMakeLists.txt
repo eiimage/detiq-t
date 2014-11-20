@@ -106,11 +106,15 @@ endif()
 qt5_add_resources(RCC_FILES "res.qrc")
 
 set(TS_FILES genericinterface_en.ts genericinterface_fr.ts)
-# Uncommento only 1 of the 2 folowing commands, depending on your needs
+# Uncomment only 1 of the 2 folowing commands, depending on your needs
 # -1- Use current translations files
 qt5_add_translation(QM_FILES ${TS_FILES})
 # -2- Update translations files with changes from c++ sources
 # qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES})
+
+foreach(__FILE ${QM_FILES})
+	file(COPY ${__FILE} DESTINATION ${DEPLOY_OUTPUT_DIRECTORY})
+endforeach()
 
 add_library(GenericInterface STATIC ${GenInterface_SOURCES} ${QM_FILES} ${RCC_FILES} ${TS_FILES})
 target_link_libraries(GenericInterface
