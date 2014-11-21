@@ -112,10 +112,6 @@ qt5_add_translation(QM_FILES ${TS_FILES})
 # -2- Update translations files with changes from c++ sources
 # qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES})
 
-foreach(__FILE ${QM_FILES})
-	file(COPY ${__FILE} DESTINATION ${DEPLOY_OUTPUT_DIRECTORY})
-endforeach()
-
 add_library(GenericInterface STATIC ${GenInterface_SOURCES} ${QM_FILES} ${RCC_FILES} ${TS_FILES})
 target_link_libraries(GenericInterface
 	ImageIn
@@ -125,3 +121,12 @@ target_link_libraries(GenericInterface
 	${QWT_LIBRARY}
 	${QWT_LIBRARIES}
 )
+
+add_custom_command(TARGET GenericInterface POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E make_directory ${DEPLOY_OUTPUT_DIRECTORY}/lang
+	COMMENT "Create directory ${DEPLOY_OUTPUT_DIRECTORY}/lang")
+foreach(__FILE ${QM_FILES})
+	add_custom_command(TARGET GenericInterface POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy ${__FILE} ${DEPLOY_OUTPUT_DIRECTORY}/lang
+		COMMENT "Copy ${__FILE} to ${DEPLOY_OUTPUT_DIRECTORY}/lang")
+endforeach()
