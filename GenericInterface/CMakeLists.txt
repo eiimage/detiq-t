@@ -118,6 +118,10 @@ qt5_add_translation(QM_FILES ${TS_FILES})
 # -2- Update translations files with changes from c++ sources
 # qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES})
 
+if(NOT WIN32)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
 add_library(GenericInterface OBJECT ${GenInterface_SOURCES} ${RCC_FILES})
 
 # This target is defined for convenience only, and shouldn't be used to link with another target.

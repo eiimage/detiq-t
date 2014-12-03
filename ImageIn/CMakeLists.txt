@@ -102,6 +102,10 @@ set(CXX_TEMPLATES
 	Algorithm/Dithering.tpp
 )
 
+if(NOT WIN32)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
 add_library(ImageIn OBJECT ${ImageIn_SOURCES})
 
 add_executable(ImageIn_main main.cpp $<TARGET_OBJECTS:ImageIn>)
