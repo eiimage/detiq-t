@@ -26,17 +26,13 @@ endif()
 
 set(ImageIn_SOURCES
 	Algorithm.h
-	Algorithm.tpp
 	Algorithm/Average.h
 	Algorithm/Binarization.h
-	Algorithm/Binarization.tpp
 	Algorithm/BitPlane.h
 	Algorithm/ComponentLabeling.h
-	Algorithm/ComponentLabeling.tpp
 	Algorithm/Difference.h
 	Algorithm/Distance.h
 	Algorithm/Dithering.h
-	Algorithm/Dithering.tpp
 	Algorithm/EdgeColoration.h
 	Algorithm/Filter.cpp
 	Algorithm/Filter.h
@@ -47,9 +43,7 @@ set(ImageIn_SOURCES
 	Algorithm/MorphoMat.cpp
 	Algorithm/MorphoMat.h
 	Algorithm/Otsu.h
-	Algorithm/Otsu.tpp
 	Algorithm/RgbToGrayscale.h
-	Algorithm/RgbToGrayscale.tpp
 	AlgorithmCollection.h
 	AlgorithmException.h
 	Array.h
@@ -59,22 +53,17 @@ set(ImageIn_SOURCES
 	BmpImage.cpp
 	BmpImage.h
 	Converter.h
-	Converter.tpp
 	EasyBMP.cpp
 	EasyBMP.h
 	EasyBMP_BMP.h
 	EasyBMP_DataStructures.h
 	EasyBMP_VariousBMPutilities.h
 	GenericAlgorithm.h
-	GenericAlgorithm.tpp
 	Graph.cpp
 	Graph.h
 	GrayscaleImage.h
-	GrayscaleImage.tpp
 	Histogram.h
-	Histogram.tpp
 	Image.h
-	Image.tpp
 	ImageFile.h
 	ImageFileAbsFactory.cpp
 	ImageFileAbsFactory.h
@@ -88,25 +77,37 @@ set(ImageIn_SOURCES
 	PngImage.cpp
 	PngImage.h
 	ProjectionHistogram.h
-	ProjectionHistogram.tpp
 	pstdint.h
 	Rectangle.h
 	RgbImage.h
-	RgbImage.tpp
 	SpecificAlgorithm.h
-	SpecificAlgorithm.tpp
 	UnknownFormatException.h
 	VffImage.cpp
 	VffImage.h
 )
+set(CXX_TEMPLATES
+	SpecificAlgorithm.tpp
+	RgbImage.tpp
+	ProjectionHistogram.tpp
+	Image.tpp
+	Histogram.tpp
+	GrayscaleImage.tpp
+	GenericAlgorithm.tpp
+	Converter.tpp
+	Algorithm/RgbToGrayscale.tpp
+	Algorithm/Otsu.tpp
+	Algorithm.tpp
+	Algorithm/Binarization.tpp
+	Algorithm/ComponentLabeling.tpp
+	Algorithm/Dithering.tpp
+)
 
-add_library(ImageIn STATIC ${ImageIn_SOURCES})
-target_link_libraries(ImageIn ${JPEG_LIBRARY} ${PNG_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+add_library(ImageIn OBJECT ${ImageIn_SOURCES})
 
-add_executable(ImageIn_main main.cpp)
-target_link_libraries(ImageIn_main ImageIn)
+add_executable(ImageIn_main main.cpp $<TARGET_OBJECTS:ImageIn>)
+target_link_libraries(ImageIn_main ${JPEG_LIBRARY} ${PNG_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(ImageIn_test test_image.cpp)
-target_link_libraries(ImageIn_test ImageIn)
+add_executable(ImageIn_test test_image.cpp $<TARGET_OBJECTS:ImageIn>)
+target_link_libraries(ImageIn_test ${JPEG_LIBRARY} ${PNG_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 # Needed to execute the tester
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test)

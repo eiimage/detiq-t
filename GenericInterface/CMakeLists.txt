@@ -19,6 +19,12 @@ find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
 
+include_directories(
+	${Qt5Core_INCLUDE_DIRS}
+	${Qt5Widgets_INCLUDE_DIRS}
+	${Qt5Gui_INCLUDE_DIRS}
+)
+
 set(GenInterface_SOURCES
 	Exceptions.h
 	GenericInterface.cpp
@@ -112,21 +118,16 @@ qt5_add_translation(QM_FILES ${TS_FILES})
 # -2- Update translations files with changes from c++ sources
 # qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES})
 
-add_library(GenericInterface STATIC ${GenInterface_SOURCES} ${QM_FILES} ${RCC_FILES} ${TS_FILES})
-target_link_libraries(GenericInterface
-	ImageIn
-	Qt5::Core
-	Qt5::Widgets
-	Qt5::Gui
-	${QWT_LIBRARY}
-	${QWT_LIBRARIES}
-)
+add_library(GenericInterface OBJECT ${GenInterface_SOURCES} ${RCC_FILES})
 
-add_custom_command(TARGET GenericInterface POST_BUILD
+# This target is defined for convenience only, and shouldn't be used to link with another target.
+add_library(static_GenericInterface STATIC $<TARGET_OBJECTS:GenericInterface> ${TS_FILES} ${QM_FILES})
+
+add_custom_command(TARGET static_GenericInterface POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E make_directory ${DEPLOY_OUTPUT_DIRECTORY}/lang
 	COMMENT "Create directory ${DEPLOY_OUTPUT_DIRECTORY}/lang")
 foreach(__FILE ${QM_FILES})
-	add_custom_command(TARGET GenericInterface POST_BUILD
+	add_custom_command(TARGET static_GenericInterface POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${__FILE} ${DEPLOY_OUTPUT_DIRECTORY}/lang
 		COMMENT "Copy ${__FILE} to ${DEPLOY_OUTPUT_DIRECTORY}/lang")
 endforeach()
