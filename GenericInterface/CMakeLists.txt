@@ -102,7 +102,7 @@ set(GenInterface_SOURCES
 	Widgets/NavBar/NodeListModel.h
 )
 
-if(NOT ${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
+if(NOT CMAKE_BUILD_TYPE MATCHES Debug)
 	# When the project is built in Release mode (or RelWithDebInfo, MinSizeRel, or nothing), we 'touch' AboutDialog.cpp.
 	# With this trick, the file will always be built, and the constants __DATE__ and __TIME__ it contains will be replaced
 	# by the real compilation date and time.
