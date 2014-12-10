@@ -25,10 +25,11 @@
 
 #include "../Service.h"
 
+#define QSETTINGS_LANGUAGE_PREFERENCE "default_language"
+
 namespace genericinterface {
     class GenericInterface;
 }
-
 
 namespace genericinterface
 {
@@ -59,6 +60,8 @@ namespace genericinterface
         private slots:
             void chooseFile();
             void openRecentFile();
+
+            void changeLanguage();
 
         signals:
             void fileChosen(const QString& path);

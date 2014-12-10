@@ -33,15 +33,34 @@ void FileService::display (GenericInterface* gi)
     _gi = gi;
     gi->toolBar("Tools")->setIconSize(QSize(16,16));
     
-    _open = gi->menu(tr("&File"))->addAction(tr("&Open"));
+    QMenu *fileMenu = gi->menu(tr("&File"));
+    _open = fileMenu->addAction(tr("&Open"));
     _open->setIcon(gi->style()->standardIcon(QStyle::SP_DialogOpenButton));
     _open->setShortcut(QKeySequence::Open);
     gi->toolBar(tr("Tools"))->addAction(_open);
-    _saveAs = gi->menu(tr("&File"))->addAction(tr("Save &As"));
+
+    _saveAs = fileMenu->addAction(tr("Save &As"));
     _saveAs->setIcon(gi->style()->standardIcon(QStyle::SP_DialogSaveButton));
     _saveAs->setShortcut(QKeySequence::Save);
     _saveAs->setEnabled(false);
     gi->toolBar(tr("Tools"))->addAction(_saveAs);
+
+    // Get the list of all translations in the 'lang' folder
+    QDir langDir(qApp->applicationDirPath() + QDir::separator() + "lang");
+    QFileInfoList qmFiles = langDir.entryInfoList(QStringList() << "*.qm", QDir::Files);
+
+    // Compute a list of all available translations
+    QSet<QString> availableLangs;
+    foreach(QFileInfo qm, qmFiles) {
+        availableLangs << qm.baseName().split('_').last();
+    }
+
+    QMenu * langMenu = fileMenu->addMenu(tr("Language"));
+    foreach (QString lang, availableLangs) {
+        QAction * action = langMenu->addAction("lang_" + lang);
+        action->setData(lang);
+        QObject::connect(action, SIGNAL(triggered()), this, SLOT(changeLanguage()));
+    }
 
     separatorAct = gi->menu(tr("&File"))->addSeparator();
     for (int i = 0; i < MaxRecentFiles; ++i) {
@@ -185,6 +204,15 @@ void FileService::openRecentFile()
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
         loadFiles(QStringList(action->data().toString()));
+    }
+}
+
+void FileService::changeLanguage()
+{
+    QAction* action = qobject_cast<QAction*>(sender());
+    if(action) {
+        QSettings settings;
+        settings.setValue(QSETTINGS_LANGUAGE_PREFERENCE, action->data());
     }
 }
 
