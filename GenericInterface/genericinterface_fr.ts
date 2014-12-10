@@ -2,6 +2,29 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR">
 <context>
+    <name>AboutDialog</name>
+    <message>
+        <source>About</source>
+        <translation>À propos</translation>
+    </message>
+    <message>
+        <source>This software has been developed at Insa.</source>
+        <translation>Ce logiciel a été développé à l&apos;Insa de Rennes.</translation>
+    </message>
+    <message>
+        <source>Main authors:</source>
+        <translation>Auteurs principaux :</translation>
+    </message>
+    <message>
+        <source>Contributors:</source>
+        <translation>Contributeurs :</translation>
+    </message>
+    <message>
+        <source>Compiled on %1 at %2</source>
+        <translation>Compilé le %1 à %2</translation>
+    </message>
+</context>
+<context>
     <name>genericinterface::AlgorithmService</name>
     <message>
         <source>Algorithm</source>
@@ -193,6 +216,10 @@
         <source>&amp;Exit</source>
         <translation>&amp;Quitter</translation>
     </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;Aide</translation>
+    </message>
 </context>
 <context>
     <name>genericinterface::HistogramView</name>
@@ -200,12 +227,20 @@
         <source>Histogram</source>
         <translation>Histogramme</translation>
     </message>
+    <message>
+        <source>Cumulated histogram</source>
+        <translation>Histogramme cumulé</translation>
+    </message>
 </context>
 <context>
     <name>genericinterface::HistogramWindow</name>
     <message>
         <source>Histogram</source>
         <translation>Histogramme</translation>
+    </message>
+    <message>
+        <source>Cumulated histogram</source>
+        <translation>Histogramme cumulé</translation>
     </message>
 </context>
 <context>
@@ -421,6 +456,10 @@
     <message>
         <source>Convert to binary</source>
         <translation>Convertir en binaire</translation>
+    </message>
+    <message>
+        <source>Cumulated histogram</source>
+        <translation>Histogramme cumulé</translation>
     </message>
 </context>
 <context>
