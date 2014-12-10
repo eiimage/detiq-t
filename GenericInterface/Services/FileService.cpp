@@ -57,7 +57,8 @@ void FileService::display (GenericInterface* gi)
 
     QMenu * langMenu = fileMenu->addMenu(tr("Language"));
     foreach (QString lang, availableLangs) {
-        QAction * action = langMenu->addAction("lang_" + lang);
+        QLocale translation(lang);
+        QAction * action = langMenu->addAction(QLocale::languageToString(translation.language()));
         action->setData(lang);
         QObject::connect(action, SIGNAL(triggered()), this, SLOT(changeLanguage()));
     }
