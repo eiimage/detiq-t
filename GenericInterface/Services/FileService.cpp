@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QSettings>
 
+#include <QTranslator>
 #include <QProcess>
 
 using namespace genericinterface;
@@ -53,15 +54,28 @@ void FileService::display (GenericInterface* gi)
 
     // Compute a list of all available translations
     QSet<QString> availableLangs;
+    QString currentLanguage;
     foreach(QFileInfo qm, qmFiles) {
-        availableLangs << qm.baseName().split('_').last();
+        QString lang = qm.baseName().split('_').last();
+        availableLangs << lang;
+
+        QTranslator translator;
+        translator.load(qm.canonicalFilePath());
+        if(translator.translate("genericinterface::FileService","&Open") == tr("&Open")) {
+            currentLanguage = lang;
+        }
     }
 
     QMenu * langMenu = fileMenu->addMenu(tr("Language"));
     foreach (QString lang, availableLangs) {
         QLocale translation(lang);
-        QAction * action = langMenu->addAction(QLocale::languageToString(translation.language()));
+        QAction * action = langMenu->addAction(translation.nativeLanguageName());
+        action->setCheckable(true);
         action->setData(lang);
+
+        if(lang == currentLanguage) {
+            action->setChecked(true);
+        }
         QObject::connect(action, SIGNAL(triggered()), this, SLOT(changeLanguage()));
     }
 
