@@ -26,6 +26,8 @@
 #include <QDebug>
 #include <QSettings>
 
+#include <QProcess>
+
 using namespace genericinterface;
 
 void FileService::display (GenericInterface* gi)
@@ -214,6 +216,17 @@ void FileService::changeLanguage()
     if(action) {
         QSettings settings;
         settings.setValue(QSETTINGS_LANGUAGE_PREFERENCE, action->data());
+        QMessageBox::StandardButton result =
+            QMessageBox::question(_gi, tr("Change current language"),
+            tr("The current language will be modified at next startup. Would you like to restart now?"));
+
+        if(result == QMessageBox::Yes) {
+            QStringList args = qApp->arguments();
+            args.removeFirst();
+
+            qApp->quit();
+            QProcess::startDetached(QApplication::applicationFilePath(), args);
+        }
     }
 }
 
