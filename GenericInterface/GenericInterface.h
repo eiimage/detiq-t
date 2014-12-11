@@ -61,9 +61,10 @@ namespace genericinterface
   class GenericInterface : public QMainWindow
   {
     Q_OBJECT
-	public:
-	
-	enum { FILE_SERVICE = 0, WINDOW_SERVICE, UTILITY_SERVICE }; 
+  public:
+
+    enum { FILE_SERVICE = 0, WINDOW_SERVICE, UTILITY_SERVICE };
+    const static QString MAIN_TOOLBAR;
 
     GenericInterface(QString name = tr(""), Qt::DockWidgetArea navPos = Qt::LeftDockWidgetArea);
     virtual ~GenericInterface();

@@ -55,7 +55,6 @@ namespace genericinterface
     protected:
         GenericInterface* _gi;
         WindowService* _ws;
-        QToolBar* _toolBar;
     };
 }
 

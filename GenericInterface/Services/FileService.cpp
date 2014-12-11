@@ -34,19 +34,19 @@ using namespace genericinterface;
 void FileService::display (GenericInterface* gi)
 {
     _gi = gi;
-    gi->toolBar("Tools")->setIconSize(QSize(16,16));
+    gi->toolBar(GenericInterface::MAIN_TOOLBAR)->setIconSize(QSize(16,16));
     
     QMenu *fileMenu = gi->menu(tr("&File"));
     _open = fileMenu->addAction(tr("&Open"));
     _open->setIcon(gi->style()->standardIcon(QStyle::SP_DialogOpenButton));
     _open->setShortcut(QKeySequence::Open);
-    gi->toolBar(tr("Tools"))->addAction(_open);
+    gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(_open);
 
     _saveAs = fileMenu->addAction(tr("Save &As"));
     _saveAs->setIcon(gi->style()->standardIcon(QStyle::SP_DialogSaveButton));
     _saveAs->setShortcut(QKeySequence::Save);
     _saveAs->setEnabled(false);
-    gi->toolBar(tr("Tools"))->addAction(_saveAs);
+    gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(_saveAs);
 
     // Get the list of all translations in the 'lang' folder
     QDir langDir(qApp->applicationDirPath() + QDir::separator() + "lang");

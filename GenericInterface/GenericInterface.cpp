@@ -25,6 +25,9 @@
 using namespace std;
 using namespace genericinterface;
 
+// Constants initialization
+const QString GenericInterface::MAIN_TOOLBAR("main_toolbar");
+
 inline void initResource_res() { Q_INIT_RESOURCE(res); }
 
 GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _nbServices(3), _running(false)

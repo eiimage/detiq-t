@@ -46,13 +46,13 @@ void WindowService::display(GenericInterface* gi)
     QAction* tile = gi->menu(tr("&Window"))->addAction(tr("&Tile windows"));
     tile->setIcon(QIcon(":/images/application-view-tile.png"));
     //tile->setShortcut(QKeySequence::Open);
-    gi->toolBar(tr("Tools"))->addAction(tile);
+    gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(tile);
 	QObject::connect(tile, SIGNAL(triggered()), _mdi, SLOT(tileSubWindows()));
     
     QAction* cascade = gi->menu(tr("&Window"))->addAction(tr("&Cascade windows"));
     cascade->setIcon(QIcon(":/images/application-cascade.png"));
     //tile->setShortcut(QKeySequence::Open);
-    gi->toolBar(tr("Tools"))->addAction(cascade);
+    gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(cascade);
 	QObject::connect(cascade, SIGNAL(triggered()), _mdi, SLOT(cascadeSubWindows()));
 }
 
