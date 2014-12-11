@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -28,7 +28,7 @@
     <name>genericinterface::AlgorithmService</name>
     <message>
         <source>Algorithm</source>
-        <translation>Algorithme</translation>
+        <translation type="vanished">Algorithme</translation>
     </message>
 </context>
 <context>
@@ -70,7 +70,7 @@
     </message>
     <message>
         <source>Tools</source>
-        <translation>Outils</translation>
+        <translation type="vanished">Outils</translation>
     </message>
     <message>
         <source>Save &amp;As</source>
@@ -115,6 +115,18 @@
     <message>
         <source>Supported image (*.png *.bmp *.jpg *.jpeg *.vff);; PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</source>
         <translation>Images supportées (*.png *.bmp *.jpg *.jpeg *.vff);; Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG (*.jpg *.jpeg);; VFF image (*.vff)</translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation>Langue</translation>
+    </message>
+    <message>
+        <source>Change current language</source>
+        <translation>Changer de langue</translation>
+    </message>
+    <message>
+        <source>The current language will be modified at next startup. Would you like to restart now?</source>
+        <translation>La langue sera changée au prochain démarrage. Voulez-vous redémarrer maintenant ?</translation>
     </message>
 </context>
 <context>
@@ -219,6 +231,10 @@
     <message>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
+    </message>
+    <message>
+        <source>&amp;About</source>
+        <translation>&amp;À propos</translation>
     </message>
 </context>
 <context>
@@ -379,15 +395,15 @@
     </message>
     <message>
         <source>Histogram</source>
-        <translation>Histogramme</translation>
+        <translation type="vanished">Histogramme</translation>
     </message>
     <message>
         <source>Horizontal Projection Histogram</source>
-        <translation>Histogramme de projection horizontale</translation>
+        <translation type="vanished">Histogramme de projection horizontale</translation>
     </message>
     <message>
         <source>Vertical Projection Histogram</source>
-        <translation>Histogramme de projection verticale</translation>
+        <translation type="vanished">Histogramme de projection verticale</translation>
     </message>
     <message>
         <source>Pixels Grid</source>
@@ -501,7 +517,7 @@
     </message>
     <message>
         <source>Tools</source>
-        <translation>Outils</translation>
+        <translation type="vanished">Outils</translation>
     </message>
     <message>
         <source>&amp;Cascade windows</source>
@@ -529,7 +545,7 @@
     </message>
     <message>
         <source>Apply mask to </source>
-        <translation>Appliquer un masque à</translation>
+        <translation type="vanished">Appliquer un masque à</translation>
     </message>
 </context>
 </TS>

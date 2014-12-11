@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en_US">
+<TS version="2.1" language="en_US">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -32,9 +32,8 @@
 <context>
     <name>genericinterface::AlgorithmService</name>
     <message>
-        <location filename="Services/AlgorithmService.cpp" line="37"/>
         <source>Algorithm</source>
-        <translation>Algorithm</translation>
+        <translation type="vanished">Algorithm</translation>
     </message>
 </context>
 <context>
@@ -76,70 +75,83 @@
 <context>
     <name>genericinterface::FileService</name>
     <message>
-        <location filename="Services/FileService.cpp" line="36"/>
-        <location filename="Services/FileService.cpp" line="40"/>
-        <location filename="Services/FileService.cpp" line="46"/>
-        <location filename="Services/FileService.cpp" line="51"/>
+        <location filename="Services/FileService.cpp" line="39"/>
+        <location filename="Services/FileService.cpp" line="82"/>
+        <location filename="Services/FileService.cpp" line="87"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="36"/>
+        <location filename="Services/FileService.cpp" line="40"/>
+        <location filename="Services/FileService.cpp" line="64"/>
         <source>&amp;Open</source>
         <translation>&amp;Open</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="39"/>
-        <location filename="Services/FileService.cpp" line="44"/>
         <source>Tools</source>
-        <translation>Tools</translation>
+        <translation type="vanished">Tools</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="40"/>
+        <location filename="Services/FileService.cpp" line="45"/>
         <source>Save &amp;As</source>
         <translation>Save &amp;As</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="106"/>
+        <location filename="Services/FileService.cpp" line="69"/>
+        <source>Language</source>
+        <translation>Language</translation>
+    </message>
+    <message>
+        <location filename="Services/FileService.cpp" line="142"/>
         <source>Bad object type</source>
         <translation>Bad object type</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="106"/>
+        <location filename="Services/FileService.cpp" line="142"/>
         <source>Only images can be saved to a file.</source>
         <translation>Only images can be saved to a file.</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="111"/>
+        <location filename="Services/FileService.cpp" line="147"/>
         <source>Unknown exception</source>
         <translation>Unknown exception</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="125"/>
+        <location filename="Services/FileService.cpp" line="161"/>
         <source>Save a file</source>
         <translation>Save a file</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="125"/>
+        <location filename="Services/FileService.cpp" line="161"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</source>
         <translation>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="179"/>
+        <location filename="Services/FileService.cpp" line="215"/>
         <source>Supported image (*.png *.bmp *.jpg *.jpeg *.vff);; PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</source>
         <translation>Supported image (*.png *.bmp *.jpg *.jpeg *.vff);; PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpg *.jpeg);; VFF image (*.vff)</translation>
+    </message>
+    <message>
+        <location filename="Services/FileService.cpp" line="234"/>
+        <source>Change current language</source>
+        <translation>Change current language</translation>
+    </message>
+    <message>
+        <location filename="Services/FileService.cpp" line="235"/>
+        <source>The current language will be modified at next startup. Would you like to restart now?</source>
+        <translation>The current language will be modified at next startup. Would you like to restart now?</translation>
     </message>
     <message>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)</source>
         <translation type="obsolete">PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="159"/>
+        <location filename="Services/FileService.cpp" line="195"/>
         <source>&amp;%1 %2</source>
         <translation>&amp;%1 %2</translation>
     </message>
     <message>
-        <location filename="Services/FileService.cpp" line="179"/>
+        <location filename="Services/FileService.cpp" line="215"/>
         <source>Open a file</source>
         <translation>Open a file</translation>
     </message>
@@ -244,42 +256,47 @@
 <context>
     <name>genericinterface::GenericInterface</name>
     <message>
-        <location filename="GenericInterface.cpp" line="53"/>
-        <location filename="GenericInterface.cpp" line="233"/>
-        <location filename="GenericInterface.cpp" line="234"/>
+        <location filename="GenericInterface.cpp" line="56"/>
+        <location filename="GenericInterface.cpp" line="236"/>
+        <location filename="GenericInterface.cpp" line="237"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="85"/>
-        <location filename="GenericInterface.cpp" line="185"/>
+        <location filename="GenericInterface.cpp" line="56"/>
+        <source>&amp;About</source>
+        <translation>&amp;About</translation>
+    </message>
+    <message>
+        <location filename="GenericInterface.cpp" line="88"/>
+        <location filename="GenericInterface.cpp" line="188"/>
         <source>Interface&apos;s integrity compromised</source>
         <translation>Interface&apos;s integrity compromised</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="86"/>
+        <location filename="GenericInterface.cpp" line="89"/>
         <source>An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations.</source>
         <translation>An error occurred in the addition of a new service. The interface may not offer all the expected features. See the log file for more informations.</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="186"/>
+        <location filename="GenericInterface.cpp" line="189"/>
         <source>An error occurred in the addition of a service. The interface may not offer all the expected features. See the log file for more informations.</source>
         <translation>An error occurred in the addition of a service. The interface may not offer all the expected features. See the log file for more informations.</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="230"/>
-        <location filename="GenericInterface.cpp" line="231"/>
+        <location filename="GenericInterface.cpp" line="233"/>
+        <location filename="GenericInterface.cpp" line="234"/>
         <source>&amp;Window</source>
         <translation>&amp;Window</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="280"/>
-        <location filename="GenericInterface.cpp" line="281"/>
+        <location filename="GenericInterface.cpp" line="283"/>
+        <location filename="GenericInterface.cpp" line="284"/>
         <source>&amp;File</source>
         <translation>&amp;File</translation>
     </message>
     <message>
-        <location filename="GenericInterface.cpp" line="281"/>
+        <location filename="GenericInterface.cpp" line="284"/>
         <source>&amp;Exit</source>
         <translation>&amp;Exit</translation>
     </message>
@@ -478,15 +495,15 @@
     </message>
     <message>
         <source>Histogram</source>
-        <translation>Histogram</translation>
+        <translation type="vanished">Histogram</translation>
     </message>
     <message>
         <source>Horizontal Projection Histogram</source>
-        <translation>Horizontal Projection Histogram</translation>
+        <translation type="vanished">Horizontal Projection Histogram</translation>
     </message>
     <message>
         <source>Vertical Projection Histogram</source>
-        <translation>Vertical Projection Histogram</translation>
+        <translation type="vanished">Vertical Projection Histogram</translation>
     </message>
     <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="238"/>
@@ -628,10 +645,8 @@
         <translation>&amp;Tile windows</translation>
     </message>
     <message>
-        <location filename="Services/WindowService.cpp" line="49"/>
-        <location filename="Services/WindowService.cpp" line="55"/>
         <source>Tools</source>
-        <translation>Tools</translation>
+        <translation type="vanished">Tools</translation>
     </message>
     <message>
         <location filename="Services/WindowService.cpp" line="52"/>
@@ -651,7 +666,7 @@
     <message>
         <source>Apply mask to </source>
         <oldsource>Apply binary mask to </oldsource>
-        <translation>Apply mask to </translation>
+        <translation type="vanished">Apply mask to </translation>
     </message>
     <message>
         <location filename="Services/WindowService.cpp" line="487"/>
