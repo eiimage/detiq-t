@@ -30,13 +30,6 @@
     </message>
 </context>
 <context>
-    <name>genericinterface::AlgorithmService</name>
-    <message>
-        <source>Algorithm</source>
-        <translation type="vanished">Algorithm</translation>
-    </message>
-</context>
-<context>
     <name>genericinterface::DoubleImageWindow</name>
     <message>
         <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="174"/>
@@ -86,10 +79,6 @@
         <location filename="Services/FileService.cpp" line="64"/>
         <source>&amp;Open</source>
         <translation>&amp;Open</translation>
-    </message>
-    <message>
-        <source>Tools</source>
-        <translation type="vanished">Tools</translation>
     </message>
     <message>
         <location filename="Services/FileService.cpp" line="45"/>
@@ -142,10 +131,6 @@
         <translation>The current language will be modified at next startup. Would you like to restart now?</translation>
     </message>
     <message>
-        <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)</source>
-        <translation type="obsolete">PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)</translation>
-    </message>
-    <message>
         <location filename="Services/FileService.cpp" line="195"/>
         <source>&amp;%1 %2</source>
         <translation>&amp;%1 %2</translation>
@@ -154,10 +139,6 @@
         <location filename="Services/FileService.cpp" line="215"/>
         <source>Open a file</source>
         <translation>Open a file</translation>
-    </message>
-    <message>
-        <source>Images (*.png *.bmp *.jpg *.jpeg)</source>
-        <translation type="obsolete">Images (*.png *.bmp *.jpg *.jpeg)</translation>
     </message>
 </context>
 <context>
@@ -494,18 +475,6 @@
         <translation>Error while opening file</translation>
     </message>
     <message>
-        <source>Histogram</source>
-        <translation type="vanished">Histogram</translation>
-    </message>
-    <message>
-        <source>Horizontal Projection Histogram</source>
-        <translation type="vanished">Horizontal Projection Histogram</translation>
-    </message>
-    <message>
-        <source>Vertical Projection Histogram</source>
-        <translation type="vanished">Vertical Projection Histogram</translation>
-    </message>
-    <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="238"/>
         <source>Pixels Grid</source>
         <translation>Pixels Grid</translation>
@@ -560,10 +529,6 @@
         <translation>Which value (0..255) ?</translation>
     </message>
     <message>
-        <source>Image</source>
-        <translation type="obsolete">Image</translation>
-    </message>
-    <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="138"/>
         <source>Selected</source>
         <translation>Selected</translation>
@@ -580,22 +545,6 @@
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="153"/>
         <source>Hovered</source>
         <translation>Hovered</translation>
-    </message>
-    <message>
-        <source>Zoom</source>
-        <translation type="obsolete">Zoom</translation>
-    </message>
-    <message>
-        <source>Selection mode</source>
-        <translation type="obsolete">Selection mode</translation>
-    </message>
-    <message>
-        <source>Hand mode</source>
-        <translation type="obsolete">Hand mode</translation>
-    </message>
-    <message>
-        <source>Select all</source>
-        <translation type="obsolete">Select all</translation>
     </message>
 </context>
 <context>
@@ -645,10 +594,6 @@
         <translation>&amp;Tile windows</translation>
     </message>
     <message>
-        <source>Tools</source>
-        <translation type="vanished">Tools</translation>
-    </message>
-    <message>
         <location filename="Services/WindowService.cpp" line="52"/>
         <source>&amp;Cascade windows</source>
         <translation>&amp;Cascade windows</translation>
@@ -662,11 +607,6 @@
         <location filename="Services/WindowService.cpp" line="335"/>
         <source>You&apos;re going to close all the relative windows, are you sure you want to continue ?</source>
         <translation>You&apos;re going to close all the relative windows, are you sure you want to continue ?</translation>
-    </message>
-    <message>
-        <source>Apply mask to </source>
-        <oldsource>Apply binary mask to </oldsource>
-        <translation type="vanished">Apply mask to </translation>
     </message>
     <message>
         <location filename="Services/WindowService.cpp" line="487"/>

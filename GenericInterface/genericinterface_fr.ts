@@ -25,13 +25,6 @@
     </message>
 </context>
 <context>
-    <name>genericinterface::AlgorithmService</name>
-    <message>
-        <source>Algorithm</source>
-        <translation type="vanished">Algorithme</translation>
-    </message>
-</context>
-<context>
     <name>genericinterface::DoubleImageWindow</name>
     <message>
         <source>Pixels Grid</source>
@@ -69,10 +62,6 @@
         <translation>&amp;Ouvrir</translation>
     </message>
     <message>
-        <source>Tools</source>
-        <translation type="vanished">Outils</translation>
-    </message>
-    <message>
         <source>Save &amp;As</source>
         <translation>&amp;Enregistrer sous</translation>
     </message>
@@ -93,16 +82,8 @@
         <translation>Sauvegarder dans un fichier</translation>
     </message>
     <message>
-        <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg)</source>
-        <translation type="obsolete">Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG(*.jpg)</translation>
-    </message>
-    <message>
         <source>Open a file</source>
         <translation>Ouvrir un fichier</translation>
-    </message>
-    <message>
-        <source>Images (*.png *.bmp *.jpg *.jpeg)</source>
-        <translation type="obsolete">Images (*.png *.bmp *.jpg *.jpeg)</translation>
     </message>
     <message>
         <source>&amp;%1 %2</source>
@@ -394,18 +375,6 @@
         <translation>Erreur lors de l&apos;ouverture d&apos;un fichier</translation>
     </message>
     <message>
-        <source>Histogram</source>
-        <translation type="vanished">Histogramme</translation>
-    </message>
-    <message>
-        <source>Horizontal Projection Histogram</source>
-        <translation type="vanished">Histogramme de projection horizontale</translation>
-    </message>
-    <message>
-        <source>Vertical Projection Histogram</source>
-        <translation type="vanished">Histogramme de projection verticale</translation>
-    </message>
-    <message>
         <source>Pixels Grid</source>
         <translation>Grille de pixels</translation>
     </message>
@@ -434,10 +403,6 @@
         <translation>Quelle valeur (0..255) ?</translation>
     </message>
     <message>
-        <source>Image</source>
-        <translation type="obsolete">Image</translation>
-    </message>
-    <message>
         <source>Selected</source>
         <translation>Selectionné</translation>
     </message>
@@ -448,22 +413,6 @@
     <message>
         <source>Hovered</source>
         <translation>Survolé</translation>
-    </message>
-    <message>
-        <source>Zoom</source>
-        <translation type="obsolete">Zoom</translation>
-    </message>
-    <message>
-        <source>Selection mode</source>
-        <translation type="obsolete">Mode sélection</translation>
-    </message>
-    <message>
-        <source>Hand mode</source>
-        <translation type="obsolete">Mode main</translation>
-    </message>
-    <message>
-        <source>Select all</source>
-        <translation type="obsolete">Sélectionner tout</translation>
     </message>
     <message>
         <source>Convert to grayscale</source>
@@ -516,10 +465,6 @@
         <translation>Arranger en &amp;mosaïque</translation>
     </message>
     <message>
-        <source>Tools</source>
-        <translation type="vanished">Outils</translation>
-    </message>
-    <message>
         <source>&amp;Cascade windows</source>
         <translation>Arranger en &amp;cascade</translation>
     </message>
@@ -532,20 +477,12 @@
         <translation>Vous êtes sur le point de fermer toutes les fenêtres relatives, êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
-        <source>Apply binary mask to </source>
-        <translation type="obsolete">Appliquer un masque binaire à </translation>
-    </message>
-    <message>
         <source>Mask to apply : </source>
         <translation>Masque à appliquer : </translation>
     </message>
     <message>
         <source> - masked</source>
         <translation> - masquée</translation>
-    </message>
-    <message>
-        <source>Apply mask to </source>
-        <translation type="vanished">Appliquer un masque à</translation>
     </message>
 </context>
 </TS>
