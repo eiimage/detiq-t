@@ -23,7 +23,7 @@
 #include <QRadioButton>
 
 #include <Image.h>
-#include "../ImageWidgets/AlternativeImageView.h"
+#include "AlternativeImageView.h"
 
 class QHBoxLayout;
 
