@@ -67,6 +67,7 @@ void DoubleImageWindow::init()
 
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
+    menu()->addAction(tr("Convert to Rgb Image"), this, SLOT(convertRgb()));
 
     updateStatusBar();
 
@@ -192,6 +193,12 @@ void DoubleImageWindow::crop() {
 void DoubleImageWindow::copycrop() {
     Image_t<double>* newImg = _image->crop(_imageView->getRectangle());
     DoubleImageWindow* newImgWnd = new DoubleImageWindow(*this, newImg);
+    emit addImage(this, newImgWnd);
+}
+
+void DoubleImageWindow::convertRgb() {
+    Image* newImg = new Image();
+    StandardImageWindow* newImgWnd = new StandardImageWindow(newImg);
     emit addImage(this, newImgWnd);
 }
 

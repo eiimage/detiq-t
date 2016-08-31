@@ -91,6 +91,8 @@ public slots:
 
     virtual void showHistogram();
 
+    void convertRgb();
+
 signals:
 
 protected:

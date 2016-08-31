@@ -272,6 +272,10 @@ void ImageWindow::zoom(int delta) {
     {
         _zoomFactor *= coef;
     }
+    else if(delta == 0)
+    {
+        _zoomFactor = 1;
+    }
     _imageView->scale(_zoomFactor, _zoomFactor);
     //if(delta < 0) {
         //_imageView->resize(_imageView->sizeHint());
@@ -294,6 +298,14 @@ void ImageWindow::wheelEvent (QWheelEvent * event) {
     {
         this->zoom(event->delta());
     }
+}
+
+void ImageWindow::keyPressEvent(QKeyEvent *event){
+    bool ctrlPressed = event->modifiers().testFlag(Qt::ControlModifier);
+    if(ctrlPressed && (event->key() == Qt::Key_Plus)) this->zoom(100);
+    if(ctrlPressed && (event->key() == Qt::Key_Minus)) this->zoom(-100);
+    if(ctrlPressed && (event->key() == Qt::Key_0)) this->zoom(0);
+
 }
 
 void ImageWindow::pixelClicked(int x, int y) {
@@ -332,6 +344,6 @@ void ImageWindow::showGenericHistogram(GenericHistogramWindow* histogramWnd) {
     emit addWidget(this, histogramWnd);
 }
 
-void ImageWindow::keyPressEvent ( QKeyEvent * /*event*/ ) {
-//    if(event->
-}
+//void ImageWindow::keyPressEvent ( QKeyEvent * /*event*/ ) {
+////    if(event->
+//}

@@ -53,6 +53,18 @@ namespace imagein {
 
         void dilate(const StructElem& elem);
 
+        inline StructElem transpose() {
+            GrayscaleImage_t<bool> t(_height*_scale,_width*_scale);
+            for(unsigned int i = 0 ; i < _width*_scale ; i++){
+                for(unsigned int j=0 ; j <_height*_scale ; j++)
+                   t.setPixel(j,i,this->getPixel(i,j));
+            }
+
+            StructElem res(t, (_width-this->_centerX)*_scale,(_height-this->_centerY)*_scale);
+
+            return res;
+        }
+
       private:
         unsigned char _scale;
         unsigned int _centerX, _centerY;
@@ -243,7 +255,7 @@ namespace imagein {
 
             Erosion<D> erosion(this->_elem);
             Image_t<D>* buffer = erosion(&img);
-            Dilatation<D> dilatation(this->_elem);
+            Dilatation<D> dilatation(this->_elem.transpose());
             Image_t<D>* result = dilatation(buffer);
             delete buffer;
 
@@ -262,7 +274,7 @@ namespace imagein {
 
             Dilatation<D> dilatation(this->_elem);
             Image_t<D>* buffer = dilatation(&img);
-            Erosion<D> erosion(this->_elem);
+            Erosion<D> erosion(this->_elem.transpose());
             Image_t<D>* result = erosion(buffer);
             delete buffer;
 
