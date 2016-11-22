@@ -6,9 +6,6 @@ include_directories(../ImageIn)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
-set(CMAKE_PREFIX_PATH "C:\\Qt\\Qwt-6.1.2\\")
-set(QWT_LIBRARY "C:\\Qt\\Qwt-6.1.2\\lib\\qwt.dll")
-set(QWT_INCLUDE_DIR "C:\\Qt\\Qwt-6.1.2\\include")
 find_package(Qwt 6.0 REQUIRED)
 if(QWT_FOUND)
 	include_directories(${QWT_INCLUDE_DIRS})
