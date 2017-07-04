@@ -49,10 +49,13 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
 
         if(_projection) {
             graphicalHisto->setValues(imagein::ProjectionHistogram(*image, _value, _horizontal, _rectangle, i));
+
         } else if(_cumulated) {
             graphicalHisto->setValues(imagein::CumulatedHistogram(*image, i, _rectangle));
+
         } else {
             graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
+
         }
     }
 

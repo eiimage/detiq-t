@@ -54,6 +54,8 @@ namespace genericinterface
     ImageWindow* getCurrentImageWindow();
     std::vector<const ImageWindow*> getImageWindows() const;
 
+    GenericHistogramWindow* getCurrentHistogramWindow();
+
 	NodeId getNodeId(QWidget* widget) const;
 	const Node* getNode(NodeId id) const;
 	const Node* getNode(QWidget* widget) const;

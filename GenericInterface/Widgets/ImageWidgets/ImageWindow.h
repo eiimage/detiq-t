@@ -33,6 +33,10 @@
 #include <QInputDialog>
 #include <QToolButton>
 #include <QStatusBar>
+#include <QImage>
+#include <QClipboard>
+#include <QRect>
+#include <QAction>
 
 #include <sstream>
 #include <iostream>
@@ -55,6 +59,10 @@ class SelectionWidget : public QWidget {
   public:
     SelectionWidget(QWidget* parent, int width, int height);
     void setRange(int width, int height);
+    QSpinBox* getX() const {return _Xspinbox;}
+    QSpinBox* getY() const {return _Yspinbox;}
+    QSpinBox* getWidth() const {return _Wspinbox;}
+    QSpinBox* getHeight() const {return _Hspinbox;}
   public slots:
     void updateSelection(QRect select);
     void selectionMoved(int);
@@ -117,8 +125,12 @@ class ImageWindow : public QWidget
         virtual bool isDouble() const = 0;
         virtual bool isStandard() const = 0;
 
+         SelectionWidget* getSelectionWidget() const {return _selectWidget;}
+        QToolButton* getSelectionButton() const {return _selectButton;}
 
     public slots:
+
+
         void activated();
         void setApplicationArea(const imagein::Rectangle rect);
         void startDrag();
@@ -137,6 +149,14 @@ class ImageWindow : public QWidget
 
         virtual void showHistogram();
         virtual void showPixelsGrid() = 0;
+
+        void zoom_in();
+        void zoom_out();
+
+        void save(const QString& path = QString(), const QString& ext = QString());
+        void saveAs();
+
+        void copyImage();
 
     signals:
         /*!
@@ -179,6 +199,11 @@ class ImageWindow : public QWidget
         QWidget* _infoWidget;
         QVBoxLayout* _infoLayout;
 
+        QToolButton* _zoomInButton;
+        QToolButton* _zoomOutButton;
+        QToolButton* _saveAsButton;
+
+
         void initStatusBar();
 
         double _zoomFactor;
@@ -189,6 +214,13 @@ class ImageWindow : public QWidget
         virtual void showHoveredPixelInformations(int x, int y) const = 0;
         virtual void showSelectedPixelInformations(int x, int y) const = 0;
         void showGenericHistogram(GenericHistogramWindow* histogramWnd);
+
+
+        double _logConstantScale;
+
+       // QAction* copy;
+
+
 };
 
 }

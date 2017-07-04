@@ -136,6 +136,9 @@ protected:
     unsigned int nChannel;
     std::vector<int> getValues(int index) const;
 
+
+
+
 private:
     bool _projection;
     bool _cumulated;

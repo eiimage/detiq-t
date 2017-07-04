@@ -81,6 +81,19 @@ ImageWindow* WindowService::getCurrentImageWindow()
     }
 }
 
+GenericHistogramWindow* WindowService::getCurrentHistogramWindow()
+{
+    QMdiSubWindow* sw = _mdi->currentSubWindow();
+
+    if(sw != NULL) {
+        GenericHistogramWindow* imw = dynamic_cast<GenericHistogramWindow*>(sw->widget());
+        return imw;
+    }
+    else {
+        qDebug ("No current window !");
+        return NULL;
+    }
+}
 
 std::vector<const ImageWindow*> WindowService::getImageWindows() const {
     vector<const ImageWindow*> result;

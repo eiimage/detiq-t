@@ -64,6 +64,9 @@ namespace genericinterface
 		 * The ProjectionHistogramView is deleted too
 		 */
 		virtual ~ProjectionHistogramWindow();
+
+
+
   };
 }
 

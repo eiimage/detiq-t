@@ -28,6 +28,8 @@
 #include <QStatusBar>
 #include <sstream>
 
+#include <QToolButton>
+
 #include "HistogramView.h"
 
 #include <Image.h>
@@ -60,6 +62,12 @@ namespace genericinterface
         void showLeftClickedValue(int index, std::vector<int> values) const;
         void showRightClickedValue(int index, std::vector<int> values) const;
         void activated();
+
+        void save(const QString& path = QString(), const QString& ext = QString());
+        void saveAs();
+
+        //void saveData();
+
     signals:
         /*!
          * \brief Signal emits when this is activated
@@ -79,7 +87,9 @@ namespace genericinterface
        * \param source The ImageWindow source (window which contains the image)
        */
       GenericHistogramWindow(GenericHistogramView* view);
-        
+
+      QToolButton* _saveAsButton;
+
     public:
       /*!
        * \brief HistogramWindow destructor.

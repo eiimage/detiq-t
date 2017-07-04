@@ -167,6 +167,10 @@
         <translation>Valeur 2</translation>
     </message>
     <message>
+        <source>Save As Image</source>
+        <translation>Enregistrer l'image sous</translation>
+    </message>
+    <message>
         <source>C: %1</source>
         <translation>C: %1</translation>
     </message>
@@ -247,8 +251,16 @@
         <translation>Image</translation>
     </message>
     <message>
+        <source>Save As</source>
+        <translation>Enregistrer sous</translation>
+    </message>
+    <message>
         <source>Zoom</source>
         <translation>Zoom</translation>
+    </message>
+    <message>
+        <source>Copy image</source>
+        <translation>Copier l'image</translation>
     </message>
     <message>
         <source>Selection mode</source>
@@ -261,6 +273,14 @@
     <message>
         <source>Select all</source>
         <translation>Sélectionner tout</translation>
+    </message>
+    <message>
+        <source>Zoom + (Ctrl+Scroll Wheel)</source>
+        <translation>Zoom + (Ctrl+Molette)</translation>
+    </message>
+    <message>
+        <source>Zoom - (Ctrl+Scroll Wheel)</source>
+        <translation>Zoom - (Ctrl+Molette)</translation>
     </message>
     <message>
         <source>Rename</source>

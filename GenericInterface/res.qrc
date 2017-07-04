@@ -8,5 +8,7 @@
      <file>images/application-cascade.png</file>
      <file>images/applications-graphics-5.png</file>
      <file>images/applications-utilities-2.png</file>
+     <file>images/zoom-in.svg.png</file>
+     <file>images/zoom-out.svg.png</file>
  </qresource>
 </RCC>

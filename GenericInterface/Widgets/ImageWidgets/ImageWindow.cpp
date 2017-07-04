@@ -18,12 +18,16 @@
 */
 
 #include "../../GenericInterface.h"
-
+#include "../../Services/FileService.h"
+#include <UnknownFormatException.h>
 #include "ImageWindow.h"
 #include <QSpinBox>
 #include <QDrag>
 #include <QMimeData>
-
+#include <QImage>
+#include <QClipboard>
+#include <QRect>
+#include <QAction>
 using namespace std;
 using namespace genericinterface;
 using namespace imagein;
@@ -79,13 +83,22 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
     QObject::connect(_imageView, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
     _statusBar = new QWidget();
     initStatusBar();
+    menu()->addAction(tr("Save As"), this, SLOT(saveAs()),QKeySequence::Save);
+    menu()->addSeparator();
+
+    menu()->addAction(tr("Zoom + (Ctrl+Scroll Wheel)"), this, SLOT(zoom_in()),QKeySequence::ZoomIn);
+    menu()->addAction(tr("Zoom - (Ctrl+Scroll Wheel)"), this, SLOT(zoom_out()),QKeySequence::ZoomOut);
+    menu()->addSeparator();
     menu()->addAction(tr("Rename"), this, SLOT(rename()));
     menu()->addSeparator();
     menu()->addAction(tr("Apply mask"), this, SLOT(applyBinaryMask()));
     menu()->addSeparator();
+    menu()->addAction(tr("Copy image"), this, SLOT(copyImage()),QKeySequence::Copy);
+    menu()->addSeparator();
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(_imageView);
+    _imageView->grabKeyboard();
     layout->addWidget(_statusBar);
 
     QObject::connect(_imageView, SIGNAL(pixelClicked(int, int)), this, SLOT(pixelClicked(int, int)));
@@ -155,6 +168,28 @@ void ImageWindow::initStatusBar()
     _selectAllButton->setIconSize (QSize(24, 24));
     _selectAllButton->setEnabled(false);
 
+    _zoomInButton = new QToolButton(this);
+    _zoomInButton->setToolTip(tr("Zoom +"));
+    _zoomInButton->setIcon(QIcon(":/images/zoom-in.svg.png"));
+    _zoomInButton->setCheckable(false);
+    _zoomInButton->setAutoRaise(true);
+    _zoomInButton->setIconSize (QSize(24, 24));
+
+
+    _zoomOutButton = new QToolButton(this);
+    _zoomOutButton->setToolTip(tr("Zoom -"));
+    _zoomOutButton->setIcon(QIcon(":/images/zoom-out.svg.png"));
+    _zoomOutButton->setCheckable(false);
+    _zoomOutButton->setAutoRaise(true);
+    _zoomOutButton->setIconSize (QSize(24, 24));
+
+    _saveAsButton = new QToolButton(this);
+    _saveAsButton->setToolTip(tr("Save As"));
+    _saveAsButton->setIcon(this->style()->standardIcon(QStyle::SP_DialogSaveButton));
+    _saveAsButton->setCheckable(false);
+    _saveAsButton->setAutoRaise(true);
+    _saveAsButton->setIconSize (QSize(24, 24));
+
     _selectWidget = new SelectionWidget(this, _imageView->pixmap().width(), _imageView->pixmap().height());
     connect(_imageView, SIGNAL(selectionMoved(QRect)), _selectWidget, SLOT(updateSelection(QRect)));
     connect(_selectWidget, SIGNAL(selectionMoved(QRect)), _imageView, SLOT(moveSelection(QRect)));
@@ -166,6 +201,9 @@ void ImageWindow::initStatusBar()
     QObject::connect(_mouseButton, SIGNAL(toggled(bool)), this, SLOT(toggleMouseMode(bool)));
     QObject::connect(_selectButton, SIGNAL(toggled(bool)), this, SLOT(toggleSelectMode(bool)));
     QObject::connect(_selectAllButton, SIGNAL(clicked()), _imageView, SLOT(selectAll()));
+    QObject::connect(_zoomInButton, SIGNAL(clicked()), this, SLOT(zoom_in()));
+    QObject::connect(_zoomOutButton, SIGNAL(clicked()), this, SLOT(zoom_out()));
+    QObject::connect(_saveAsButton, SIGNAL(clicked()), this, SLOT(saveAs()));
 
     QWidget* widgetImage = new QWidget();
     QHBoxLayout* layoutImage = new QHBoxLayout(widgetImage);
@@ -179,11 +217,15 @@ void ImageWindow::initStatusBar()
     layoutImage->addWidget(_mouseButton);
     layoutImage->addWidget(_selectButton);
     layoutImage->addWidget(_selectAllButton);
+    layoutImage->addWidget(_zoomInButton);
+    layoutImage->addWidget(_zoomOutButton);
+    layoutImage->addWidget(_saveAsButton);
     layoutImage->addSpacing(8);
 
     layout->addWidget(widgetImage);
     layout->addWidget(_selectWidget);
     layout->addWidget(_infoWidget);
+
 }
 
 
@@ -262,6 +304,57 @@ void ImageWindow::toggleSelectMode(bool checked) {
 }
 
 
+void ImageWindow::save(const QString& path, const QString& ext)
+{
+    if(path == "") {
+        this->saveAs();
+    }
+    else {
+        try {
+           // WindowService* ws = _gi->windowService();
+           // if(ws != NULL) {
+
+                if(this != NULL) {
+                    try {                      
+                        _displayImg->save(path.toStdString());
+                    }
+                    catch(const UnknownFormatException& e) {
+                        if(ext == "")
+                            throw e;
+
+                        _displayImg->save((path+ext).toStdString());
+                    }
+                }
+                else {
+                    QMessageBox::critical(this, tr("Bad object type"), tr("Only images can be saved to a file."));
+                }
+           // }
+        }
+        catch(const char* s) {
+            QMessageBox::information(this, tr("Unknown exception"), s);
+        }
+    }
+}
+
+void ImageWindow::saveAs()
+{
+    QString path;
+    //WindowService* ws = _gi->windowService();
+    //ImageWindow* currentWindow = ws->getCurrentImageWindow();
+    if(this != NULL) {
+        path = this->getPath();
+    }
+    QString selectedFilter;
+    QString file = QFileDialog::getSaveFileName(this, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)"), &selectedFilter);
+
+    QString ext = selectedFilter.right(5).left(4);
+
+    if(file != "") {
+        if(!file.contains('.')) file += ext;
+        this->save(file, ext);
+    }
+}
+
 void ImageWindow::zoom(int delta) {
     const double coef = 1.4142135623730950488016887242096980785696718753769480;
     if(delta < 0 && _imageView->widget()->width() > 16) //Zoom out
@@ -276,6 +369,34 @@ void ImageWindow::zoom(int delta) {
     {
         _zoomFactor = 1;
     }
+    _imageView->scale(_zoomFactor, _zoomFactor);
+    //if(delta < 0) {
+        //_imageView->resize(_imageView->sizeHint());
+        //QApplication::processEvents();
+        //this->adjustSize();
+        //QApplication::processEvents();
+        //this->
+    //}
+    updateZoom(_zoomFactor*100);
+}
+
+void ImageWindow::zoom_in() {
+    const double coef = 1.4142135623730950488016887242096980785696718753769480;
+    _zoomFactor *= coef;
+    _imageView->scale(_zoomFactor, _zoomFactor);
+    //if(delta < 0) {
+        //_imageView->resize(_imageView->sizeHint());
+        //QApplication::processEvents();
+        //this->adjustSize();
+        //QApplication::processEvents();
+        //this->
+    //}
+    updateZoom(_zoomFactor*100);
+}
+
+void ImageWindow::zoom_out() {
+    const double coef = 1.4142135623730950488016887242096980785696718753769480;
+    _zoomFactor /= coef;
     _imageView->scale(_zoomFactor, _zoomFactor);
     //if(delta < 0) {
         //_imageView->resize(_imageView->sizeHint());
@@ -343,6 +464,22 @@ void ImageWindow::showGenericHistogram(GenericHistogramWindow* histogramWnd) {
 
     emit addWidget(this, histogramWnd);
 }
+
+void ImageWindow::copyImage(){
+    QImage img = _imageView->widget()->convertImage(_displayImg);
+    QClipboard *clipboard = QApplication::clipboard();
+    if(_selectButton->isChecked()){
+        QRect rect(_selectWidget->getX()->value(),_selectWidget->getY()->value(),_selectWidget->getWidth()->value(),_selectWidget->getHeight()->value());
+        QImage image = img.copy(rect);
+        clipboard->setImage(image);
+    }
+    else
+    {
+        clipboard->setImage(img);
+    }
+}
+
+
 
 //void ImageWindow::keyPressEvent ( QKeyEvent * /*event*/ ) {
 ////    if(event->

@@ -29,6 +29,9 @@
 #include <QTranslator>
 #include <QProcess>
 
+#include "../Widgets/ImageWidgets/GenericHistogramWindow.h"
+#include "../Widgets/ImageWidgets/ImageWindow.h"
+
 using namespace genericinterface;
 
 void FileService::display (GenericInterface* gi)
@@ -47,6 +50,11 @@ void FileService::display (GenericInterface* gi)
     _saveAs->setShortcut(QKeySequence::Save);
     _saveAs->setEnabled(false);
     gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(_saveAs);
+
+    /*_copy = fileMenu->addAction(tr("&Copy"));
+    _copy->setShortcut(QKeySequence::Copy);
+    gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(_copy);
+    */
 
     // Get the list of all translations in the 'lang' folder
     QDir langDir(qApp->applicationDirPath() + QDir::separator() + "lang");
@@ -107,6 +115,7 @@ void FileService::connect (GenericInterface* gi)
     _gi = gi;
     QObject::connect(_open, SIGNAL(triggered()), this, SLOT(chooseFile()));
     QObject::connect(_saveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
+    //QObject::connect(_copy, SIGNAL(triggered()), this, SLOT(copyImage()));
     for (int i = 0; i < MaxRecentFiles; ++i) {
         QObject::connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
@@ -119,15 +128,18 @@ void FileService::connect (GenericInterface* gi)
 
 void FileService::save(const QString& path, const QString& ext)
 {
-    if(path == "") {
+    /*if(path == "") {
         this->saveAs();
     }
     else {
-        try {
+        try {*/
             WindowService* ws = _gi->windowService();
             if(ws != NULL) {
                 ImageWindow* imw = dynamic_cast<ImageWindow*>(ws->getCurrentImageWindow());
+                GenericHistogramWindow* histo = dynamic_cast<GenericHistogramWindow*>(ws->getCurrentHistogramWindow());
                 if(imw != NULL) {
+                    imw->save(path,ext);
+                    /*
                     try {
                         imw->getDisplayImage()->save(path.toStdString());
                     }
@@ -137,6 +149,24 @@ void FileService::save(const QString& path, const QString& ext)
 
                         imw->getDisplayImage()->save((path+ext).toStdString());
                     }
+                    */
+                }
+
+                else if (histo != NULL){
+                    histo->save(path,ext);
+
+                    /*
+                    try {
+                        QPixmap pixmap = QPixmap::grabWidget(histo->getView());
+                        pixmap.save(path, "PNG");
+                    }
+                    catch(const UnknownFormatException& e) {
+                        if(ext == "")
+                            throw e;
+                        QPixmap pix = QPixmap::grabWidget(histo->getView());
+                        pix.save((path+ext));
+                    }
+
                 }
                 else {
                     QMessageBox::critical(_gi, tr("Bad object type"), tr("Only images can be saved to a file."));
@@ -145,8 +175,9 @@ void FileService::save(const QString& path, const QString& ext)
         }
         catch(const char* s) {
             QMessageBox::information(_gi, tr("Unknown exception"), s);
+        }*/
+              }
         }
-    }
 }
 
 void FileService::saveAs()
@@ -154,8 +185,12 @@ void FileService::saveAs()
     QString path;
     WindowService* ws = _gi->windowService();
     ImageWindow* currentWindow = ws->getCurrentImageWindow();
+    GenericHistogramWindow* histo = ws->getCurrentHistogramWindow();
     if(currentWindow != NULL) {
         path = currentWindow->getPath();
+    }
+    else if(histo != NULL){
+        path="histogram";
     }
     QString selectedFilter;
     QString file = QFileDialog::getSaveFileName(_gi, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)"), &selectedFilter);
@@ -248,10 +283,29 @@ void FileService::checkActionsValid(const QWidget* activeWidget)
 {
     std::cout << "WindowService::activeWidgetChanged(" << reinterpret_cast<intptr_t>(activeWidget) << ")" << std::endl;
     const ImageWindow* window = dynamic_cast<const ImageWindow*>(activeWidget);
-    if(window) {
+    const GenericHistogramWindow* histo = dynamic_cast<const GenericHistogramWindow*>(activeWidget);
+    if(window||histo) {
         _saveAs->setEnabled(true);
     }
     else {
         _saveAs->setEnabled(false);
     }
 }
+/*
+void FileService::copyImage(){
+    WindowService* ws = _gi->windowService();
+    ImageWindow* currentWindow = ws->getCurrentImageWindow();
+    QImage img = currentWindow->view()->widget()->convertImage(_displayImg);
+    QClipboard *clipboard = QApplication::clipboard();
+    if(currentWindow->getSelectionButton()->isChecked()){
+        QRect rect(currentWindow->getSelectionWidget()->getX()->value(),currentWindow->getSelectionWidget()->getY()->value(),currentWindow->getSelectionWidget()->getWidth()->value(),currentWindow->getSelectionWidget()->getHeight()->value());
+        QImage image = img.copy(rect);
+        clipboard->setImage(image);
+    }
+    else
+    {
+        clipboard->setImage(img);
+    }
+
+}
+*/

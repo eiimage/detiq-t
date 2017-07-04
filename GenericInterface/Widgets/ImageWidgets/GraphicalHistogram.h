@@ -59,6 +59,7 @@ namespace genericinterface
 		 */
 		void setValues(const imagein::Array<unsigned int>&);
         void setValues(const imagein::Array<double>&);
+        QwtIntervalSeriesData getValues(const imagein::Array<double>& values);
     };
 }
 
