@@ -98,7 +98,6 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(_imageView);
-    _imageView->grabKeyboard();
     layout->addWidget(_statusBar);
 
     QObject::connect(_imageView, SIGNAL(pixelClicked(int, int)), this, SLOT(pixelClicked(int, int)));
