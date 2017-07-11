@@ -75,6 +75,9 @@ public:
     inline double getLogScale() const  { return _logConstantScale; }
     inline bool isAbsolute() const { return _abs; }
 
+    double isHough(double angStep){_hough=true;angleStep = angStep;}
+
+
 
 public slots:
 
@@ -93,6 +96,7 @@ public slots:
 
     void convertRgb();
 
+
 signals:
 
 protected:
@@ -102,6 +106,8 @@ protected:
     bool _logScale;
     double _logConstantScale;
     bool _abs;
+    bool _hough = false;
+    double angleStep;
 
     void init();
     void updateStatusBar();

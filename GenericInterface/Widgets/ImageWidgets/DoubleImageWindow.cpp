@@ -23,6 +23,9 @@
 #include <QDoubleSpinBox>
 #include <QSlider>
 
+#include <QApplication>
+#include "../../../../../app/Operations/HoughDialog.h"
+
 using namespace genericinterface;
 using namespace imagein;
 using namespace std;
@@ -204,7 +207,18 @@ void DoubleImageWindow::convertRgb() {
 
 void DoubleImageWindow::showSelectedPixelInformations(int x, int y) const
 {
-    _lSelectedPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
+    if (_hough) //teste si l'operation effectuee est une transformee de Hough
+    {
+
+        //double angStep = HoughDialog::getAngleStep();
+        int theta = (_image->getHeight()-y)-(90/angleStep);
+        _lSelectedPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(x).arg(theta*angleStep));
+
+    }
+    else
+    {
+        _lSelectedPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
+    }
     _lSelectedPixelColor->setText(tr("Color") + " : ");
     for(unsigned int i = 0; i < _image->getNbChannels(); i++)
     {
@@ -221,7 +235,19 @@ void DoubleImageWindow::showSelectedPixelInformations(int x, int y) const
 
 void DoubleImageWindow::showHoveredPixelInformations(int x, int y) const
 {
-    _lHoveredPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
+    if (_hough)
+    {
+       // HoughDialog* dialog = new HoughDialog(QApplication::activeWindow());
+       // QDialog::DialogCode code = static_cast<QDialog::DialogCode>(dialog->exec());
+        //int jDisplayRho = round(rho / rhoStep);
+        //int iDisplayTheta = round((resImg->getHeight()-(te+90)) / angleStep);
+        int theta = (_image->getHeight()-y)-(90/angleStep);
+        _lHoveredPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(x).arg(theta*angleStep)); //(_image->getHeight()-y)-90) // (y-(90/dialog->getAngleStep()))
+    }
+    else
+    {
+        _lHoveredPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
+    }
 
     _lHoveredPixelColor->setText(tr("Color") + " :");
     for(unsigned int i = 0; i < _image->getNbChannels(); i++)
