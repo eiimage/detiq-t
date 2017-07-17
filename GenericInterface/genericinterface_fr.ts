@@ -50,6 +50,10 @@
         <source>Hovered</source>
         <translation>Survolé</translation>
     </message>
+    <message>
+        <source>Disable Offset</source>
+        <translation>Désactiver le décallage des pixels</translation>
+    </message>
 </context>
 <context>
     <name>genericinterface::FileService</name>

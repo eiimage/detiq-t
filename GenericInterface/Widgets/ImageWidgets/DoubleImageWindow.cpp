@@ -22,9 +22,12 @@
 #include "GridView.h"
 #include <QDoubleSpinBox>
 #include <QSlider>
+#include <QPushButton>
 
 #include <QApplication>
 #include "../../../../../app/Operations/HoughDialog.h"
+#include "../../Utilities/Log.h"
+#include <UnknownFormatException.h>
 
 using namespace genericinterface;
 using namespace imagein;
@@ -68,10 +71,22 @@ void DoubleImageWindow::init()
 {
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
+    if(_normalize){
+        QHBoxLayout* _offsetLayout= new QHBoxLayout();
+
+        _offsetButton = new QPushButton(tr("Disable Offset"));
+
+        QObject::connect(_offsetButton, SIGNAL(clicked()), this, SLOT(offset()));
+
+        _offsetLayout->addWidget(_offsetButton);
+
+        _infoLayout->addLayout(_offsetLayout);
+        menu()->addAction(tr("Offset (127)"), this, SLOT(offset()));
+    }
+
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
     menu()->addAction(tr("Convert to Rgb Image"), this, SLOT(convertRgb()));
-
     updateStatusBar();
 
 }
@@ -193,7 +208,7 @@ void DoubleImageWindow::crop() {
     this->updateGeometry();
 }
 
-void DoubleImageWindow::copycrop() {
+void DoubleImageWindow::copycrop() {    
     Image_t<double>* newImg = _image->crop(_imageView->getRectangle());
     DoubleImageWindow* newImgWnd = new DoubleImageWindow(*this, newImg);
     emit addImage(this, newImgWnd);
@@ -207,13 +222,11 @@ void DoubleImageWindow::convertRgb() {
 
 void DoubleImageWindow::showSelectedPixelInformations(int x, int y) const
 {
-    if (_hough) //teste si l'operation effectuee est une transformee de Hough
+    //teste si l'operation est une transformee de Hough et gere l'affichage de la valeur selectionnee en consequence
+    if (_hough)
     {
-
-        //double angStep = HoughDialog::getAngleStep();
         int theta = (_image->getHeight()-y)-(90/angleStep);
         _lSelectedPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(x).arg(theta*angleStep));
-
     }
     else
     {
@@ -235,14 +248,11 @@ void DoubleImageWindow::showSelectedPixelInformations(int x, int y) const
 
 void DoubleImageWindow::showHoveredPixelInformations(int x, int y) const
 {
+    //teste si l'operation est une transformee de Hough et gere l'affichage de la valeur survolee en consequence
     if (_hough)
     {
-       // HoughDialog* dialog = new HoughDialog(QApplication::activeWindow());
-       // QDialog::DialogCode code = static_cast<QDialog::DialogCode>(dialog->exec());
-        //int jDisplayRho = round(rho / rhoStep);
-        //int iDisplayTheta = round((resImg->getHeight()-(te+90)) / angleStep);
         int theta = (_image->getHeight()-y)-(90/angleStep);
-        _lHoveredPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(x).arg(theta*angleStep)); //(_image->getHeight()-y)-90) // (y-(90/dialog->getAngleStep()))
+        _lHoveredPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(x).arg(theta*angleStep));
     }
     else
     {
@@ -313,4 +323,25 @@ void DoubleImageWindow::showHistogram()
 {
     HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle());
     showGenericHistogram(histogramWnd);
+}
+
+void DoubleImageWindow::offset(){
+
+    int height = _image->getHeight();
+    int width = _image->getWidth();
+    int nbChannels = _image->getNbChannels();
+    Image_t<double>* offsetImg = new Image_t<double>(width, height, nbChannels, 0.);
+    for(unsigned int c = 0; c < nbChannels; ++c) {
+
+        for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
+
+            for(unsigned int j = 0; j < width; ++j){
+
+                double pixOffset = _image->getPixelAt(j,i,c);
+                offsetImg->setPixelAt(j, i, c, pixOffset);
+            }
+        }
+    }
+    DoubleImageWindow* offsetImgWnd = new DoubleImageWindow(offsetImg, this->_path, false, this->_logScale, this->_logConstantScale, false);
+    emit addImage(this, offsetImgWnd);
 }

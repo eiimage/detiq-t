@@ -64,6 +64,11 @@
         <source>Hovered</source>
         <translation>Hovered</translation>
     </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp"/>
+        <source>Disable Offset</source>
+        <translation>Disable Offset</translation>
+    </message>
 </context>
 <context>
     <name>genericinterface::FileService</name>

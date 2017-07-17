@@ -24,7 +24,7 @@
 
 #include <Converter.h>
 #include <QDoubleSpinBox>
-
+#include <QCheckBox>
 
 namespace genericinterface
 {
@@ -74,13 +74,15 @@ public:
     inline bool isLogScaled() const { return _logScale; }
     inline double getLogScale() const  { return _logConstantScale; }
     inline bool isAbsolute() const { return _abs; }
-
-    double isHough(double angStep){_hough=true;angleStep = angStep;}
+    double isHough(double angStep){_hough = true; angleStep = angStep;}
+    void setNormalized(bool norm){_normalize = norm;}
+    void setAbsolute(bool abs){_abs = abs;}
 
 
 
 public slots:
 
+    void offset();
     virtual void crop();
     virtual void copycrop();
     void showPixelsGrid();
@@ -95,6 +97,7 @@ public slots:
     virtual void showHistogram();
 
     void convertRgb();
+
 
 
 signals:
@@ -119,6 +122,8 @@ protected:
     QLabel* _lSelectedPixelPosition;
     QLabel* _lSelectedPixelColor;
     QDoubleSpinBox* _logBox;
+    QHBoxLayout* _offsetLayout;
+    QPushButton* _offsetButton;
 };
 }
 
