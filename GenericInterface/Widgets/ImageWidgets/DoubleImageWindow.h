@@ -74,7 +74,7 @@ public:
     inline bool isLogScaled() const { return _logScale; }
     inline double getLogScale() const  { return _logConstantScale; }
     inline bool isAbsolute() const { return _abs; }
-    double isHough(double angStep){_hough = true; angleStep = angStep;}
+    double isHough(double angStep, double distStep){_hough = true; angleStep = angStep; distanceStep = distStep;}
     void setNormalized(bool norm){_normalize = norm;}
     void setAbsolute(bool abs){_abs = abs;}
 
@@ -111,6 +111,7 @@ protected:
     bool _abs;
     bool _hough = false;
     double angleStep;
+    double distanceStep;
 
     void init();
     void updateStatusBar();
