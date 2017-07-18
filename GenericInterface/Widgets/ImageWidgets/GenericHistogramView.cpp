@@ -33,15 +33,15 @@
 #include "GenericHistogramView.h"
 #include "HistogramPicker.h"
 #include "GraphicalHistogram.h"
+#include "../../Utilities/Log.h"
 
 using namespace genericinterface;
 using namespace imagein;
 
-GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
-    : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
+GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection, bool cumulated, bool lineProfile, bool columnProfile)
+    : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated), _lineProfile(lineProfile), _columnProfile(columnProfile)
 {
     _qwtPlot = new QwtPlot();
-
     init(image->getNbChannels());
 
     for(unsigned int i = 0; i < _graphicalHistos.size(); ++i) {
@@ -52,6 +52,14 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
 
         } else if(_cumulated) {
             graphicalHisto->setValues(imagein::CumulatedHistogram(*image, i, _rectangle));
+
+        } else if(_lineProfile){
+
+            graphicalHisto->setValues(imagein::LineProfile(*image, _value, _horizontal, _rectangle, i));
+
+        } else if(_columnProfile){
+
+            graphicalHisto->setValues(imagein::ColumnProfile(*image, _value, _horizontal, _rectangle, i));
 
         } else {
             graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
@@ -98,6 +106,8 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
             }
 
             graphicalHisto->setData(new QwtIntervalSeriesData(samples));
+          //graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
+
         }
     }
 
@@ -114,6 +124,9 @@ GenericHistogramView::~GenericHistogramView()
 
 void GenericHistogramView::init(uint nbChannels)
 {
+
+    Log::info("view");
+
     this->setMouseTracking(true); //Switch on mouse tracking (no need to press button)
 
     _qwtPlot->setTitle(tr("Histogram"));
@@ -123,7 +136,10 @@ void GenericHistogramView::init(uint nbChannels)
 
     _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Number of specimen"));
     _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Pixel value"));
-    _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, 256);
+   if((!_columnProfile) || (!_lineProfile)){
+        _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, 256);
+    }
+
 
     QwtLegend *legend = new QwtLegend;
     legend->setDefaultItemMode(QwtLegendData::Checkable);

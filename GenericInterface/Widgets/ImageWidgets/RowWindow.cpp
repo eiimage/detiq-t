@@ -22,15 +22,10 @@
 using namespace genericinterface;
 using namespace imagein;
 
-RowWindow::RowWindow(const imagein::Image* image, imagein::Rectangle rect, bool vertical, QString name)
-    : GenericHistogramWindow(new RowView(image, rect))
+RowWindow::RowWindow(const imagein::Image* image, imagein::Rectangle rect, int value, QString name)
+    : GenericHistogramWindow(new RowView(image, rect, value))
 {
-    if(vertical) {
-        this->setWindowTitle(name + QString(" - ") + tr("Column profile"));
-    }
-    else {
-        this->setWindowTitle(name + QString(" - ") + tr("Row profile"));
-    }
+    this->setWindowTitle(name + QString(" - ") + tr("Row profile"));
 }
 
 RowWindow::~RowWindow()

@@ -29,10 +29,12 @@
 #include <Rectangle.h>
 #include <Histogram.h>
 #include <ProjectionHistogram.h>
-
+#include <LineProfile.h>
+#include <ColumnProfile.h>
 #include "AlternativeImageView.h"
 
 #include <qwt_legend_data.h>
+#include "../../Utilities/Log.h"
 
 class QwtPlot;
 class QwtPlotItem;
@@ -61,7 +63,7 @@ public:
      * \param image The image concerned by the histogram
      * \param rect The part of the image where the histogram is applied
      */
-    GenericHistogramView(const imagein::Image* image, imagein::Rectangle rect, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false);
+    GenericHistogramView(const imagein::Image* image, imagein::Rectangle rect, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false, bool lineProfile = false, bool columnProfile = false);
 
     /*!
      * \brief Alternative constructor
@@ -86,7 +88,7 @@ public:
     //inline const imagein::Histogram* getHistogram(int channel) const { return new imagein::Histogram(*_image, channel, _rectangle); }
 
     //! Returns the graphical histogram
-    inline QwtPlot* getGraphicalHistogram() const { return _qwtPlot; }
+    inline QwtPlot* getGraphicalHistogram() const { Log::info("get graphical histogram"); return _qwtPlot; }
     inline imagein::Rectangle getApplicationArea() const { return _rectangle; }
 
 signals:
@@ -138,14 +140,16 @@ protected:
 
 
 
-
 private:
     bool _projection;
     bool _cumulated;
+    bool _lineProfile;
+    bool _columnProfile;
     void init(uint nbChannels);
     // This is the origin value for the x axis. It is 0 by default on classical images,
     // but can be negative if the input image has negative values
     int _originValue;
+
 };
 }
 

@@ -48,6 +48,10 @@ set(GenInterface_SOURCES
 	Widgets/AboutDialog.cpp
 	Widgets/ImageWidgets/AlternativeImageView.cpp
 	Widgets/ImageWidgets/AlternativeImageView.h
+	Widgets/ImageWidgets/ColumnView.cpp
+	Widgets/ImageWidgets/ColumnView.h
+	Widgets/ImageWidgets/ColumnWindow.cpp
+	Widgets/ImageWidgets/ColumnWindow.h
 	Widgets/ImageWidgets/DoubleImageWindow.cpp
 	Widgets/ImageWidgets/DoubleImageWindow.h
 	Widgets/ImageWidgets/GenericHistogramView.cpp

@@ -416,22 +416,45 @@
 <context>
     <name>genericinterface::RowView</name>
     <message>
-        <location filename="Widgets/ImageWidgets/RowView.cpp" line="28"/>
-        <source>Profile Histogram</source>
-        <translation>Profile Histogram</translation>
+        <source>Line Profile Histogram for line number %1</source>
+        <translation>Line Profile Histogram for line number %1</translation>
+    </message>
+    <message>
+        <source>Pixel Value</source>
+        <translation>Pixel Value</translation>
+    </message>
+    <message>
+        <source>Column</source>
+        <translation>Column</translation>
+    </message>
+</context>
+<context>
+    <name>genericinterface::ColumnView</name>
+    <message>
+        <source>Column Profile Histogram for column number %1</source>
+        <translation>Column Profile Histogram for column number %1</translation>
+    </message>
+    <message>
+        <source>Pixel Value</source>
+        <translation>Pixel Value</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Line</translation>
     </message>
 </context>
 <context>
     <name>genericinterface::RowWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/RowWindow.cpp" line="29"/>
-        <source>Column profile</source>
-        <translation>Column profile</translation>
-    </message>
-    <message>
-        <location filename="Widgets/ImageWidgets/RowWindow.cpp" line="32"/>
         <source>Row profile</source>
         <translation>Row profile</translation>
+    </message>
+</context>
+<context>
+    <name>genericinterface::ColumnWindow</name>
+    <message>
+        <source>Column profile</source>
+        <translation>Column profile</translation>
     </message>
 </context>
 <context>
@@ -526,6 +549,30 @@
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="212"/>
         <source>Select value</source>
         <translation>Select value</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
+        <source>Line selection</source>
+        <translation>Line selection</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
+        <source>Select the line to project</source>
+        <translation>Select the line to project</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
+        <source>Column selection</source>
+        <translation>Column selection</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
+        <source>Select the column to project</source>
+        <translation>Select the column to project</translation>
     </message>
     <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="200"/>

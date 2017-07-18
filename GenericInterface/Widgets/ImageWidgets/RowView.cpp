@@ -23,7 +23,11 @@
 using namespace genericinterface;
 using namespace imagein;
 
-RowView::RowView(const Image* image, Rectangle rect): GenericHistogramView(image, rect)
+RowView::RowView(const Image* image, Rectangle rect, int value): GenericHistogramView(image, rect, false, value, false, false,true)
 {
-	_qwtPlot->setTitle(tr("Profile Histogram"));
+        _qwtPlot->setTitle(tr("Line Profile Histogram for line number %1").arg(value));
+        _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Pixel Value"));
+        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Column"));
+        _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, image->getWidth());
+        _qwtPlot->setAxisScale(QwtPlot::yLeft, 0.0, 257.0);
 }

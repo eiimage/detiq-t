@@ -22,6 +22,7 @@
 
 #include "ImageWindow.h"
 #include "RowWindow.h"
+#include "ColumnWindow.h"
 #include "HistogramWindow.h"
 #include "ProjectionHistogramWindow.h"
 #include "GridWindow.h"
@@ -119,6 +120,8 @@ protected:
     QLabel* _lSelectedPixelInfo;
     QLabel* _lSelectedPixelPosition;
     QLabel* _lSelectedPixelColor;
+    int _selectedX;
+    int _selectedY;
 };
 }
 

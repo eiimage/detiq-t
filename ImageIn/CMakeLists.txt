@@ -52,6 +52,7 @@ set(ImageIn_SOURCES
 	BinaryImage.h
 	BmpImage.cpp
 	BmpImage.h
+	ColumnProfile.h
 	Converter.h
 	EasyBMP.cpp
 	EasyBMP.h
@@ -72,6 +73,7 @@ set(ImageIn_SOURCES
 	ImageFileFactory.h
 	JpgImage.cpp
 	JpgImage.h
+	LineProfile.h
 	mystdint.h
 	PixelAlgorithm.h
 	PngImage.cpp
@@ -86,10 +88,12 @@ set(ImageIn_SOURCES
 	VffImage.h
 )
 set(CXX_TEMPLATES
+  ColumnProfile.tpp
 	SpecificAlgorithm.tpp
 	RgbImage.tpp
 	ProjectionHistogram.tpp
 	Image.tpp
+	LineProfile.tpp
 	Histogram.tpp
 	GrayscaleImage.tpp
 	GenericAlgorithm.tpp

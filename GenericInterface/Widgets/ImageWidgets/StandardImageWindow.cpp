@@ -220,16 +220,27 @@ void StandardImageWindow::showVProjectionHistogram()
 
 void StandardImageWindow::showLineProfile()
 {
-    imagein::Rectangle rect(0, _selectedPixel.y(), _displayImg->getWidth(), 1);
-    RowWindow* histogramWnd = new RowWindow(_displayImg, rect, false, this->windowTitle() + QString(" - ") + tr("Line Profile"));
-    showGenericHistogram(histogramWnd);
+    bool ok;
+    int rowNumber = QInputDialog::getInt(this, tr("Line selection"), tr("Select the line to project"), _selectedPixel.y(), 0, _displayImg->getHeight(), 1, &ok);
+
+    if(ok)
+    {
+        RowWindow* histogramWnd = new RowWindow(_displayImg, selection(), rowNumber, this->windowTitle());
+        showGenericHistogram(histogramWnd);
+    }
+
 }
 
 void StandardImageWindow::showColumnProfile()
 {
-    imagein::Rectangle rect(_selectedPixel.x(), 0, 1, _displayImg->getHeight());
-    RowWindow* histogramWnd = new RowWindow(_displayImg, rect, true, this->windowTitle() + QString(" - ")  + tr("Line Profile"));
-    showGenericHistogram(histogramWnd);
+    bool ok;
+    int columnNumber = QInputDialog::getInt(this, tr("Column selection"), tr("Select the column to project"), _selectedPixel.x(), 0, _displayImg->getWidth(), 1, &ok);
+
+    if(ok)
+    {        
+        ColumnWindow* histogramWnd = new ColumnWindow(_displayImg, selection(), columnNumber, this->windowTitle());
+        showGenericHistogram(histogramWnd);
+    }
 }
 
 void StandardImageWindow::showPixelsGrid()

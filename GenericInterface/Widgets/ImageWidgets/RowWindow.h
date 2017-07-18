@@ -55,8 +55,8 @@ namespace genericinterface
 		 * \param image The image concerned by the histogram
 		 * \param rect The part of the image where the histogram is applied
 		 * \param vertical False : row profile ; True : column profile
-		 */
-    RowWindow(const imagein::Image* image, imagein::Rectangle rect, bool vertical, QString name = "");
+                 */
+    RowWindow(const imagein::Image* image, imagein::Rectangle rect, int value, QString name = "");
     
 		
 		/*!

@@ -346,19 +346,45 @@
 <context>
     <name>genericinterface::RowView</name>
     <message>
-        <source>Profile Histogram</source>
-        <translation>Profil</translation>
+        <source>Line Profile Histogram for line number %1</source>
+        <translation>Profil ligne pour la ligne numéro %1</translation>
+    </message>
+    <message>
+        <source>Pixel Value</source>
+        <translation>Valeur du pixel</translation>
+    </message>
+    <message>
+        <source>Column</source>
+        <translation>Colonne</translation>
+    </message>
+</context>
+<context>
+    <name>genericinterface::ColumnView</name>
+    <message>
+        <source>Column Profile Histogram for column number %1</source>
+        <translation>Profil colonne pour la colonne numéro %1</translation>
+    </message>
+    <message>
+        <source>Pixel Value</source>
+        <translation>Valeur du pixel</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Ligne</translation>
     </message>
 </context>
 <context>
     <name>genericinterface::RowWindow</name>
     <message>
-        <source>Column profile</source>
-        <translation>Profil colonne</translation>
-    </message>
-    <message>
         <source>Row profile</source>
         <translation>Profil ligne</translation>
+    </message>
+</context>
+<context>
+    <name>genericinterface::ColumnWindow</name>
+    <message>
+        <source>Column profile</source>
+        <translation>Profil colonne</translation>
     </message>
 </context>
 <context>
@@ -421,6 +447,22 @@
     <message>
         <source>Select value</source>
         <translation>Selectionner une valeur</translation>
+    </message>
+    <message>
+        <source>Line selection</source>
+        <translation>Selection de la ligne</translation>
+    </message>
+    <message>
+        <source>Select the line to project</source>
+        <translation>Selectionner la ligne à projeter</translation>
+    </message>
+    <message>
+        <source>Column selection</source>
+        <translation>Selection de la colonne</translation>
+    </message>
+    <message>
+        <source>Select the column to project</source>
+        <translation>Selectionner la colonne à projeter</translation>
     </message>
     <message>
         <source>Which value (0..255) ?</source>
