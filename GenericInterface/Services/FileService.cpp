@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QSettings>
+#include <QSpinBox>
 
 #include <QTranslator>
 #include <QProcess>
@@ -51,10 +52,12 @@ void FileService::display (GenericInterface* gi)
     _saveAs->setEnabled(false);
     gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(_saveAs);
 
-    /*_copy = fileMenu->addAction(tr("&Copy"));
+    _copy = fileMenu->addAction(tr("&Copy"));
+    _copy->setIcon(QIcon(":/images/copy.svg.png"));
     _copy->setShortcut(QKeySequence::Copy);
+    _copy->setEnabled(false);
     gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(_copy);
-    */
+
 
     // Get the list of all translations in the 'lang' folder
     QDir langDir(qApp->applicationDirPath() + QDir::separator() + "lang");
@@ -113,15 +116,16 @@ bool FileService::canOpen(const QString &fileName)
 void FileService::connect (GenericInterface* gi)
 {
     _gi = gi;
+    WindowService* ws = _gi->windowService();
+    ImageWindow* currentWindow = ws->getCurrentImageWindow();
     QObject::connect(_open, SIGNAL(triggered()), this, SLOT(chooseFile()));
     QObject::connect(_saveAs, SIGNAL(triggered()), this, SLOT(saveAs()));
-    //QObject::connect(_copy, SIGNAL(triggered()), this, SLOT(copyImage()));
+    QObject::connect(_copy, SIGNAL(triggered()), this, SLOT(copyImage()));
     for (int i = 0; i < MaxRecentFiles; ++i) {
         QObject::connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
 
-    //connexion des changements d'images
-    WindowService* ws = gi->windowService();
+    //connexion des changements d'images    
     QObject::connect(this, SIGNAL(fileChosen(const QString&)), ws, SLOT(addFile(const QString&)));
     QObject::connect(ws, SIGNAL(activeWidgetChanged(const QWidget*)), this, SLOT(checkActionsValid(const QWidget*)));
 }
@@ -284,18 +288,22 @@ void FileService::checkActionsValid(const QWidget* activeWidget)
     std::cout << "WindowService::activeWidgetChanged(" << reinterpret_cast<intptr_t>(activeWidget) << ")" << std::endl;
     const ImageWindow* window = dynamic_cast<const ImageWindow*>(activeWidget);
     const GenericHistogramWindow* histo = dynamic_cast<const GenericHistogramWindow*>(activeWidget);
-    if(window||histo) {
+    if(window) {
         _saveAs->setEnabled(true);
-    }
-    else {
+        _copy->setEnabled(true);
+    }else if (histo){
+        _saveAs->setEnabled(true);
+        _copy->setEnabled(false);
+    }else{
         _saveAs->setEnabled(false);
+        _copy->setEnabled(false);
     }
 }
-/*
+
 void FileService::copyImage(){
     WindowService* ws = _gi->windowService();
     ImageWindow* currentWindow = ws->getCurrentImageWindow();
-    QImage img = currentWindow->view()->widget()->convertImage(_displayImg);
+    QImage img = currentWindow->view()->widget()->convertImage(currentWindow->getDisplayImage());
     QClipboard *clipboard = QApplication::clipboard();
     if(currentWindow->getSelectionButton()->isChecked()){
         QRect rect(currentWindow->getSelectionWidget()->getX()->value(),currentWindow->getSelectionWidget()->getY()->value(),currentWindow->getSelectionWidget()->getWidth()->value(),currentWindow->getSelectionWidget()->getHeight()->value());
@@ -308,4 +316,4 @@ void FileService::copyImage(){
     }
 
 }
-*/
+

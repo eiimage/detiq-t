@@ -10,5 +10,6 @@
      <file>images/applications-utilities-2.png</file>
      <file>images/zoom-in.svg.png</file>
      <file>images/zoom-out.svg.png</file>
+     <file>images/copy.svg.png</file>
  </qresource>
 </RCC>

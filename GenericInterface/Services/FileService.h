@@ -54,7 +54,7 @@ namespace genericinterface
         public slots:
             void save(const QString& path = QString(), const QString& ext = QString());
             void saveAs();
-           // void copyImage();
+            void copyImage();
             void checkActionsValid(const QWidget* activeWidget);
             void loadFiles(const QStringList &fileNames);
 
@@ -73,8 +73,8 @@ namespace genericinterface
             QAction* _open;
             QAction* _save;
             QAction* _saveAs;
+            QAction* _copy;
 
-            //QAction* _copy;
 
             GenericInterface* _gi;
             //ImageWindow* _iw = _gi->windowService()->getCurrentImageWindow();
