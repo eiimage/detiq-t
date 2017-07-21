@@ -27,10 +27,12 @@ ProjectionHistogramView::ProjectionHistogramView(const Image* image, Rectangle r
 {
     if (horizontal){
         _qwtPlot->setTitle(tr("Horizontal Projection Histogram"));
-        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Column number"));
+        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Line number"));
+        _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, image->getHeight());
     }else{
         _qwtPlot->setTitle(tr("Vertical Projection Histogram"));
-        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Line number"));
+        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Column number"));
+        _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, image->getWidth());
     }
     _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Number of pixels >= %1").arg(value));
 
