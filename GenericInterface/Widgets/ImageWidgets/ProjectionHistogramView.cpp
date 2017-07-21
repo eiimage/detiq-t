@@ -23,11 +23,16 @@
 using namespace genericinterface;
 using namespace imagein;
 
-ProjectionHistogramView::ProjectionHistogramView(const Image* image, Rectangle rect, int value, bool horizontal): GenericHistogramView(image, rect, true, horizontal, value)
+ProjectionHistogramView::ProjectionHistogramView(const Image* image, Rectangle rect, int value, bool horizontal): GenericHistogramView(image, rect, horizontal, value, true)
 {
-    _qwtPlot->setTitle(tr("Projection Histogram"));
+    if (horizontal){
+        _qwtPlot->setTitle(tr("Horizontal Projection Histogram"));
+        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Column number"));
+    }else{
+        _qwtPlot->setTitle(tr("Vertical Projection Histogram"));
+        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Line number"));
+    }
+    _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Number of pixels >= %1").arg(value));
 
-    _qwtPlot->setAxisTitle(QwtPlot::yLeft, "");
-    _qwtPlot->setAxisTitle(QwtPlot::xBottom, "");
 }
 

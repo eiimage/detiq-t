@@ -39,23 +39,21 @@ namespace imagein
 			/*!
                          * \brief Constructs a ColumnProfile_t from an image.
 			 *
-			 * \param img The image from which to compute the projection histogram.
-			 * \param value The value that will be counted.
-			 * \param horizontal The projection histogram will count the pixels of the selected value for each row if true, for each column if false.
+                         * \param img The image from which to compute the profile.
+                         * \param value The column that will be used for the profile.
 			 * \param rect A rectangle used to crop the image before computing the Histogram.
 			 * \param channel The channel to consider for the values. Default value is 0 in case of a one channel image.
 			 */
-            ColumnProfile_t(const Image_t<D>& img, D value, bool horizontal, const Rectangle& rect, unsigned int channel = 0);
+            ColumnProfile_t(const Image_t<D>& img, D value, const Rectangle& rect, unsigned int channel = 0);
 			
 			/*!
                          * \brief Constructs a ColumnProfile_t from an image.
 			 *
-			 * \param img The image from which to compute the projection histogram.
-			 * \param value The value that will be counted.
-			 * \param horizontal The projection histogram will count the pixels of the selected value for each row if true, for each column if false.
+                         * \param img The image from which to compute the profile.
+                         * \param value The column that will be used for the profile.
 			 * \param channel The channel to consider for the values. Default value is 0 in case of a one channel image.
 			 */
-            ColumnProfile_t(const Image_t<D>& img, D value, bool horizontal, unsigned int channel = 0);
+            ColumnProfile_t(const Image_t<D>& img, D value, unsigned int channel = 0);
 			
 			/*!
                          * \brief Classical destructor for ColumnProfile_t.

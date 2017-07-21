@@ -29,6 +29,7 @@ ProjectionHistogramWindow::ProjectionHistogramWindow(const imagein::Image* image
         this->setWindowTitle(name + QString(" - ") + tr("Horizontal Projection Histogram"));
 	else
         this->setWindowTitle(name + QString(" - ") + tr("Vertical Projection Histogram"));
+        adjustSize();
 }
 
 ProjectionHistogramWindow::~ProjectionHistogramWindow()

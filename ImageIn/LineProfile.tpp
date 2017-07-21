@@ -20,7 +20,7 @@
 //#include "LineProfile.h"
 
 template <typename D>
-imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, D value, bool horizontal, const Rectangle& rect, unsigned int channel) {
+imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, D value, const Rectangle& rect, unsigned int channel) {
     // We recreate the Array depending on the orientation of the projection and the size of the cropped Image
     _width = rect.w;
     delete [] _array;
@@ -38,7 +38,7 @@ imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, D value, bool ho
 }
 
 template <typename D>
-imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, D value, bool horizontal, unsigned int channel) {
+imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, D value, unsigned int channel) {
 	// We recreate the Array depending on the orientation of the projection and the size of the cropped Image
     _width = img.getWidth();
     delete [] _array;

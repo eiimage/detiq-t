@@ -313,8 +313,25 @@
 <context>
     <name>genericinterface::ProjectionHistogramView</name>
     <message>
-        <source>Projection Histogram</source>
-        <translation>Histogramme de projection</translation>
+        <source>Horizontal Projection Histogram</source>
+        <translation>Histogramme de Projection Horizontale</translation>
+    </message>
+    <message>
+        <source>Vertical Projection Histogram</source>
+        <translation>Histogramme de Projection Verticale</translation>
+    </message>
+    <message>
+        <source>Column number</source>
+        <translation>Numéro de colonne</translation>
+    </message>
+    <message>
+        <source>Line number</source>
+        <translation>Numéro de ligne</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ProjectionHistogramView.cpp"/>
+        <source>Number of pixels >= %1</source>
+        <translation>Nombre de pixels >= %1</translation>
     </message>
 </context>
 <context>
@@ -346,7 +363,7 @@
 <context>
     <name>genericinterface::RowView</name>
     <message>
-        <source>Line Profile Histogram for line number %1</source>
+        <source>Line Profile for line number %1</source>
         <translation>Profil ligne pour la ligne numéro %1</translation>
     </message>
     <message>
@@ -361,7 +378,7 @@
 <context>
     <name>genericinterface::ColumnView</name>
     <message>
-        <source>Column Profile Histogram for column number %1</source>
+        <source>Column Profile for column number %1</source>
         <translation>Profil colonne pour la colonne numéro %1</translation>
     </message>
     <message>
@@ -445,8 +462,8 @@
         <translation>Copier &amp; rognier</translation>
     </message>
     <message>
-        <source>Select value</source>
-        <translation>Selectionner une valeur</translation>
+        <source>Threshold selection</source>
+        <translation>Selection du seuil</translation>
     </message>
     <message>
         <source>Line selection</source>
@@ -454,7 +471,7 @@
     </message>
     <message>
         <source>Select the line to project</source>
-        <translation>Selectionner la ligne à projeter</translation>
+        <translation>Selectionnez la ligne à projeter</translation>
     </message>
     <message>
         <source>Column selection</source>
@@ -462,11 +479,11 @@
     </message>
     <message>
         <source>Select the column to project</source>
-        <translation>Selectionner la colonne à projeter</translation>
+        <translation>Selectionnez la colonne à projeter</translation>
     </message>
     <message>
-        <source>Which value (0..255) ?</source>
-        <translation>Quelle valeur (0..255) ?</translation>
+        <source>Enter the threshold value&#xA;(only pixels superior or equal to this value will be counted)</source>
+        <translation>Entrez la valeur du seuil&#xA;(seuls les pixels supérieurs ou égaux à cette valeur seront comptés)</translation>
     </message>
     <message>
         <source>Selected</source>

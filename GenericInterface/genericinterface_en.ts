@@ -377,9 +377,29 @@
 <context>
     <name>genericinterface::ProjectionHistogramView</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ProjectionHistogramView.cpp" line="28"/>
-        <source>Projection Histogram</source>
-        <translation>Projection Histogram</translation>
+        <location filename="Widgets/ImageWidgets/ProjectionHistogramView.cpp"/>
+        <source>Horizontal Projection Histogram</source>
+        <translation>Horizontal Projection Histogram</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ProjectionHistogramView.cpp"/>
+        <source>Vertical Projection Histogram</source>
+        <translation>Vertical Projection Histogram</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ProjectionHistogramView.cpp"/>
+        <source>Column number</source>
+        <translation>Column number</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ProjectionHistogramView.cpp"/>
+        <source>Line number</source>
+        <translation>Line number</translation>
+    </message>
+    <message>
+        <location filename="Widgets/ImageWidgets/ProjectionHistogramView.cpp"/>
+        <source>Number of pixels >= %1</source>
+        <translation>Number of pixels >= %1</translation>
     </message>
 </context>
 <context>
@@ -416,8 +436,8 @@
 <context>
     <name>genericinterface::RowView</name>
     <message>
-        <source>Line Profile Histogram for line number %1</source>
-        <translation>Line Profile Histogram for line number %1</translation>
+        <source>Line Profile for line number %1</source>
+        <translation>Line Profile for line number %1</translation>
     </message>
     <message>
         <source>Pixel Value</source>
@@ -431,8 +451,8 @@
 <context>
     <name>genericinterface::ColumnView</name>
     <message>
-        <source>Column Profile Histogram for column number %1</source>
-        <translation>Column Profile Histogram for column number %1</translation>
+        <source>Column Profile for column number %1</source>
+        <translation>Column Profile for column number %1</translation>
     </message>
     <message>
         <source>Pixel Value</source>
@@ -547,8 +567,14 @@
     <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="200"/>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="212"/>
-        <source>Select value</source>
-        <translation>Select value</translation>
+        <source>Threshold selection</source>
+        <translation>Threshold selection</translation>
+    </message>
+        <message>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="200"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="212"/>
+        <source>Enter the threshold value&#xA;(only pixels superior or equal to this value will be counted)</source>
+        <translation>Enter the threshold value&#xA;(only pixels superior or equal to this value will be counted)</translation>
     </message>
     <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
@@ -573,12 +599,6 @@
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp"/>
         <source>Select the column to project</source>
         <translation>Select the column to project</translation>
-    </message>
-    <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="200"/>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="212"/>
-        <source>Which value (0..255) ?</source>
-        <translation>Which value (0..255) ?</translation>
     </message>
     <message>
         <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="138"/>

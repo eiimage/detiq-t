@@ -26,18 +26,38 @@ imagein::ProjectionHistogram_t<D>::ProjectionHistogram_t(const Image_t<D>& img, 
     else _width = rect.w;
     delete [] _array;
     _array = new unsigned int[_width];
+
+    //_array initialization
+    for(int i = 0; i<_width; i++){
+        _array[i] = 0;
+    }
     // We crop the Image to the Rectangle given in parameter
     Image_t<D>* workImg = img.crop(rect);
     // We prepare to iterate through the Image, we get the max width and height now to avoid to calculate it every iteration
     unsigned int wmax, hmax, iterw, iterh;
     wmax = workImg->getWidth();
     hmax = workImg->getHeight();
-    for(iterw=0;iterw<wmax;iterw++) {
+    if (horizontal){
         for(iterh=0;iterh<hmax;iterh++) {
-            if(workImg->getPixel(iterw,iterh,channel)==value) {
-                if(horizontal) _array[iterh]++;
-                else _array[iterw]++;
+            int numberPixel = 0;
+            for(iterw=0;iterw<wmax;iterw++) {
+                if(workImg->getPixel(iterw, iterh, channel)>=value) {
+                    numberPixel++;
+
+                }
             }
+            _array[iterh] = numberPixel;
+        }
+    }else{
+
+        for(iterw=0;iterw<wmax;iterw++) {
+            int numberPixel = 0;
+            for(iterh=0;iterh<hmax;iterh++) {
+                if(workImg->getPixel(iterw, iterh, channel)>=value) {
+                    numberPixel++;
+                }
+            }
+            _array[iterw]=numberPixel;
         }
     }
 	delete workImg;
@@ -50,16 +70,33 @@ imagein::ProjectionHistogram_t<D>::ProjectionHistogram_t(const Image_t<D>& img, 
     else _width = img.getWidth();
     delete [] _array;
     _array = new unsigned int[_width];
+    //_array initialization
+    for(int i = 0; i<_width; i++){
+        _array[i] = 0;
+    }
     // We prepare to iterate through the Image, we get the max width and height now to avoid to calculate it every iteration
     unsigned int wmax, hmax, iterw, iterh;
     wmax = img.getWidth();
     hmax = img.getHeight();
-    for(iterw=0;iterw<wmax;iterw++) {
+    if (!horizontal){
         for(iterh=0;iterh<hmax;iterh++) {
-            if(img.getPixel(iterw,iterh,channel)==value) {
-                if(horizontal) _array[iterh]++;
-                else _array[iterw]++;
+            int numberPixel = 0;
+            for(iterw=0;iterw<wmax;iterw++){
+                if(img.getPixel(iterh, iterw, channel)>=value) {
+                    numberPixel++;
+                }
             }
+            _array[iterh] = numberPixel;
+        }
+    }else {
+       for(iterw=0;iterw<wmax;iterw++) {
+           int numberPixel = 0;
+           for(iterh=0;iterh<hmax;iterh++) {
+               if(img.getPixel(iterh, iterw, channel)>=value) {
+                    numberPixel++;
+               }
+           }
+           _array[iterw]=numberPixel;
         }
     }
 }

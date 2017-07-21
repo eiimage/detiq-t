@@ -25,7 +25,7 @@ using namespace imagein;
 
 ColumnView::ColumnView(const Image* image, Rectangle rect, int value): GenericHistogramView(image, rect, false, value, false, false, false, true)
 {
-        _qwtPlot->setTitle(tr("Column Profile Histogram for column number %1").arg(value));
+        _qwtPlot->setTitle(tr("Column Profile for column number %1").arg(value));
         _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Pixel Value"));
         _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Line"));
         _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, image->getHeight());

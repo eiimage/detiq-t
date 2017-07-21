@@ -55,11 +55,11 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
 
         } else if(_lineProfile){
 
-            graphicalHisto->setValues(imagein::LineProfile(*image, _value, _horizontal, _rectangle, i));
+            graphicalHisto->setValues(imagein::LineProfile(*image, _value, _rectangle, i));
 
         } else if(_columnProfile){
 
-            graphicalHisto->setValues(imagein::ColumnProfile(*image, _value, _horizontal, _rectangle, i));
+            graphicalHisto->setValues(imagein::ColumnProfile(*image, _value, _rectangle, i));
 
         } else {
             graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
@@ -215,9 +215,9 @@ void GenericHistogramView::init(uint nbChannels)
             graphicalHisto = new GraphicalHistogram(tr("Channel"), Qt::black);
         }
 
-        if(_horizontal) {
+        /*if(_horizontal) {
             graphicalHisto->setOrientation(Qt::Horizontal);
-        }
+        }*/
         graphicalHisto->attach(_qwtPlot);
         _graphicalHistos.push_back(graphicalHisto);
 

@@ -99,15 +99,15 @@ void StandardImageWindow::init()
 {
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
-    menu()->addAction(tr("Cumulated histogram"), this, SLOT(showCumulatedHistogram()));
-    menu()->addAction(tr("Column Profile"), this, SLOT(showColumnProfile()));
-    menu()->addAction(tr("Line Profile"), this, SLOT(showLineProfile()));
-    menu()->addSeparator();
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
     menu()->addSeparator();
     menu()->addAction(tr("Convert to grayscale"), this, SLOT(convertToGrayscale()));
     menu()->addAction(tr("Convert to binary"), this, SLOT(convertToBinary()));
+    menu()->addSeparator();
+    menu()->addAction(tr("Cumulated histogram"), this, SLOT(showCumulatedHistogram()));
+    menu()->addAction(tr("Column Profile"), this, SLOT(showColumnProfile()));
+    menu()->addAction(tr("Line Profile"), this, SLOT(showLineProfile()));
 
     updateStatusBar();
 }
@@ -197,7 +197,7 @@ void StandardImageWindow::showCumulatedHistogram() {
 void StandardImageWindow::showHProjectionHistogram()
 {
     bool ok;
-    int value = QInputDialog::getInt(this, tr("Select value"), tr("Which value (0..255) ?"), 0, 0, 255, 1, &ok);
+    int value = QInputDialog::getInt(this, tr("Threshold selection"), tr("Enter the threshold value\n(only pixels superior or equal to this value will be counted)"), _displayImg->getPixel(_selectedPixel.x(),_selectedPixel.y(),0), 0, 255, 1, &ok);
 
     if (ok)
     {
@@ -208,14 +208,14 @@ void StandardImageWindow::showHProjectionHistogram()
 
 void StandardImageWindow::showVProjectionHistogram()
 {
-	bool ok;
-	int value = QInputDialog::getInt(this, tr("Select value"), tr("Which value (0..255) ?"), 0, 0, 255, 1, &ok);
-	
-	if(ok)
-	{
-        ProjectionHistogramWindow* histogramWnd = new ProjectionHistogramWindow(_displayImg, selection(), value, false,  this->windowTitle());
-        showGenericHistogram(histogramWnd);
-	} 
+    bool ok;
+    int value = QInputDialog::getInt(this, tr("Threshold selection"), tr("Enter the threshold value\n(only pixels superior or equal to this value will be counted)"), _displayImg->getPixel(_selectedPixel.x(),_selectedPixel.y(),0), 0, 255, 1, &ok);
+
+    if(ok)
+    {
+    ProjectionHistogramWindow* histogramWnd = new ProjectionHistogramWindow(_displayImg, selection(), value, false,  this->windowTitle());
+    showGenericHistogram(histogramWnd);
+    }
 }
 
 void StandardImageWindow::showLineProfile()
