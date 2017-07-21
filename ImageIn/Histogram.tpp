@@ -20,6 +20,7 @@
 #include "Histogram.h"
 #include "Image.h"
 
+
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
@@ -29,7 +30,7 @@
 
 template <typename D>
 imagein::Histogram::Histogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect)
-    : imagein::Array<unsigned int>(1 << (sizeof(D)*8))
+    : imagein::Array<unsigned int>(img.getWidth())
 {
    // assert(std::numeric_limits<D>::is_integer && "Initializing an Histogram from a Image_t<double> is a non-sense!");
     this->computeHistogram(img, channel, rect);
@@ -51,12 +52,11 @@ void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int ch
     }
     unsigned int maxw = rect.w > 0 ? rect.x+rect.w : img.getWidth();
     unsigned int maxh = rect.h > 0 ? rect.y+rect.h : img.getHeight();
-	
     for(unsigned int j=rect.y; j<maxh; j++) {
         for(unsigned int i=rect.x; i<maxw; i++) {
             D pixel = img.getPixel(i, j, channel);
             // D can't be a double here, so static_cast is valid
-            this->_array[(unsigned int)(pixel)]++;
+            this->_array[static_cast<unsigned int>(pixel)]++;
             //this->_array[pixel]++;
         }
     }
