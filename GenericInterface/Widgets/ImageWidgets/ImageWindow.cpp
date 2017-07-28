@@ -314,7 +314,7 @@ void ImageWindow::save(const QString& path, const QString& ext)
            // if(ws != NULL) {
 
                 if(this != NULL) {
-                    try {                      
+                    try{
                         _displayImg->save(path.toStdString());
                     }
                     catch(const UnknownFormatException& e) {

@@ -33,7 +33,6 @@
 #include "GenericHistogramView.h"
 #include "HistogramPicker.h"
 #include "GraphicalHistogram.h"
-#include "../../Utilities/Log.h"
 
 using namespace genericinterface;
 using namespace imagein;
@@ -61,7 +60,7 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
 
             graphicalHisto->setValues(imagein::ColumnProfile(*image, _value, _rectangle, i));
 
-        } else {
+        }else {
             graphicalHisto->setValues(imagein::Histogram(*image, i, _rectangle));
 
         }

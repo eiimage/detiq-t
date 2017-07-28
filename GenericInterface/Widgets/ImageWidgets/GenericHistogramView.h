@@ -88,7 +88,7 @@ public:
     //inline const imagein::Histogram* getHistogram(int channel) const { return new imagein::Histogram(*_image, channel, _rectangle); }
 
     //! Returns the graphical histogram
-    inline QwtPlot* getGraphicalHistogram() const { Log::info("get graphical histogram"); return _qwtPlot; }
+    inline QwtPlot* getGraphicalHistogram() const { return _qwtPlot; }
     inline imagein::Rectangle getApplicationArea() const { return _rectangle; }
 
 signals:

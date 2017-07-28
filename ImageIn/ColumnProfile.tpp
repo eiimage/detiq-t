@@ -20,9 +20,9 @@
 //#include "ColumnProfile.h"
 
 template <typename D>
-imagein::ColumnProfile_t<D>::ColumnProfile_t(const Image_t<D>& img, D value, const Rectangle& rect, unsigned int channel) {
+imagein::ColumnProfile_t<D>::ColumnProfile_t(const Image_t<D>& img, int value, const Rectangle& rect, unsigned int channel) {
     // We recreate the Array depending on the orientation of the projection and the size of the cropped Image
-    _width = rect.w;
+    _width = rect.h;
     delete [] _array;
     _array = new unsigned int[_width];
     // We crop the Image to the Rectangle given in parameter
@@ -30,17 +30,17 @@ imagein::ColumnProfile_t<D>::ColumnProfile_t(const Image_t<D>& img, D value, con
     // We prepare to iterate through the Image, we get the max width and height now to avoid to calculate it every iteration
     for(unsigned int i = 0; i < workImg->getHeight(); ++i) {
 
-        D pixValue = workImg->getPixel(value, i, channel);
+        int pixValue = workImg->getPixel(value, i, channel);
         _array[i]=pixValue;
 
     }
-	delete workImg;
+    delete workImg;
 }
 
 template <typename D>
 imagein::ColumnProfile_t<D>::ColumnProfile_t(const Image_t<D>& img, D value, unsigned int channel) {
 	// We recreate the Array depending on the orientation of the projection and the size of the cropped Image
-    _width = img.getWidth();
+    _width = img.getHeight();
     delete [] _array;
     _array = new unsigned int[_width];
     // We prepare to iterate through the Image, we get the max width and height now to avoid to calculate it every iteration

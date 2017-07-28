@@ -44,7 +44,7 @@ namespace imagein
 			 * \param rect A rectangle used to crop the image before computing the Histogram.
 			 * \param channel The channel to consider for the values. Default value is 0 in case of a one channel image.
 			 */
-            LineProfile_t(const Image_t<D>& img, D value, const Rectangle& rect, unsigned int channel = 0);
+            LineProfile_t(const Image_t<D>& img, int value, const Rectangle& rect, unsigned int channel = 0);
 			
 			/*!
                          * \brief Constructs a LineProfile_t from an image.

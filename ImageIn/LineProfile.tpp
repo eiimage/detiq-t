@@ -20,21 +20,23 @@
 //#include "LineProfile.h"
 
 template <typename D>
-imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, D value, const Rectangle& rect, unsigned int channel) {
+imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, int value, const Rectangle& rect, unsigned int channel) {
     // We recreate the Array depending on the orientation of the projection and the size of the cropped Image
     _width = rect.w;
     delete [] _array;
     _array = new unsigned int[_width];
+
     // We crop the Image to the Rectangle given in parameter
     Image_t<D>* workImg = img.crop(rect);
     // We prepare to iterate through the Image, we get the max width and height now to avoid to calculate it every iteration
     for(unsigned int j = 0; j < workImg->getWidth(); ++j) {
 
-        D pixValue = workImg->getPixel(j, value, channel);
+        int pixValue = workImg->getPixel(j, value, channel);
         _array[j]=pixValue;
 
     }
-	delete workImg;
+    delete workImg;
+
 }
 
 template <typename D>

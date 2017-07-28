@@ -221,7 +221,7 @@ void StandardImageWindow::showVProjectionHistogram()
 void StandardImageWindow::showLineProfile()
 {
     bool ok;
-    int rowNumber = QInputDialog::getInt(this, tr("Line selection"), tr("Select the line to project"), _selectedPixel.y(), 0, _displayImg->getHeight(), 1, &ok);
+    int rowNumber = QInputDialog::getInt(this, tr("Line selection"), tr("Select the line to project"), _selectedPixel.y(), 0, selection().h /*_displayImg->getHeight()*/, 1, &ok);
 
     if(ok)
     {
@@ -234,7 +234,7 @@ void StandardImageWindow::showLineProfile()
 void StandardImageWindow::showColumnProfile()
 {
     bool ok;
-    int columnNumber = QInputDialog::getInt(this, tr("Column selection"), tr("Select the column to project"), _selectedPixel.x(), 0, _displayImg->getWidth(), 1, &ok);
+    int columnNumber = QInputDialog::getInt(this, tr("Column selection"), tr("Select the column to project"), _selectedPixel.x(), 0, selection().w /*_displayImg->getWidth()*/, 1, &ok);
 
     if(ok)
     {        
