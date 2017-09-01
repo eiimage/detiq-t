@@ -27,7 +27,7 @@ ColumnView::ColumnView(const Image* image, Rectangle rect, int value): GenericHi
 {
         _qwtPlot->setTitle(tr("Column Profile for column number %1").arg(value));
         _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Pixel Value"));
-        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Line"));
+        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Line number"));
         _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, image->getHeight());
         _qwtPlot->setAxisScale(QwtPlot::yLeft, 0.0, 257.0);
 }

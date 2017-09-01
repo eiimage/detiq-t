@@ -29,8 +29,8 @@
 #include <assert.h>
 
 template <typename D>
-imagein::Histogram::Histogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect)
-    : imagein::Array<unsigned int>(511)
+imagein::Histogram::Histogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect, int width)
+    : imagein::Array<unsigned int>(width)
 {
    // assert(std::numeric_limits<D>::is_integer && "Initializing an Histogram from a Image_t<double> is a non-sense!");
     this->computeHistogram(img, channel, rect);
@@ -59,6 +59,8 @@ void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int ch
             // D can't be a double here, so static_cast is valid
             _array[static_cast<unsigned int>(pixel)]++;
 //                this->_array[(int)pixel]++;
+//            this->_array[static_cast<unsigned int>(pixel)]++;
+//            this->_array[pixel]++;
 
         }
     }

@@ -24,7 +24,7 @@ using namespace genericinterface;
 using namespace imagein;
 
 HistogramView::HistogramView(const Image* image, imagein::Rectangle rect, bool cumul)
-    : GenericHistogramView(image, rect, false, 0, false, cumul)
+    : GenericHistogramView(image, rect, false, 0, false, cumul, false, false)
 {
     if(!cumul) {
         _qwtPlot->setTitle(tr("Histogram"));

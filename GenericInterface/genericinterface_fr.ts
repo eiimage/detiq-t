@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Copy &amp; crop</source>
-        <translation>Copier &amp; rognier</translation>
+        <translation>Copier &amp; rogner</translation>
     </message>
     <message>
         <source>Selected</source>
@@ -52,7 +52,7 @@
     </message>
     <message>
         <source>Disable Offset</source>
-        <translation>Désactiver le décallage des pixels</translation>
+        <translation>Désactiver le décalage des pixels</translation>
     </message>
 </context>
 <context>

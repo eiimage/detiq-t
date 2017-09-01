@@ -124,8 +124,6 @@ GenericHistogramView::~GenericHistogramView()
 void GenericHistogramView::init(uint nbChannels)
 {
 
-    Log::info("view");
-
     this->setMouseTracking(true); //Switch on mouse tracking (no need to press button)
 
     _qwtPlot->setTitle(tr("Histogram"));

@@ -27,7 +27,7 @@ RowView::RowView(const Image* image, Rectangle rect, int value): GenericHistogra
 {
         _qwtPlot->setTitle(tr("Line Profile for line number %1").arg(value));
         _qwtPlot->setAxisTitle(QwtPlot::yLeft, tr("Pixel Value"));
-        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Column"));
+        _qwtPlot->setAxisTitle(QwtPlot::xBottom, tr("Column number"));
         _qwtPlot->setAxisScale(QwtPlot::xBottom, 0.0, image->getWidth());
         _qwtPlot->setAxisScale(QwtPlot::yLeft, 0.0, 257.0);
 }
