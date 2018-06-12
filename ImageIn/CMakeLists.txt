@@ -21,7 +21,7 @@ find_package(Threads REQUIRED)
 # This ensure the shared libraries built in 'plugins' folder will link with ImageIn
 # This flag is useless on Windows (MSVC or MinGW compilers)
 if(UNIX)
-	set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -fPIC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 set(ImageIn_SOURCES
