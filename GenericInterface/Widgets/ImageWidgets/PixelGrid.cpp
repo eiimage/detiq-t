@@ -58,8 +58,8 @@ void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
     QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
     QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
     
-    /* fix the last row and column no displayed
-     * there has to be a cleaner way to do it (my thought is in the Qrect property)
+    /* fix the last row and column not displayed
+     * there has to be a cleaner way to do it (my thought is in a Qrect property)
      * but for the time being it works quite well
     */
 
@@ -153,7 +153,7 @@ void DoublePixelGrid::paintEvent (QPaintEvent* /*event */) {
 //    }
     QPainter painter(this);
 
-    QSize srcSize(10, 10);
+    QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
     QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
 
 
