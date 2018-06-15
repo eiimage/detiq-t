@@ -58,9 +58,23 @@ void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
     QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
     QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
     
+    /* fix the last row and column no displayed
+     * there has to be a cleaner way to do it (my thought is in the Qrect property)
+     * but for the time being it works quite well
+    */
+
+    if(_offset.x() == _pixmap.width()-srcSize.width()-1){
+        _offset.setX(_offset.x()+1);
+    }
+
+    if(_offset.y() == _pixmap.height()-srcSize.height()-1){
+        _offset.setY(_offset.y()+1);
+    }
+
     /* draw the image's pixmap */
+
     painter.drawPixmap(QRect(QPoint(PIXEL_S,PIXEL_S), dstSize), _pixmap, QRect(_offset, srcSize));
-    
+
     /* draw the grid's lines */
     painter.setPen(Qt::black);
     for(int i = 1; i <= srcSize.width()+1; ++i) {
@@ -139,11 +153,13 @@ void DoublePixelGrid::paintEvent (QPaintEvent* /*event */) {
 //    }
     QPainter painter(this);
 
-    QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
+    QSize srcSize(10, 10);
     QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
+
 
     /* draw the image's pixmap */
     painter.drawPixmap(QRect(QPoint(PIXEL_S,PIXEL_S), dstSize), _pixmap, QRect(_offset, srcSize));
+
 
     /* draw the grid's lines */
     painter.setPen(Qt::black);
