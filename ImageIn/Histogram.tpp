@@ -47,7 +47,7 @@ imagein::Histogram::Histogram(const imagein::Image_t<D>& img, const imagein::Rec
 template<typename D>
 void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect)
 {
-    for(int i=0; i<=255; i++) {
+    for(int i=0; i<this->size(); i++) {
         this->_array[i] = 0;
     }
 
