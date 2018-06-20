@@ -32,11 +32,15 @@ using namespace imagein;
 using namespace genericinterface;
 
 ChannelSelector::ChannelSelector(const QString& name, int nb)
-  : QRadioButton(name), _nb(nb)
+  : QRadioButton(name), _nb(nb), _name(name)
 {
-  if(nb == 0)
+  if(nb == 0){
     setChecked(true);
-  QObject::connect(this, SIGNAL(clicked(bool)), this, SLOT(send(bool)));
+  }
+  if(nb == 0 && _name.toStdString()!="R"){
+    setVisible(false);
+  }
+    QObject::connect(this, SIGNAL(clicked(bool)), this, SLOT(send(bool)));
 }
 
 void ChannelSelector::send(bool b)

@@ -41,6 +41,7 @@ namespace genericinterface
       void send(bool);
   private:
       int _nb;
+      QString _name;
   };
 
   class RadioPanel : public QWidget
