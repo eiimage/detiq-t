@@ -48,9 +48,12 @@ inline uintmax_t sum(const Image* im, int i, int j) {
     return sum / im->getNbChannels();
 }
 
-    /* 1.9 coefficient allows the window to strech correctly and to display the last row and column */
+    /* Fully working, now displays last row and column correctly */
 void PixelGrid::resizeEvent(QResizeEvent* event) {
-    emit resized(event->size()/(PIXEL_S+1.9));
+    QSize* evtSize = new QSize(event->size()/(PIXEL_S));
+    evtSize->setWidth((event->size().width()-25)/PIXEL_S);
+    evtSize->setHeight((event->size().height()-25)/PIXEL_S);
+    emit resized(*evtSize);
 }
 
 void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
@@ -58,7 +61,7 @@ void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
     
     QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
     QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
-    
+
     /* draw the image's pixmap */
 
     painter.drawPixmap(QRect(QPoint(PIXEL_S,PIXEL_S), dstSize), _pixmap, QRect(_offset, srcSize));
