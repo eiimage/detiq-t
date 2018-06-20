@@ -48,8 +48,9 @@ inline uintmax_t sum(const Image* im, int i, int j) {
     return sum / im->getNbChannels();
 }
 
+    /* 1.9 coefficient allows the window to strech correctly and to display the last row and column */
 void PixelGrid::resizeEvent(QResizeEvent* event) {
-    emit resized(event->size()/PIXEL_S);
+    emit resized(event->size()/(PIXEL_S+1.9));
 }
 
 void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
@@ -58,19 +59,6 @@ void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
     QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
     QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
     
-    /* fix the last row and column not displayed
-     * there has to be a cleaner way to do it (my thought is in a Qrect property)
-     * but for the time being it works quite well
-    */
-
-    if(_offset.x() == _pixmap.width()-srcSize.width()-1){
-        _offset.setX(_offset.x()+1);
-    }
-
-    if(_offset.y() == _pixmap.height()-srcSize.height()-1){
-        _offset.setY(_offset.y()+1);
-    }
-
     /* draw the image's pixmap */
 
     painter.drawPixmap(QRect(QPoint(PIXEL_S,PIXEL_S), dstSize), _pixmap, QRect(_offset, srcSize));
