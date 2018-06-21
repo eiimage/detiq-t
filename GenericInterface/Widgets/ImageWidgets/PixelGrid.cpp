@@ -56,14 +56,27 @@ void PixelGrid::resizeEvent(QResizeEvent* event) {
     emit resized(*evtSize);
 }
 
+
 void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
     QPainter painter(this);
     
     QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
     QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
 
-    /* draw the image's pixmap */
 
+    /* Pour ne pas afficher de carrés blancs lorsque l'on sort de l'image */
+    if(_pixmap.width()-(srcSize.width()+_offset.x())<0){
+        _offset.setX(_pixmap.width()-srcSize.width());
+    }
+
+    if(_pixmap.height()-(srcSize.height()+_offset.y())<0){
+        _offset.setY(_pixmap.height()-srcSize.height());
+    }
+
+    cout << "offset : " << _offset.x() << " " << _offset.y() << "\n";
+    emit originMoved(_offset);
+
+    /* draw the image's pixmap */
     painter.drawPixmap(QRect(QPoint(PIXEL_S,PIXEL_S), dstSize), _pixmap, QRect(_offset, srcSize));
 
     /* draw the grid's lines */

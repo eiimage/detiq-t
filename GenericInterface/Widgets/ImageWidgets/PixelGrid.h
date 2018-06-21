@@ -55,6 +55,7 @@ namespace genericinterface
 
   signals:
     void resized(QSize size);
+    void originMoved(QPoint point);
 
   protected:
   

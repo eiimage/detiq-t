@@ -30,3 +30,9 @@ void ThumbnailView::setRectSize(QSize size) {
     _rubberBand.resize(QSize(size.width()*width()/pixmap().width(),size.height()*height()/pixmap().height()));
 }
 
+void ThumbnailView::setRectPos(QPoint point){
+    _select.moveTo(point);
+    cout << "endroit à bouger " << point.x() << " " << point.y() << "\n";
+    _rubberBand.move(QPoint(point.x()*width()/pixmap().width(),point.y()*height()/pixmap().height()));
+}
+

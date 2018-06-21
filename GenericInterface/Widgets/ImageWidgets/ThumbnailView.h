@@ -21,6 +21,7 @@ namespace genericinterface
 
     public slots:
       void setRectSize(QSize size);
+      void setRectPos(QPoint point);
 
     protected:
       void mouseMoveEvent(QMouseEvent * event);
