@@ -51,8 +51,8 @@ inline uintmax_t sum(const Image* im, int i, int j) {
     /* Fully working, now displays last row and column correctly */
 void PixelGrid::resizeEvent(QResizeEvent* event) {
     QSize* evtSize = new QSize(event->size()/(PIXEL_S));
-    evtSize->setWidth((event->size().width()-25)/PIXEL_S);
-    evtSize->setHeight((event->size().height()-25)/PIXEL_S);
+    evtSize->setWidth((event->size().width()-PIXEL_S)/PIXEL_S);
+    evtSize->setHeight((event->size().height()-PIXEL_S)/PIXEL_S);
     emit resized(*evtSize);
 }
 
@@ -73,7 +73,6 @@ void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
         _offset.setY(_pixmap.height()-srcSize.height());
     }
 
-    cout << "offset : " << _offset.x() << " " << _offset.y() << "\n";
     emit originMoved(_offset);
 
     /* draw the image's pixmap */
@@ -123,43 +122,21 @@ DoublePixelGrid::DoublePixelGrid(const imagein::Image_t<double>* dataImg, const 
 }
 
 void DoublePixelGrid::paintEvent (QPaintEvent* /*event */) {
-//    QPainter painter(this);
 
-//    QSize srcSize(this->width()/PIXEL_S, this->height()/PIXEL_S);
-//    QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
-
-//    /* draw the image's pixmap */
-//    painter.drawPixmap(QRect(QPoint(0,0), dstSize), _pixmap, QRect(_offset, srcSize));
-
-//    /* draw the grid's lines */
-//    painter.setPen(Qt::black);
-//    for(int i = 0; i <= srcSize.width(); ++i) {
-//        painter.drawLine(i*PIXEL_S, 0, i*PIXEL_S, srcSize.height()*PIXEL_S);
-//    }
-//    for(int i = 0; i <= srcSize.height(); ++i) {
-//        painter.drawLine(0, i*PIXEL_S, srcSize.width()*PIXEL_S, i*PIXEL_S);
-//    }
-
-//    /* draw the text */
-//    painter.setFont(QFont("arial", 7));
-//    const int offsetY = (PIXEL_S+painter.fontMetrics().height())/2;
-//    for(int j = 0; j < srcSize.height(); ++j) {
-//        for(int i = 0; i < srcSize.width(); ++i) {
-//            try {
-//                double value = _dataImg->getPixel(i+_offset.x(), j+_offset.y(), _channel);
-//                painter.setPen( (sum(_image, i+_offset.x(), j+_offset.y()) > 127) ? Qt::black : Qt::white );
-//                QString string = QString("%1").arg(value,0,'f',2);
-//                const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
-//                painter.drawText(QPointF(i*PIXEL_S+offsetX, j*PIXEL_S+offsetY), string);
-//            }
-//            catch(out_of_range&) {}
-//        }
-//    }
     QPainter painter(this);
 
     QSize srcSize(this->width()/PIXEL_S-1, this->height()/PIXEL_S-1);
     QSize dstSize(srcSize.width()*PIXEL_S, srcSize.height()*PIXEL_S);
 
+    /* Pour ne pas afficher de carrés blancs lorsque l'on sort de l'image */
+    if(_pixmap.width()-(srcSize.width()+_offset.x())<0){
+        _offset.setX(_pixmap.width()-srcSize.width());
+    }
+
+    if(_pixmap.height()-(srcSize.height()+_offset.y())<0){
+        _offset.setY(_pixmap.height()-srcSize.height());
+    }
+    emit originMoved(_offset);
 
     /* draw the image's pixmap */
     painter.drawPixmap(QRect(QPoint(PIXEL_S,PIXEL_S), dstSize), _pixmap, QRect(_offset, srcSize));
@@ -229,4 +206,12 @@ void DoublePixelGrid::paintEvent (QPaintEvent* /*event */) {
             catch(out_of_range&) {}
         }
     }
+}
+
+void DoublePixelGrid::resizeEvent(QResizeEvent* event) {
+    QSize* evtSize = new QSize(event->size()/(PIXEL_S));
+    evtSize->setWidth((event->size().width()-PIXEL_S)/PIXEL_S);
+    evtSize->setHeight((event->size().height()-PIXEL_S)/PIXEL_S);
+    emit resized(*evtSize);
+    cout << "val pix dans resizeevent" << PIXEL_S << "\n";
 }

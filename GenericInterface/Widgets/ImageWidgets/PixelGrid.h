@@ -78,7 +78,7 @@ namespace genericinterface
   protected:
       void paintEvent (QPaintEvent* event );
       const imagein::Image_t<double>* _dataImg;
-
+      void resizeEvent(QResizeEvent * event);
 
   };
 }

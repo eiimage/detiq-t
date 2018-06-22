@@ -129,5 +129,6 @@ GridView::GridView(const imagein::Image_t<double>* dataImg, const imagein::Image
 
     QObject::connect(view, SIGNAL(positionChanged(QPoint)), pixelGrid, SLOT(setOffset(QPoint)));
     QObject::connect(pixelGrid, SIGNAL(resized(QSize)), view, SLOT(setRectSize(QSize)));
+    QObject::connect(pixelGrid, SIGNAL(originMoved(QPoint)), view, SLOT(setRectPos(QPoint)));
 
 }
