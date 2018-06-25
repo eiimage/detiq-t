@@ -33,11 +33,13 @@ Filtering::Filtering(Filter* filter)
 {
     _filters.push_back(filter);
     _policy = POLICY_BLACK;
+    _normalisation = false;
 }
 
 Filtering::Filtering(std::vector<Filter*> filters) : _filters(filters)
 {
     _policy = POLICY_BLACK;
+    _normalisation = false;
 }
 
 
@@ -205,19 +207,20 @@ Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>&
     for(filter = _filters.begin(); filter != _filters.end(); ++filter)
     {
         Filter::iterator iter = (*filter)->begin();
-        /*double factor = 0;
-        for(; iter != (*filter)->end(); ++iter)
-        {
-            factor += (*iter);
-        }
-
         
-        std::cout << "facteur = " << factor << std::endl;
-        for(Filter::iterator it = (*filter)->begin(); it < (*filter)->end(); ++it) {
-            *it /= abs(factor);
-            std::cout << *it << std::endl;
+        if(_normalisation){
+            double factor = 0;
+            for(; iter != (*filter)->end(); ++iter)
+            {
+                factor += (*iter);
+            }
+
+            if(factor != 0){
+                for(Filter::iterator it = (*filter)->begin(); it < (*filter)->end(); ++it) {
+                    *it /= abs(factor);
+                }
+            }
         }
-*/
         Image_t<double>* result = new Image_t<double>(width, height, nChannels);
         
         int halfHeightFilter = (*filter)->getHeight() / 2;
