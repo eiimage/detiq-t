@@ -46,8 +46,8 @@ namespace imagein
 			
 			static Filtering uniformBlur(int numPixels);
 			static Filtering gaussianBlur(double alpha);
-            static Filtering gaussianBlur(int size, double sigma);
-            static Filtering prewitt(int numPixels);
+                        static Filtering gaussianBlur(int size, double sigma);
+                        static Filtering prewitt(int numPixels);
 			static Filtering roberts();
 			static Filtering sobel();
 			static Filtering squareLaplacien();
