@@ -274,12 +274,9 @@ namespace imagein {
   {
     Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
     
-    for(unsigned int i = 0; i < from.getWidth(); i++)
-    {
-      for(unsigned int j = 0; j < from.getHeight(); j++)
-      {
-        for(unsigned int k = 0; k < from.getNbChannels(); k++)
-        {
+    for(unsigned int i = 0; i < from.getWidth(); i++){
+      for(unsigned int j = 0; j < from.getHeight(); j++){
+        for(unsigned int k = 0; k < from.getNbChannels(); k++){
           D value = from.getPixel(i, j, k) ? std::numeric_limits<D>::max() : std::numeric_limits<D>::min();
           image->setPixel(i, j, k, value);
         }
@@ -318,18 +315,103 @@ namespace imagein {
       return resImg;
   }
 
-//  template <typename D>
-//  Image_t<double>* convert(const Image_t<D>& from) {
-//      Image_t<double>* resImg = new Image_t<double>(from.getWidth(), from.getHeight(), from.getNbChannels());
-//      for(unsigned int c = 0; c < resImg->getNbChannels(); ++c) {
-//          for(unsigned int j = 0; j < resImg->getHeight(); ++j) {
-//              for(unsigned int i = 0; i < resImg->getWidth(); ++i) {
-//                  resImg->setPixel(i, j, c, from.getPixel(i, j, c));
-//              }
-//          }
-//      }
-//      return resImg;
 
-//  }
+  template <typename D>
+  Image_t<D>* Converter<Image_t<D> >::ConvertScaleAndOffset(const Image_t<int>& from, std::string * to_print)
+  {
+    Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
+    
+    bool negValue = false;
+    int maxValue = from.max();
+    int minval = from.min();
+    maxValue = std::max(std::abs(minval), std::abs(maxValue) );
+    negValue = minval < 0;
+    int destmax;
+    if(negValue){
+        destmax = 127;
+    }
+    else{
+        destmax = 255;
+    }
+    double factor = std::abs(maxValue / destmax);
+    /*std::cout << "Max value : " << maxValue << std::endl;*/
+    
+    for(unsigned int i = 0; i < from.getWidth(); i++)
+    {
+      for(unsigned int j = 0; j < from.getHeight(); j++)
+      {
+        for(unsigned int k = 0; k < from.getNbChannels(); k++)
+        {
+          int newPixel = from.getPixel(i, j, k);
+          if(factor != 0)
+          {
+            std::cout << i << "," << j << " pixel : " << newPixel;
+            newPixel /= factor;
 
+          }
+            
+          if(negValue)
+          {
+            newPixel += 127;
+            if(newPixel > 255) newPixel = 255;
+            else if(newPixel < 0) newPixel = 0;
+          }
+          std::cout << " -> " << (int) newPixel << std::endl;
+          image->setPixel(i, j, k, (int) newPixel);
+        }
+      }
+    }
+    char buffer[100];
+    sprintf(buffer, "Conversion appliquee : Mise à l'echelle et centrage du 0 : val_UChar = val_Double ");
+    *to_print = *to_print + buffer;
+    sprintf(buffer, "* %d / %.2f", destmax,  std::abs(maxValue) );
+    *to_print = *to_print + buffer;
+    if(negValue){
+        *to_print += " + 127 \n";
+    }
+
+    return image;
+  }
+  
+  
+  template <typename D>
+    Image_t<D>* Converter<Image_t<D>>::ConvertAndScale(const Image_t<int>& from, std::string * to_print){
+        
+        Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
+        
+        int max = from.max();
+        
+        for(unsigned int i = 0; i < from.getWidth(); i++){
+            for(unsigned int j = 0; j < from.getHeight(); j++){
+                for(unsigned int k = 0; k < from.getNbChannels(); k++){
+                    int newPixel = from.getPixel(i, j, k) * 255/max ;
+                    image->setPixel(i, j, k, newPixel );
+                }
+            }
+        }
+        char buffer[100];
+        sprintf(buffer, "Conversion appliquee : Mise à l'echelle : val_UChar = val_Double * 255 / %.2f \n", max);
+        *to_print = *to_print + buffer;
+        return image;
+    }
+    
+  template <typename D>
+    Image_t<D>* Converter<Image_t<D>>::ConvertAndOffset(const Image_t<int>& from, std::string * to_print){
+        Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
+        
+        int offset = 127;
+        
+        for(unsigned int i = 0; i < from.getWidth(); i++){
+            for(unsigned int j = 0; j < from.getHeight(); j++){
+                for(unsigned int k = 0; k < from.getNbChannels(); k++){
+                    int newPixel = from.getPixel(i, j, k) + 127;
+                    image->setPixel(i, j, k, newPixel);
+                }
+            }
+        }
+        char buffer[100];
+        sprintf(buffer, "Conversion appliquee : Centrage du 0 : val_UChar = val_Double + 127 \n");
+        *to_print = *to_print + buffer;
+        return image;
+    }
 }
