@@ -334,7 +334,6 @@ namespace imagein {
         destmax = 255;
     }
     double factor = std::abs(maxValue / destmax);
-    /*std::cout << "Max value : " << maxValue << std::endl;*/
     
     for(unsigned int i = 0; i < from.getWidth(); i++)
     {
@@ -345,7 +344,6 @@ namespace imagein {
           int newPixel = from.getPixel(i, j, k);
           if(factor != 0)
           {
-            std::cout << i << "," << j << " pixel : " << newPixel;
             newPixel /= factor;
 
           }
@@ -356,7 +354,6 @@ namespace imagein {
             if(newPixel > 255) newPixel = 255;
             else if(newPixel < 0) newPixel = 0;
           }
-          std::cout << " -> " << (int) newPixel << std::endl;
           image->setPixel(i, j, k, (int) newPixel);
         }
       }
@@ -364,7 +361,7 @@ namespace imagein {
     char buffer[100];
     sprintf(buffer, "Conversion appliquee : Mise à l'echelle et centrage du 0 : val_UChar = val_Double ");
     *to_print = *to_print + buffer;
-    sprintf(buffer, "* %d / %.2f", destmax,  std::abs(maxValue) );
+    sprintf(buffer, "* %d / %d", destmax,  std::abs(maxValue) );
     *to_print = *to_print + buffer;
     if(negValue){
         *to_print += " + 127 \n";
@@ -385,12 +382,14 @@ namespace imagein {
             for(unsigned int j = 0; j < from.getHeight(); j++){
                 for(unsigned int k = 0; k < from.getNbChannels(); k++){
                     int newPixel = from.getPixel(i, j, k) * 255/max ;
+                    if(newPixel > 255) newPixel = 255;
+                    else if(newPixel < 0) newPixel = 0;
                     image->setPixel(i, j, k, newPixel );
                 }
             }
         }
         char buffer[100];
-        sprintf(buffer, "Conversion appliquee : Mise à l'echelle : val_UChar = val_Double * 255 / %.2f \n", max);
+        sprintf(buffer, "Conversion appliquee : Mise à l'echelle : val_UChar = val_Double * 255 / %d \n", max);
         *to_print = *to_print + buffer;
         return image;
     }
@@ -405,6 +404,8 @@ namespace imagein {
             for(unsigned int j = 0; j < from.getHeight(); j++){
                 for(unsigned int k = 0; k < from.getNbChannels(); k++){
                     int newPixel = from.getPixel(i, j, k) + 127;
+                    if(newPixel > 255) newPixel = 255;
+                    else if(newPixel < 0) newPixel = 0;
                     image->setPixel(i, j, k, newPixel);
                 }
             }
