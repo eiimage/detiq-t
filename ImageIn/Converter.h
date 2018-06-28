@@ -173,10 +173,10 @@ namespace imagein {
             static Image_t<D>* makeDisplayable(const Image_t<int>& from);
             static Image_t<D>* makeDisplayable(const Image_t<bool>& from);
 
-            static Image_t<D>* ConvertScaleAndOffset(const Image_t<int>& from, std::string * to_print);
-            static Image_t<D>* ConvertAndScale(const Image_t<int>& from, std::string * to_print);
-            static Image_t<D>* ConvertAndOffset(const Image_t<int>& from, std::string * to_print);
-            static Image_t<D>* ConvertAndOffset(const Image_t<int>& from, std::string * to_print, int offset);
+            static Image_t<D>* convertScaleAndOffset(const Image_t<int>& from, std::string * to_print);
+            static Image_t<D>* convertAndScale(const Image_t<int>& from, std::string * to_print);
+            static Image_t<D>* convertAndOffset(const Image_t<int>& from, std::string * to_print);
+            static Image_t<D>* convertAndOffset(const Image_t<int>& from, std::string * to_print, int offset);
             static Image_t<D>* convertAndRound(const Image_t<double>& from);
 
             template<typename D2>
