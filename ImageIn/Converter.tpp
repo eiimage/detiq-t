@@ -333,7 +333,9 @@ namespace imagein {
     else{
         destmax = 255;
     }
-    double factor = std::abs(maxValue / destmax);
+
+    double factor = (double ) (std::abs(maxValue)) / (double) destmax;
+    //std::cout << "Max " << maxValue << " factor = " << factor << std::endl;
     
     for(unsigned int i = 0; i < from.getWidth(); i++)
     {
@@ -349,11 +351,11 @@ namespace imagein {
           }
             
           if(negValue)
-          {
+          { 
             newPixel += 127;
-            if(newPixel > 255) newPixel = 255;
-            else if(newPixel < 0) newPixel = 0;
           }
+          if(newPixel > 255) newPixel = 255;
+          else if(newPixel < 0) newPixel = 0;
           image->setPixel(i, j, k, (int) newPixel);
         }
       }
@@ -381,7 +383,7 @@ namespace imagein {
         for(unsigned int i = 0; i < from.getWidth(); i++){
             for(unsigned int j = 0; j < from.getHeight(); j++){
                 for(unsigned int k = 0; k < from.getNbChannels(); k++){
-                    int newPixel = from.getPixel(i, j, k) * 255/max ;
+                    int newPixel = from.getPixel(i, j, k) * 255 / max ;
                     if(newPixel > 255) newPixel = 255;
                     else if(newPixel < 0) newPixel = 0;
                     image->setPixel(i, j, k, newPixel );
@@ -397,7 +399,6 @@ namespace imagein {
   template <typename D>
     Image_t<D>* Converter<Image_t<D>>::ConvertAndOffset(const Image_t<int>& from, std::string * to_print){
         Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
-        
         int offset = 127;
         
         for(unsigned int i = 0; i < from.getWidth(); i++){
@@ -411,7 +412,28 @@ namespace imagein {
             }
         }
         char buffer[100];
-        sprintf(buffer, "Conversion appliquee : Centrage du 0 : val_UChar = val_Double + 127 \n");
+        sprintf(buffer, "Conversion appliquee : Centrage du 0 : val_UChar = val_Double + %d \n", offset);
+        *to_print = *to_print + buffer;
+        return image;
+    }
+    
+
+template <typename D>
+    Image_t<D>* Converter<Image_t<D>>::ConvertAndOffset(const Image_t<int>& from, std::string * to_print, int offset){
+        Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
+
+        for(unsigned int i = 0; i < from.getWidth(); i++){
+            for(unsigned int j = 0; j < from.getHeight(); j++){
+                for(unsigned int k = 0; k < from.getNbChannels(); k++){
+                    int newPixel = from.getPixel(i, j, k) + 127;
+                    if(newPixel > 255) newPixel = 255;
+                    else if(newPixel < 0) newPixel = 0;
+                    image->setPixel(i, j, k, newPixel);
+                }
+            }
+        }
+        char buffer[100];
+        sprintf(buffer, "Conversion appliquee : Centrage du 0 : val_UChar = val_Double + %d \n", offset);
         *to_print = *to_print + buffer;
         return image;
     }
