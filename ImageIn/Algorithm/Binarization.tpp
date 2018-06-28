@@ -53,6 +53,7 @@ namespace imagein {
 
 			GrayscaleImage_t<D>* result = new GrayscaleImage_t<D>(img->getWidth(), img->getHeight(), data);
             delete img;
+			delete[] data;
             return result;
 		}
 	}
