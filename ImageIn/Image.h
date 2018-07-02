@@ -281,6 +281,8 @@ namespace imagein
             double mean() const;
             double deviation(double mean) const;
             double deviation() const { return deviation(mean()); }
+
+            double getEntropy() const;
             void normalize(double min = static_cast<double>(std::numeric_limits<D>::min()),
                            double max = static_cast<double>(std::numeric_limits<D>::max()));
 

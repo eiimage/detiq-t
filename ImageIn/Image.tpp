@@ -324,3 +324,37 @@ void imagein::Image_t<D>::normalize(double dstMin, double dstMax) {
         }
     }
 }
+/*
+template<typename D>
+double imagein::Image_t<D>::getEntropy(){
+    double entropy = 0;
+    for(unsigned int c = 0; c < getNbChannels(); ++c) {
+        Histogram histo = getHistogram(c);
+        for(int i = 0; i < 256; ++i) {
+            if(histo[i] > 0) {
+                double p = (double)histo[i] /getWidth() /getHeight();
+                entropy +=  p * log(p);
+            }
+        }
+    }
+    entropy = - entropy / log(2);
+    return entropy;
+}
+*/
+template<typename D>
+double imagein::Image_t<D>::getEntropy() const{
+    double entropy = 0.;
+    int min = this->min();
+    int max = this->max();
+    for(unsigned int c = 0; c < getNbChannels(); ++c) {
+        Histogram histo = getHistogramForEntropy(c, 511);
+        for(int i = min; i<= max; i++){
+            if(histo[i] > 0) {
+                double p = (double)histo[i] / getWidth() / getHeight();
+                entropy +=  p * log(p);
+            }
+        }
+    }
+    entropy = - entropy / log(2);
+    return entropy;
+}
