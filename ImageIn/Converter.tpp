@@ -425,7 +425,7 @@ template <typename D>
         for(unsigned int i = 0; i < from.getWidth(); i++){
             for(unsigned int j = 0; j < from.getHeight(); j++){
                 for(unsigned int k = 0; k < from.getNbChannels(); k++){
-                    int newPixel = from.getPixel(i, j, k) + 127;
+                    int newPixel = from.getPixel(i, j, k) + offset;
                     if(newPixel > 255) newPixel = 255;
                     else if(newPixel < 0) newPixel = 0;
                     image->setPixel(i, j, k, newPixel);
