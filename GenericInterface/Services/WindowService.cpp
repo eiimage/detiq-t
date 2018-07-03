@@ -54,6 +54,11 @@ void WindowService::display(GenericInterface* gi)
     //tile->setShortcut(QKeySequence::Open);
     gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(cascade);
 	QObject::connect(cascade, SIGNAL(triggered()), _mdi, SLOT(cascadeSubWindows()));
+
+    QAction* dockimage = gi->menu(tr("&Window"))->addAction(tr("Hide/Show Image dock"));
+    dockimage->setIcon(QIcon(":/images/application-dock.png"));
+    gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(dockimage);
+        QObject::connect(dockimage, SIGNAL(triggered()), _nav, SLOT(hideshow()));
 }
 
 void WindowService::connect(GenericInterface* gi)

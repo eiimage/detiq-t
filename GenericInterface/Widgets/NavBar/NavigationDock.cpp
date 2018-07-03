@@ -182,3 +182,10 @@ void NavigationDock::changeOrientation(Qt::DockWidgetArea area) {
     }
     _view->setOrientation(orientation);
 }
+
+void NavigationDock::hideshow(){
+    if(this->isHidden())
+        this->show();
+    else
+        this->hide();
+}
