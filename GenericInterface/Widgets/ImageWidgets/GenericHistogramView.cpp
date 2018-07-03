@@ -85,9 +85,9 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
         if(_projection) {
             graphicalHisto->setValues(imagein::ProjectionHistogram_t<double>(*image, _value, _horizontal, _rectangle, channel));
         } else if(_cumulated) {
-            qDebug() << "Cumulated Histogram for ImageDouble is unsupported for now";
+            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, channel, _rectangle));
         } else {
-          graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
+            graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
 
         }
     }

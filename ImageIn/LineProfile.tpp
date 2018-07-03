@@ -25,6 +25,8 @@ imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, int value, const
     _width = rect.w;
     delete [] _array;
     _array = new unsigned int[_width];
+    _min = 0;
+    _max = _width - 1;
 
     // We crop the Image to the Rectangle given in parameter
     Image_t<D>* workImg = img.crop(rect);
@@ -45,6 +47,8 @@ imagein::LineProfile_t<D>::LineProfile_t(const Image_t<D>& img, D value, unsigne
     _width = img.getWidth();
     delete [] _array;
     _array = new unsigned int[_width];
+    _min = 0;
+    _max = _width - 1;
     // We prepare to iterate through the Image, we get the max width and height now to avoid to calculate it every iteration
    for(unsigned int j = 0; j < img->getWidth(); ++j)
    {

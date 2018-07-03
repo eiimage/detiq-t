@@ -26,7 +26,8 @@ imagein::ProjectionHistogram_t<D>::ProjectionHistogram_t(const Image_t<D>& img, 
     else _width = rect.w;
     delete [] _array;
     _array = new unsigned int[_width];
-
+    _min = 0;
+    _max = _width - 1;
     //_array initialization
     for(int i = 0; i<_width; i++){
         _array[i] = 0;
@@ -69,6 +70,8 @@ imagein::ProjectionHistogram_t<D>::ProjectionHistogram_t(const Image_t<D>& img, 
     if(horizontal) _width = img.getHeight();
     else _width = img.getWidth();
     delete [] _array;
+    _min = 0;
+    _max = _width - 1;
     _array = new unsigned int[_width];
     //_array initialization
     for(int i = 0; i<_width; i++){
@@ -79,9 +82,9 @@ imagein::ProjectionHistogram_t<D>::ProjectionHistogram_t(const Image_t<D>& img, 
     wmax = img.getWidth();
     hmax = img.getHeight();
     if (!horizontal){
-        for(iterh=0;iterh<hmax;iterh++) {
+        for(iterh=0; iterh<hmax; iterh++) {
             int numberPixel = 0;
-            for(iterw=0;iterw<wmax;iterw++){
+            for(iterw=0; iterw<wmax; iterw++){
                 if(img.getPixel(iterh, iterw, channel)>=value) {
                     numberPixel++;
                 }

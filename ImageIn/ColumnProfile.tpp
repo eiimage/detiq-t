@@ -25,6 +25,8 @@ imagein::ColumnProfile_t<D>::ColumnProfile_t(const Image_t<D>& img, int value, c
     _width = rect.h;
     delete [] _array;
     _array = new unsigned int[_width];
+    _min = 0;
+    _max = _width - 1;
     // We crop the Image to the Rectangle given in parameter
     Image_t<D>* workImg = img.crop(rect);
     // We prepare to iterate through the Image, we get the max width and height now to avoid to calculate it every iteration
@@ -43,6 +45,8 @@ imagein::ColumnProfile_t<D>::ColumnProfile_t(const Image_t<D>& img, D value, uns
     _width = img.getHeight();
     delete [] _array;
     _array = new unsigned int[_width];
+    _min = 0;
+    _max = _width - 1;
     // We prepare to iterate through the Image, we get the max width and height now to avoid to calculate it every iteration
    for(unsigned int i = 0; i < img->getHeight(); ++i)
    {
