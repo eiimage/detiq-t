@@ -58,6 +58,7 @@ public slots:
     int removeNode(NodeId);
     void changeOrientation(Qt::DockWidgetArea);
     void setActiveNode(NodeId id);
+    void hideshow();
 
 protected slots:
     /**
