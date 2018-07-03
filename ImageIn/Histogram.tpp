@@ -30,7 +30,7 @@
 
 template <typename D>
 imagein::Histogram::Histogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect, int width)
-    : imagein::Array<unsigned int>(width)
+    : imagein::Array<unsigned int>(-width, width)
 {
    // assert(std::numeric_limits<D>::is_integer && "Initializing an Histogram from a Image_t<double> is a non-sense!");
     this->computeHistogram(img, channel, rect);
@@ -47,35 +47,31 @@ imagein::Histogram::Histogram(const imagein::Image_t<D>& img, const imagein::Rec
 template<typename D>
 void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect)
 {
-    for(int i=0; i<this->size(); i++) {
+    for(int i=getMin(); i<getMax(); i++) {
         this->_array[i] = 0;
     }
-
+    D min =  img.getPixel(0, 0 , 0);
+    D max =  img.getPixel(0, 0 , 0);
     unsigned int maxw = rect.w > 0 ? rect.x+rect.w : img.getWidth();
     unsigned int maxh = rect.h > 0 ? rect.y+rect.h : img.getHeight();
     for(unsigned int i=rect.y; i<maxh; i++) {
         for(unsigned int j=rect.x; j<maxw; j++) {
-            D pixel = img.getPixel(j, i, channel);
-            // D can't be a double here, so static_cast is valid
-            _array[static_cast<unsigned int>(pixel)]++;
-//                this->_array[(int)pixel]++;
-//            this->_array[static_cast<unsigned int>(pixel)]++;
-//            this->_array[pixel]++;
-
+            int pixel = img.getPixel(j, i, channel);
+            _array[pixel]++;
         }
     }
 }
 
 template <typename D>
 imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect)
-    : imagein::Array<double>(1 << (sizeof(D)*8))
+    : imagein::Array<double>(- ( 1 << (sizeof(D)*8)), ( 1 << (sizeof(D)*8)))
 {
     this->computeHistogram(img, channel, rect);
 }
 
 template <typename D>
 imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, const imagein::Rectangle& rect)
-    : imagein::Array<double>(1 << (sizeof(D)*8))
+    : imagein::Array<double>(- ( 1 << (sizeof(D)*8)), ( 1 << (sizeof(D)*8)))
 {
     this->computeHistogram(img, 0, rect);
 }
@@ -86,7 +82,7 @@ void imagein::CumulatedHistogram::computeHistogram(const Image_t<D>& img, unsign
     Histogram histo = img.getHistogram(channel, rect);
     double cumul = 0.;
     double imgSize = img.getWidth() * img.getHeight();
-    for(unsigned int i=0; i<this->_width; i++) {
+    for(int i=this->getMin(); i<this->getMax(); i++) {
         cumul += histo[i] / imgSize;
         this->_array[i] = cumul;
     }

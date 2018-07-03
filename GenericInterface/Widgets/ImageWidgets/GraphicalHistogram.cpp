@@ -18,6 +18,8 @@
 */
 
 #include "GraphicalHistogram.h"
+#include <iostream>
+
 
 using namespace genericinterface;
 
@@ -40,41 +42,44 @@ GraphicalHistogram::GraphicalHistogram(const QString& title, const QColor& color
 void GraphicalHistogram::setValues(const imagein::Array<unsigned int>& values)
 {
     QVector<QwtIntervalSample> samples(values.size());
-    for (unsigned int i = 0; i < values.size(); ++i)
+    for (int i = values.getMin(); i <= values.getMax(); ++i)
     {
-        QwtInterval interval(double(i), i + 1.0 );
+        unsigned int j = i  - values.getMin();
+        QwtInterval interval(double(j), j + 1.0);
         interval.setBorderFlags(QwtInterval::ExcludeMaximum);
 
-        samples[i] = QwtIntervalSample(values[i], interval);
+        samples[j] = QwtIntervalSample(values[i], interval);
     }
-
+    std::cout << "1 " << std::endl;
     setData(new QwtIntervalSeriesData(samples));
 }
 
 void GraphicalHistogram::setValues(const imagein::Array<double>& values)
 {
     QVector<QwtIntervalSample> samples(values.size());
-    for (unsigned int i = 0; i < values.size(); ++i)
+    for (int i = values.getMin(); i <= values.getMax(); ++i)
     {
-        QwtInterval interval(double(i), i + 1.0 );
+        unsigned int j = i  - values.getMin();
+        QwtInterval interval(double(j), j + 1.0);
         interval.setBorderFlags(QwtInterval::ExcludeMaximum);
 
-        samples[i] = QwtIntervalSample(values[i], interval);
+        samples[j] = QwtIntervalSample(values[i], interval);
     }
-
+    std::cout << "2 " << std::endl;
     setData(new QwtIntervalSeriesData(samples));
 }
 
 QwtIntervalSeriesData GraphicalHistogram::getValues(const imagein::Array<double>& values)
 {
     QVector<QwtIntervalSample> samples(values.size());
-    for (unsigned int i = 0; i < values.size(); ++i)
+    for (int i = values.getMin(); i <= values.getMax(); ++i)
     {
-        QwtInterval interval(double(i), i + 1.0 );
+        unsigned int j = i  - values.getMin();
+        QwtInterval interval(double(j), j + 1.0);
         interval.setBorderFlags(QwtInterval::ExcludeMaximum);
 
-        samples[i] = QwtIntervalSample(values[i], interval);
+        samples[j] = QwtIntervalSample(values[i], interval);
     }
-
+    std::cout << "3 " << std::endl;
    return QwtIntervalSeriesData(samples);
 }

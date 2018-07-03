@@ -39,16 +39,19 @@ namespace imagein
              *
              * Values are not initialized.
              */
-            inline Array(int width = 0) : _width(width) { _array = new T[width]; }
+            inline Array(int width = 0) : _width(width), _min(0), _max(width - 1) { _array = new T[width]; }
+            inline Array(int min, int max) : _min(min), _max(max), _width(max - min + 1 ) { _array = new T[ 1 + max - min]; }
             inline virtual ~Array() { delete _array; }
 
             //! Returns the size of the array.
             inline unsigned int getWidth() const { return _width; }
             inline unsigned int size() const { return _width; }
+            inline int getMin() const {return _min; }
+            inline int getMax() const {return _max; }
             //! Access to the element at the given index.
-            inline T operator[](unsigned int index) const { return _array[index]; }
+            inline T operator[](int index) const { return _array[index - _min]; }
             //! Constant access to the element at the given index.
-            inline T& operator[](unsigned int index) { return _array[index]; }
+            inline T& operator[](int index) { return _array[index - _min]; }
 
             //! Returns an iterator to the first element of the array
             inline iterator begin() { return _array; }
@@ -62,6 +65,8 @@ namespace imagein
         protected:
             T* _array;
             unsigned int _width;
+            int _min;
+            int _max;
     };
 }
 
