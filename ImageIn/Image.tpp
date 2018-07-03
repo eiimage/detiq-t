@@ -344,11 +344,9 @@ double imagein::Image_t<D>::getEntropy(){
 template<typename D>
 double imagein::Image_t<D>::getEntropy() const{
     double entropy = 0.;
-    int min = this->min();
-    int max = this->max();
     for(unsigned int c = 0; c < getNbChannels(); ++c) {
-        Histogram histo = getHistogramForEntropy(c, 511);
-        for(int i = min; i<= max; i++){
+        Histogram histo = getHistogramForEntropy(c);
+        for(int i = histo.getMin(); i<= histo.getMax(); i++){
             if(histo[i] > 0) {
                 double p = (double)histo[i] / getWidth() / getHeight();
                 entropy +=  p * log(p);

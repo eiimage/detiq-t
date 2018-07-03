@@ -260,7 +260,7 @@ namespace imagein
              * \param rect The image area on which to calculate the Histogram.
              */
             inline Histogram getHistogram(unsigned int channel=0, const Rectangle& rect = Rectangle()) const { return Histogram(*this, channel, rect); }
-            Histogram getHistogramForEntropy(unsigned int channel=0, int width=0, const Rectangle& rect = Rectangle() ) const { return Histogram(*this, channel, rect); }
+            Histogram getHistogramForEntropy(unsigned int channel=0, const Rectangle& rect = Rectangle() ) const { return Histogram(*this, channel, rect); }
 
 
             /*!
