@@ -40,17 +40,16 @@ GraphicalHistogram::GraphicalHistogram(const QString& title, const QColor& color
 }
 
 void GraphicalHistogram::setValues(const imagein::Array<unsigned int>& values)
-{
+{   
     QVector<QwtIntervalSample> samples(values.size());
     for (int i = values.getMin(); i <= values.getMax(); ++i)
     {
         unsigned int j = i  - values.getMin();
-        QwtInterval interval(double(j), j + 1.0);
+        QwtInterval interval(double(i), double(i + 1.0));
         interval.setBorderFlags(QwtInterval::ExcludeMaximum);
 
         samples[j] = QwtIntervalSample(values[i], interval);
     }
-    std::cout << "1 " << std::endl;
     setData(new QwtIntervalSeriesData(samples));
 }
 
@@ -60,12 +59,11 @@ void GraphicalHistogram::setValues(const imagein::Array<double>& values)
     for (int i = values.getMin(); i <= values.getMax(); ++i)
     {
         unsigned int j = i  - values.getMin();
-        QwtInterval interval(double(j), j + 1.0);
+        QwtInterval interval(double(i), double(i + 1.0));
         interval.setBorderFlags(QwtInterval::ExcludeMaximum);
 
         samples[j] = QwtIntervalSample(values[i], interval);
     }
-    std::cout << "2 " << std::endl;
     setData(new QwtIntervalSeriesData(samples));
 }
 
@@ -75,11 +73,10 @@ QwtIntervalSeriesData GraphicalHistogram::getValues(const imagein::Array<double>
     for (int i = values.getMin(); i <= values.getMax(); ++i)
     {
         unsigned int j = i  - values.getMin();
-        QwtInterval interval(double(j), j + 1.0);
+        QwtInterval interval(double(i), double(i + 1.0));
         interval.setBorderFlags(QwtInterval::ExcludeMaximum);
 
         samples[j] = QwtIntervalSample(values[i], interval);
     }
-    std::cout << "3 " << std::endl;
    return QwtIntervalSeriesData(samples);
 }

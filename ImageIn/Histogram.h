@@ -46,7 +46,7 @@ namespace imagein
          * \param rect A rectangle used to crop the image before computing the Histogram.
          */
           template <typename D>
-          Histogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect = Rectangle(), int width = (1 << (sizeof(D)*8)));
+          Histogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect = Rectangle());
 		
         /*!
          * \brief Constructs an Histogram from an image.

@@ -29,8 +29,8 @@
 #include <assert.h>
 
 template <typename D>
-imagein::Histogram::Histogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect, int width)
-    : imagein::Array<unsigned int>(-width, width)
+imagein::Histogram::Histogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect)
+    : imagein::Array<unsigned int>(img.min(channel), img.max(channel))
 {
    // assert(std::numeric_limits<D>::is_integer && "Initializing an Histogram from a Image_t<double> is a non-sense!");
     this->computeHistogram(img, channel, rect);
@@ -38,7 +38,7 @@ imagein::Histogram::Histogram(const imagein::Image_t<D>& img, unsigned int chann
 
 template <typename D>
 imagein::Histogram::Histogram(const imagein::Image_t<D>& img, const imagein::Rectangle& rect)
-    : imagein::Array<unsigned int>(1 << (sizeof(D)*8))
+    : imagein::Array<unsigned int>(img.min(0), img.max(0))
 {
  //   assert(std::numeric_limits<D>::is_integer && "Initializing an Histogram from a Image_t<double> is a non-sense!");
     this->computeHistogram(img, 0, rect);
@@ -47,31 +47,29 @@ imagein::Histogram::Histogram(const imagein::Image_t<D>& img, const imagein::Rec
 template<typename D>
 void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect)
 {
-    for(int i=getMin(); i<getMax(); i++) {
-        this->_array[i] = 0;
+    for(int i=getMin(); i<=getMax(); i++) {
+        this->operator[](i) = 0;
     }
-    D min =  img.getPixel(0, 0 , 0);
-    D max =  img.getPixel(0, 0 , 0);
     unsigned int maxw = rect.w > 0 ? rect.x+rect.w : img.getWidth();
     unsigned int maxh = rect.h > 0 ? rect.y+rect.h : img.getHeight();
     for(unsigned int i=rect.y; i<maxh; i++) {
         for(unsigned int j=rect.x; j<maxw; j++) {
             int pixel = img.getPixel(j, i, channel);
-            _array[pixel]++;
+            this->operator[](pixel)++;
         }
     }
 }
 
 template <typename D>
 imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect)
-    : imagein::Array<double>(- ( 1 << (sizeof(D)*8)), ( 1 << (sizeof(D)*8)))
+    :imagein::Array<double>(img.min(channel), img.max(channel))
 {
     this->computeHistogram(img, channel, rect);
 }
 
 template <typename D>
 imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, const imagein::Rectangle& rect)
-    : imagein::Array<double>(- ( 1 << (sizeof(D)*8)), ( 1 << (sizeof(D)*8)))
+    : imagein::Array<double>(img.min(0), img.max(0))
 {
     this->computeHistogram(img, 0, rect);
 }
@@ -84,6 +82,6 @@ void imagein::CumulatedHistogram::computeHistogram(const Image_t<D>& img, unsign
     double imgSize = img.getWidth() * img.getHeight();
     for(int i=this->getMin(); i<this->getMax(); i++) {
         cumul += histo[i] / imgSize;
-        this->_array[i] = cumul;
+        this->operator[](i) = cumul;
     }
 }

@@ -67,7 +67,7 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
     }
 
     // The origin of the histogram will be 0 on the x axis
-    _originValue = 0;
+    _originValue = qFloor(image->min());
 }
 
 GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
@@ -87,25 +87,7 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
         } else if(_cumulated) {
             qDebug() << "Cumulated Histogram for ImageDouble is unsupported for now";
         } else {
-            QMap<int, int> cumulativeValues;
-
-            uint maxw = rect.w > 0 ? rect.x + rect.w : image->getWidth();
-            uint maxh = rect.h > 0 ? rect.y + rect.h : image->getHeight();
-            for(uint j = rect.y; j < maxh; j++) {
-                for(uint i = rect.x; i < maxw; i++) {
-                    double pixel = image->getPixel(i, j, channel);
-                    cumulativeValues[qFloor(pixel)]++;
-                }
-            }
-
-            QVector<QwtIntervalSample> samples;
-            for(int i = qFloor(image->min()); i <= qFloor(image->max()); ++i) {
-                QwtIntervalSample sample(cumulativeValues.value(i, 0), i, i + 1);
-                samples << sample;
-            }
-
-            graphicalHisto->setData(new QwtIntervalSeriesData(samples));
-          //graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
+          graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
 
         }
     }
