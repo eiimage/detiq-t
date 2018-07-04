@@ -86,7 +86,7 @@ void DoubleImageWindow::init()
 
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
-    menu()->addAction(tr("Convert to Rgb Image"), this, SLOT(convertRgb()));
+  //  menu()->addAction(tr("Convert to Rgb Image"), this, SLOT(convertRgb()));
     updateStatusBar();
 
 }
