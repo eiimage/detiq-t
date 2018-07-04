@@ -24,6 +24,7 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include <algorithm>
 
 #include <limits>
 #include <assert.h>
@@ -62,7 +63,7 @@ void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int ch
 
 template <typename D>
 imagein::CumulatedHistogram::CumulatedHistogram(const imagein::Image_t<D>& img, unsigned int channel, const imagein::Rectangle& rect)
-    :imagein::Array<double>(img.min(channel), img.max(channel))
+    :imagein::Array<double>(std::min( (int) img.min(channel), 0), std::max( (int) img.max(channel), 255))
 {
     this->computeHistogram(img, channel, rect);
 }
@@ -80,8 +81,15 @@ void imagein::CumulatedHistogram::computeHistogram(const Image_t<D>& img, unsign
     Histogram histo = img.getHistogram(channel, rect);
     double cumul = 0.;
     double imgSize = img.getWidth() * img.getHeight();
-    for(int i=this->getMin(); i<this->getMax(); i++) {
+    for(int i=this->getMin(); i<histo.getMin(); i++) {
+        this->operator[](i) = cumul;
+    }
+    for(int i=histo.getMin(); i<=histo.getMax(); i++) {
         cumul += histo[i] / imgSize;
         this->operator[](i) = cumul;
     }
+    for(int i=histo.getMax() + 1; i<this->getMax(); i++) {
+        this->operator[](i) = cumul;
+    }
+    delete &histo;
 }
