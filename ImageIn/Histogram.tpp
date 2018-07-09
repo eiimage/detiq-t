@@ -49,14 +49,14 @@ template<typename D>
 void imagein::Histogram::computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect)
 {
     for(int i=getMin(); i<=getMax(); i++) {
-        this->operator[](i) = 0;
+        _array[i - _min] = 0;
     }
     unsigned int maxw = rect.w > 0 ? rect.x+rect.w : img.getWidth();
     unsigned int maxh = rect.h > 0 ? rect.y+rect.h : img.getHeight();
     for(unsigned int i=rect.y; i<maxh; i++) {
         for(unsigned int j=rect.x; j<maxw; j++) {
             int pixel = img.getPixel(j, i, channel);
-            this->operator[](pixel)++;
+            _array[pixel - _min]++;
         }
     }
 }
@@ -82,14 +82,14 @@ void imagein::CumulatedHistogram::computeHistogram(const Image_t<D>& img, unsign
     double cumul = 0.;
     double imgSize = img.getWidth() * img.getHeight();
     for(int i=this->getMin(); i<histo.getMin(); i++) {
-        this->operator[](i) = cumul;
+        _array[i - _min] = cumul;
     }
     for(int i=histo.getMin(); i<=histo.getMax(); i++) {
         cumul += histo[i] / imgSize;
-        this->operator[](i) = cumul;
+        _array[i - _min] = cumul;
     }
     for(int i=histo.getMax() + 1; i<this->getMax(); i++) {
-        this->operator[](i) = cumul;
+        _array[i - _min] = cumul;
     }
     delete &histo;
 }

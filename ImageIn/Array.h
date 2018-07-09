@@ -20,6 +20,8 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
+#include <iostream>
+
 namespace imagein
 {
     /*!
@@ -49,9 +51,9 @@ namespace imagein
             inline int getMin() const {return _min; }
             inline int getMax() const {return _max; }
             //! Access to the element at the given index.
-            inline T operator[](int index) const { return _array[index - _min]; }
+            inline T operator[](int index) const { return (index >= _min && index <= _max ) ? _array[index - _min] : 0;}
             //! Constant access to the element at the given index.
-            inline T& operator[](int index) { return _array[index - _min]; }
+            //inline T& operator[](int index) {return _array[index - _min]; }
 
             //! Returns an iterator to the first element of the array
             inline iterator begin() { return _array; }
