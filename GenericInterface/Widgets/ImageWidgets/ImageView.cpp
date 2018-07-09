@@ -232,7 +232,7 @@ void ImageView::mouseMoveEvent(QMouseEvent* event)
 {
     QPoint pos = mapToPixmap(event->pos());
     
-    if(_imgWidget->rect().contains(pos))
+    if(1)
     {
         emit pixelHovered(pos.x(), pos.y());
     }
