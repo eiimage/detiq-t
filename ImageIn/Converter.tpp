@@ -1,18 +1,18 @@
 /*
  * Copyright 2011-2012 Benoit Averty, Samuel Babin, Matthieu Bergere, Thomas Letan, Sacha Percot-Tétu, Florian Teyssier
- * 
+ *
  * This file is part of DETIQ-T.
- * 
+ *
  * DETIQ-T is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * DETIQ-T is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with DETIQ-T.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -22,7 +22,7 @@
 namespace imagein {
 
   template <typename D>
-  RgbImage_t<D>* Converter<RgbImage_t<D> >::convert(const GrayscaleImage_t<D>& from) 
+  RgbImage_t<D>* Converter<RgbImage_t<D> >::convert(const GrayscaleImage_t<D>& from)
   {
 //      D* data = new D[from.getWidth() * from.getHeight() * 3];
 //      D* ptr = data;
@@ -53,7 +53,7 @@ namespace imagein {
   }
 
   template <typename D>
-  RgbImage_t<D>* Converter<RgbImage_t<D> >::convert(const Image_t<D>& from) 
+  RgbImage_t<D>* Converter<RgbImage_t<D> >::convert(const Image_t<D>& from)
   {
 //      D* data = new D[from.getWidth() * from.getHeight() * 3];
 //      D* ptr = data;
@@ -108,7 +108,7 @@ namespace imagein {
   }
 
   template <typename D>
-  GrayscaleImage_t<D>* Converter<GrayscaleImage_t<D> >::convert(const RgbImage_t<D>& from) 
+  GrayscaleImage_t<D>* Converter<GrayscaleImage_t<D> >::convert(const RgbImage_t<D>& from)
   {
 //      D* data = new D[from.getWidth() * from.getHeight()];
 //      D* ptr = data;
@@ -138,7 +138,7 @@ namespace imagein {
   }
 
   template <typename D>
-  GrayscaleImage_t<D>* Converter<GrayscaleImage_t<D> >::convert(const Image_t<D>& from) 
+  GrayscaleImage_t<D>* Converter<GrayscaleImage_t<D> >::convert(const Image_t<D>& from)
   {
 //      D* data = new D[from.getWidth() * from.getHeight()];
 //      D* ptr = data;
@@ -225,7 +225,7 @@ namespace imagein {
   Image_t<D>* Converter<Image_t<D> >::makeDisplayable(const Image_t<int>& from)
   {
     Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
-    
+
     bool negValue = false;
     int maxValue = 0;
     for(unsigned int i = 0; i < from.getWidth(); i++)
@@ -241,9 +241,9 @@ namespace imagein {
       }
     }
     int factor = std::abs(maxValue / 255);
-    
+
     /*std::cout << "Max value : " << maxValue << std::endl;*/
-    
+
     for(unsigned int i = 0; i < from.getWidth(); i++)
     {
       for(unsigned int j = 0; j < from.getHeight(); j++)
@@ -255,7 +255,7 @@ namespace imagein {
           {
             newPixel /= factor;
           }
-            
+
           if(negValue)
           {
             newPixel += 127;
@@ -268,12 +268,12 @@ namespace imagein {
     }
     return image;
   }
-  
+
   template <typename D>
   Image_t<D>* Converter<Image_t<D> >::makeDisplayable(const Image_t<bool>& from)
   {
     Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
-    
+
     for(unsigned int i = 0; i < from.getWidth(); i++){
       for(unsigned int j = 0; j < from.getHeight(); j++){
         for(unsigned int k = 0; k < from.getNbChannels(); k++){
@@ -320,7 +320,7 @@ namespace imagein {
   Image_t<D>* Converter<Image_t<D> >::convertScaleAndOffset(const Image_t<int>& from, std::string * to_print)
   {
     Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
-    
+
     bool negValue = false;
     int maxValue = from.max();
     int minval = from.min();
@@ -336,7 +336,7 @@ namespace imagein {
 
     double factor = (double ) (std::abs(maxValue)) / (double) destmax;
     //std::cout << "Max " << maxValue << " factor = " << factor << std::endl;
-    
+
     for(unsigned int i = 0; i < from.getWidth(); i++)
     {
       for(unsigned int j = 0; j < from.getHeight(); j++)
@@ -349,9 +349,9 @@ namespace imagein {
             newPixel /= factor;
 
           }
-            
+
           if(negValue)
-          { 
+          {
             newPixel += 127;
           }
           if(newPixel > 255) newPixel = 255;
@@ -371,15 +371,15 @@ namespace imagein {
 
     return image;
   }
-  
-  
+
+
   template <typename D>
-    Image_t<D>* Converter<Image_t<D>>::convertAndScale(const Image_t<int>& from, std::string * to_print){
-        
+    Image_t<D>* Converter<Image_t<D> >::convertAndScale(const Image_t<int>& from, std::string * to_print){
+
         Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
-        
+
         int max = from.max();
-        
+
         for(unsigned int i = 0; i < from.getWidth(); i++){
             for(unsigned int j = 0; j < from.getHeight(); j++){
                 for(unsigned int k = 0; k < from.getNbChannels(); k++){
@@ -395,12 +395,12 @@ namespace imagein {
         *to_print = *to_print + buffer;
         return image;
     }
-    
+
   template <typename D>
-    Image_t<D>* Converter<Image_t<D>>::convertAndOffset(const Image_t<int>& from, std::string * to_print){
+    Image_t<D>* Converter<Image_t<D> >::convertAndOffset(const Image_t<int>& from, std::string * to_print){
         Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
         int offset = 127;
-        
+
         for(unsigned int i = 0; i < from.getWidth(); i++){
             for(unsigned int j = 0; j < from.getHeight(); j++){
                 for(unsigned int k = 0; k < from.getNbChannels(); k++){
@@ -416,10 +416,10 @@ namespace imagein {
         *to_print = *to_print + buffer;
         return image;
     }
-    
+
 
 template <typename D>
-    Image_t<D>* Converter<Image_t<D>>::convertAndOffset(const Image_t<int>& from, std::string * to_print, int offset){
+    Image_t<D>* Converter<Image_t<D> >::convertAndOffset(const Image_t<int>& from, std::string * to_print, int offset){
         Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());
 
         for(unsigned int i = 0; i < from.getWidth(); i++){
