@@ -206,8 +206,8 @@ namespace genericinterface
     std::map<QString, QMenu*> _menus;
     std::map<QString, QToolBar*> _toolBars;
     QSettings* _settings;
-	
-	int _nbServices;
+
+    int _nbServices;
     bool _running;
 	
 	

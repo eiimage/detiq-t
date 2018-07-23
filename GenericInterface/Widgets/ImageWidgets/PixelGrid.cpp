@@ -213,5 +213,4 @@ void DoublePixelGrid::resizeEvent(QResizeEvent* event) {
     evtSize->setWidth((event->size().width()-PIXEL_S)/PIXEL_S);
     evtSize->setHeight((event->size().height()-PIXEL_S)/PIXEL_S);
     emit resized(*evtSize);
-    cout << "val pix dans resizeevent" << PIXEL_S << "\n";
 }
