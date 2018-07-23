@@ -361,7 +361,13 @@ namespace imagein {
       }
     }
     char buffer[100];
-    sprintf(buffer, "Conversion appliquee : Mise à l'echelle et centrage du 0 : val_UChar = val_Double ");
+    sprintf(buffer, "Conversion appliquee : Mise à l'echelle");
+    *to_print = *to_print + buffer;
+    if(negValue){
+        sprintf(buffer, " et Décalage");
+        *to_print = *to_print + buffer;
+    }
+    sprintf(buffer, " : val_UChar = val_Double ");
     *to_print = *to_print + buffer;
     sprintf(buffer, "* %d / %d", destmax,  std::abs(maxValue) );
     *to_print = *to_print + buffer;
@@ -412,7 +418,7 @@ namespace imagein {
             }
         }
         char buffer[100];
-        sprintf(buffer, "Conversion appliquee : Centrage du 0 : val_UChar = val_Double + %d \n", offset);
+        sprintf(buffer, "Conversion appliquee : Décalage: val_UChar = val_Double + %d \n", offset);
         *to_print = *to_print + buffer;
         return image;
     }
@@ -433,7 +439,7 @@ template <typename D>
             }
         }
         char buffer[100];
-        sprintf(buffer, "Conversion appliquee : Centrage du 0 : val_UChar = val_Double + %d \n", offset);
+        sprintf(buffer, "Conversion appliquee : Décalage : val_UChar = val_Double + %d \n", offset);
         *to_print = *to_print + buffer;
         return image;
     }
