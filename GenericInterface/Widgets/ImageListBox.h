@@ -50,6 +50,15 @@ public:
         }
         return NULL;
     }
+
+	void setCurrentImage(std::string imagename){
+		for(int i=0; i<this->count(); ++i){
+			if(this->itemText(i).toStdString().compare(imagename)==0){
+				this->setCurrentIndex(i);
+			}
+		}
+	}
+
 protected:
     std::map<std::string, const imagein::Image_t<D>*> _images;
 };
