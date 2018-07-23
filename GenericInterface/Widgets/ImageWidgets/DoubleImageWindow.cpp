@@ -225,9 +225,9 @@ void DoubleImageWindow::showSelectedPixelInformations(int x, int y) const
     //teste si l'operation est une transformee de Hough et gere l'affichage de la valeur selectionnee en consequence
     if (_hough)
     {
-        int rho = x*distanceStep;
-        int theta = (_image->getHeight()-y)-(90/angleStep);
-        _lSelectedPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(rho).arg(theta*angleStep));
+        int rho= y - (_image->getHeight()/2);
+        int theta= x - (_image->getWidth()/2);
+        _lSelectedPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(rho).arg(theta));
     }
     else
     {
@@ -252,9 +252,9 @@ void DoubleImageWindow::showHoveredPixelInformations(int x, int y) const
     //teste si l'operation est une transformee de Hough et gere l'affichage de la valeur survolee en consequence
     if (_hough)
     {
-        int rho = x*distanceStep;
-        int theta = (_image->getHeight()-y)-(90/angleStep);
-        _lHoveredPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(rho).arg(theta*angleStep));
+        int rho= y - (_image->getHeight()/2);
+        int theta= x - (_image->getWidth()/2);
+        _lHoveredPixelPosition->setText(QString("Rho : %1 | Theta : %2").arg(rho).arg(theta));
     }
     else
     {
