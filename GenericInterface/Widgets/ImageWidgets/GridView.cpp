@@ -121,7 +121,10 @@ GridView::GridView(const imagein::Image_t<double>* dataImg, const imagein::Image
     RadioPanel* panel = new RadioPanel(dataImg->getNbChannels());
 
     ThumbnailView* view = new ThumbnailView(this, displayImg);
-    view->setFixedSize(256, 256*view->pixmap().height()/view->pixmap().width());
+    if(view->pixmap().height()<view->pixmap().width())
+        view->setFixedSize(256, 256*view->pixmap().height()/view->pixmap().width());
+    else
+        view->setFixedSize(256*view->pixmap().width()/view->pixmap().height(), 256);
     layout->addWidget(view);
     layout->addWidget(panel);
     _layout->addWidget(leftWidget);
