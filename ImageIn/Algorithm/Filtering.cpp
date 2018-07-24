@@ -23,7 +23,7 @@
 
 #include <algorithm>
 #include "Average.h"
-#include "Distance.h"
+#include "SquareSum.h"
 
 namespace imagein
 {
@@ -244,7 +244,7 @@ Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>&
     {
         unsigned int size = images.size();
         
-        MaxDistance<Image_t<double>, 2> av;
+        SquareSum<Image_t<double>, 2> av;
 
         for(unsigned int i = 0; i < size; ++i)
         {
