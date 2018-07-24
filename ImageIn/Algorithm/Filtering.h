@@ -43,8 +43,7 @@ namespace imagein
 			Filtering(const Filtering& f) : _filters(f._filters), _policy(f._policy) {}
   
 			inline void setPolicy(Policy policy) { _policy = policy; }
-			inline void setNormalisation(bool n){ _normalisation = n; }
-			inline bool isNormalisationEnable(){ return _normalisation; }
+			inline void setNormalisation(int n){ _normalisation = n; }
 			
 			static Filtering uniformBlur(int numPixels);
 			static Filtering gaussianBlur(double alpha);
@@ -68,7 +67,7 @@ namespace imagein
 		private:
 			std::vector<Filter*> _filters;
 			Policy _policy;
-			bool _normalisation;
+			int _normalisation;
 		};
 	}
 }
