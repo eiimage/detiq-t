@@ -208,16 +208,9 @@ Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>&
     {
         Filter::iterator iter = (*filter)->begin();
         
-        if(_normalisation){
-            double factor = 0;
-            for(; iter != (*filter)->end(); ++iter)
-            {
-                factor += (*iter);
-            }
-
-            if(factor != 0){
-                for(Filter::iterator it = (*filter)->begin(); it < (*filter)->end(); ++it) {
-                    *it /= abs(factor);
+        if(_normalisation != 0){
+            for(Filter::iterator it = (*filter)->begin(); it < (*filter)->end(); ++it) {
+                    *it /= abs(_normalisation);
                 }
             }
         }
