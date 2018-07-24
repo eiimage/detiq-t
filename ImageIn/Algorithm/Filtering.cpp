@@ -210,8 +210,7 @@ Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>&
         
         if(_normalisation != 0){
             for(Filter::iterator it = (*filter)->begin(); it < (*filter)->end(); ++it) {
-                    *it /= abs(_normalisation);
-                }
+                *it /= abs(_normalisation);
             }
         }
         Image_t<double>* result = new Image_t<double>(width, height, nChannels);
