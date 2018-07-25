@@ -23,7 +23,6 @@
 
 #include <algorithm>
 #include "Average.h"
-#include "SquareSum.h"
 
 namespace imagein
 {
@@ -199,7 +198,6 @@ Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>&
     bool odd = width % 2 != 1 || height % 2 != 1;
 
     std::vector<Filter*>::iterator filter;
-    std::vector<Image_t<double>*> images;
 
 
 // attention Normalisation du filtre 
@@ -226,27 +224,28 @@ Image_t<double>* Filtering::algorithm(const std::vector<const Image_t<double>*>&
             }
         }
 
-        images.push_back(result);
+        _interImg.push_back(result);
     }
-    Image_t<double>* result = NULL;
+    Image_t<double>* result = new Image_t<double>(width, height, nChannels);
 
-    if(images.size() == 1)
-        result = images[0];
+    if(_interImg.size() == 1){
+        result = _interImg[0];
+        _interImg.pop_back();
+    }
     else
     {
-        unsigned int size = images.size();
-        
-        SquareSum<Image_t<double>, 2> av;
-
-        for(unsigned int i = 0; i < size; ++i)
-        {
-            if(result == NULL)
-            {
-                result = av(images[0], images[1]);
-            }
-            else
-            {
-                result = av(result, images[i]);
+        /*Result is the square root of the square sum */
+        unsigned int size = _interImg.size();
+        double tmp;
+        for(int c = 0; c < nChannels; c++){
+	        for(int y = 0; y < height; y++){
+	            for(int x = 0; x < width; x++){
+                    tmp = 0;
+                    for(unsigned int i = 1; i < size; ++i){   
+                        tmp += pow(_interImg[i-1]->getPixel(x,y,c), 2) + pow(_interImg[i]->getPixel(x,y,c), 2);
+                    }        
+                    result->setPixel(x,y,c, sqrt(tmp));
+                }
             }
         }
     }

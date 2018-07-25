@@ -59,6 +59,7 @@ namespace imagein
             double mirrorPolicy(const Image_t<double>* img, const int& x, const int& y, const int& channel);
             double nearestPolicy(const Image_t<double>* img, const int& x, const int& y, const int& channel);
 			double sphericalPolicy(const Image_t<double>* img, const int& x, const int& y, const int& channel);
+			Image_t<double>* getInterImg() {Image_t<double>* res; _interImg.size() >= 1 ? res = _interImg[_interImg.size() - 1]: res = NULL; _interImg.pop_back(); return res; }
 			
 		protected:
 
@@ -66,6 +67,7 @@ namespace imagein
 		
 		private:
 			std::vector<Filter*> _filters;
+			std::vector<Image_t<double>*> _interImg;
 			Policy _policy;
 			int _normalisation;
 		};
