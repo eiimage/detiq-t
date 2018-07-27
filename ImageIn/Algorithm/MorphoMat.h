@@ -54,17 +54,6 @@ namespace imagein {
         void dilate(const StructElem& elem);
 
         inline StructElem transpose() {
-            //Code before dev2018
-           /* GrayscaleImage_t<bool> t(_height*_scale,_width*_scale);
-            
-            for(unsigned int i = 0 ; i < _width*_scale ; i++){
-                for(unsigned int j=0 ; j <_height*_scale ; j++)
-                   t.setPixel(j,i,this->getPixel(i,j));
-            }
-
-            StructElem res(t, (_width-this->_centerX)*_scale,(_height-this->_centerY)*_scale);
-
-            return res;*/
             GrayscaleImage_t<bool> t(_width*_scale,_height*_scale);
             for(unsigned int i = 0 ; i < _width*_scale ; i++){
                 for(unsigned int j = 0 ; j <_height*_scale ; j++){
