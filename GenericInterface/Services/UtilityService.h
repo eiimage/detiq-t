@@ -40,6 +40,11 @@ namespace genericinterface
             void showHProjectionHistogram();
             void showVProjectionHistogram();
             void showPixelsGrid();
+            void showCumulHistogram();
+            void showLineProfile();
+            void showColumnProfile();
+            void convertToBinary();
+            void convertToGrayscale();
 
             void checkActionsValid(const QWidget* activeWidget);
         signals:
@@ -47,11 +52,17 @@ namespace genericinterface
         private:
             WindowService *_currentWindowService;
             QMenu* _showMenu;
+            QMenu* _colorsMenu;
 
             QAction* _showHistogram;
             QAction* _showHProjectionHistogram;
             QAction* _showVProjectionHistogram;
             QAction* _showPixelsGrid;
+            QAction* _showCumulHistogram;
+            QAction* _showLineProfile;
+            QAction* _showColumnProfile;
+            QAction* _showConvertToBin;
+            QAction* _showConvertToGrayscale;
     };
 }
 

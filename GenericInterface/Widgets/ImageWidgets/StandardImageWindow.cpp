@@ -100,14 +100,9 @@ void StandardImageWindow::init()
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
 
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
-    menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
-    menu()->addSeparator();
-    menu()->addAction(tr("Convert to grayscale"), this, SLOT(convertToGrayscale()));
-    menu()->addAction(tr("Convert to binary"), this, SLOT(convertToBinary()));
+    menu()->addAction(tr("Copy and crop"), this, SLOT(copycrop()));
     menu()->addSeparator();
     menu()->addAction(tr("Cumulated histogram"), this, SLOT(showCumulatedHistogram()));
-    menu()->addAction(tr("Column Profile"), this, SLOT(showColumnProfile()));
-    menu()->addAction(tr("Line Profile"), this, SLOT(showLineProfile()));
 
     updateStatusBar();
 }

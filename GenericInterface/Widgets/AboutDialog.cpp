@@ -42,8 +42,17 @@ AboutDialog::AboutDialog(QWidget *parent) :
     theText.append("<li>").append("Florian Teyssier").append("</li>");
     theText.append("</ul>");
 
-    theText.append(tr("Contributors:")).append(NEWLINE);
-    theText.append("Antoine Lorence");
+    theText.append("<strong>");
+    theText.append(tr("Contributors:"));
+    theText.append("</strong>").append("<ul>");
+    theText.append("<li>").append("Antoine Lorence").append("</li>");
+    theText.append("<li>").append("Antoine Pazat").append("</li>");
+    theText.append("<li>").append("Quentin Bigot").append("</li>");
+    theText.append("<li>").append("Antoine Riotte").append("</li>");
+    theText.append("<li>").append("Bertrand Provot").append("</li>");
+    theText.append("</ul>");
+
+
 
     theText.append(NEWLINE).append(NEWLINE);
     theText.append(tr("Compiled on %1 at %2").arg(__DATE__, __TIME__));
