@@ -18,6 +18,7 @@
 */
 
 //#include "Converter.h"
+#include <cstdio>
 
 namespace imagein {
 
@@ -361,14 +362,11 @@ namespace imagein {
       }
     }
     char buffer[100];
-    sprintf(buffer, "Conversion appliquee : Mise à l'echelle");
-    *to_print = *to_print + buffer;
+    *to_print = *to_print + "Conversion appliquee : Mise à l'echelle";
     if(negValue){
-        sprintf(buffer, " et Décalage");
-        *to_print = *to_print + buffer;
+        *to_print = *to_print + " et Décalage";
     }
-    sprintf(buffer, " : val_UChar = val_Double ");
-    *to_print = *to_print + buffer;
+    *to_print = *to_print + " : val_UChar = val_Double ";
     sprintf(buffer, "* %d / %d", destmax,  std::abs(maxValue) );
     *to_print = *to_print + buffer;
     if(negValue){
