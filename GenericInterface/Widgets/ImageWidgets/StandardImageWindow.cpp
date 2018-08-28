@@ -102,7 +102,6 @@ void StandardImageWindow::init()
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy and crop"), this, SLOT(copycrop()));
     menu()->addSeparator();
-    menu()->addAction(tr("Cumulated histogram"), this, SLOT(showCumulatedHistogram()));
 
     updateStatusBar();
 }

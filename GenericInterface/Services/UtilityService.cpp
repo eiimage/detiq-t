@@ -159,6 +159,7 @@ void UtilityService::checkActionsValid(const QWidget* activeWidget)
     const ImageWindow* window = dynamic_cast<const ImageWindow*>(activeWidget);
     if(window) {
         window->menu()->addAction(_showHistogram);
+        window->menu()->addAction(_showCumulHistogram);
         window->menu()->addSeparator();
         window->menu()->addAction(_showPixelsGrid);
 
@@ -166,6 +167,7 @@ void UtilityService::checkActionsValid(const QWidget* activeWidget)
         // StandardImage windows
         _showHistogram->setEnabled(true);
         _showPixelsGrid->setEnabled(true);
+        _showCumulHistogram->setEnabled(true);
 
         // Projections can only be displayed for standard images
         if(dynamic_cast<const StandardImageWindow*>(window)) {
