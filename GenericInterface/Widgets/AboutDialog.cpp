@@ -45,6 +45,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     theText.append("<strong>");
     theText.append(tr("Contributors:"));
     theText.append("</strong>").append("<ul>");
+    theText.append("<li>").append("Alexandre Sanchez").append("</li>");
     theText.append("<li>").append("Antoine Lorence").append("</li>");
     theText.append("<li>").append("Antoine Pazat").append("</li>");
     theText.append("<li>").append("Quentin Bigot").append("</li>");
