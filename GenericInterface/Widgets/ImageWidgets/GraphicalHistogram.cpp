@@ -67,6 +67,45 @@ void GraphicalHistogram::setValues(const imagein::Array<double>& values)
     setData(new QwtIntervalSeriesData(samples));
 }
 
+void GraphicalHistogram::setDoubleValues(const imagein::Array<unsigned int>& values, double binSize)
+{
+    QVector<QwtIntervalSample> samples(values.size());
+    for (unsigned int i = 0; i < values.size(); ++i)
+    {
+        if(values.getvMin() + (i + 1) * binSize < values.getvMax()){
+            QwtInterval interval( values.getvMin() + i * binSize, values.getvMin() + (i + 1) * binSize);
+            interval.setBorderFlags(QwtInterval::ExcludeMaximum);
+            samples[i] = QwtIntervalSample(values[i], interval);
+        }else{
+            QwtInterval interval( values.getvMin() + i * binSize, values.getvMax());
+            interval.setBorderFlags(QwtInterval::ExcludeMaximum);
+            samples[i] = QwtIntervalSample(values[i], interval);
+        }
+    }
+    setData(new QwtIntervalSeriesData(samples));
+}
+
+/*These two functions use the same method to build QwtInterval and QwtIntervalSeriesData,
+ * the only difference is the parameter,
+ * the array of cumulative histograms is double because it represents a proportion value*/
+void GraphicalHistogram::setCumulativeValues(const imagein::Array<double>& values, double binSize)
+{
+    QVector<QwtIntervalSample> samples(values.size());
+    for (unsigned int i = 0; i < values.size(); ++i)
+    {
+        if(values.getvMin() + (i + 1) * binSize < values.getvMax()){
+            QwtInterval interval( values.getvMin() + i * binSize, values.getvMin() + (i + 1) * binSize);
+            interval.setBorderFlags(QwtInterval::ExcludeMaximum);
+            samples[i] = QwtIntervalSample(values[i], interval);
+        }else{
+            QwtInterval interval( values.getvMin() + i * binSize, values.getvMax());
+            interval.setBorderFlags(QwtInterval::ExcludeMaximum);
+            samples[i] = QwtIntervalSample(values[i], interval);
+        }
+    }
+    setData(new QwtIntervalSeriesData(samples));
+}
+
 QwtIntervalSeriesData GraphicalHistogram::getValues(const imagein::Array<double>& values)
 {
     QVector<QwtIntervalSample> samples(values.size());

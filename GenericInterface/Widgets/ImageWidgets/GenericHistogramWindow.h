@@ -28,9 +28,12 @@
 #include <QStatusBar>
 #include <sstream>
 
+#include <qwt_plot_zoomer.h>
 #include <QToolButton>
-
+#include <QPushButton>
+#include <QLineEdit>
 #include "HistogramView.h"
+#include "MyDoubleValidator.h"
 
 #include <Image.h>
 #include <Rectangle.h>
@@ -52,7 +55,12 @@ namespace genericinterface
         QLabel* _lHoveredValue;
         QLabel* _lSelectedValue1;
         QLabel* _lSelectedValue2;
+        QLabel* _lBinSize;
+        QLineEdit* _binSizeInput;
+        QDoubleValidator* _inputValidator;
+        QPushButton* _button;
         QStatusBar* _statusBar;
+        QwtPlotZoomer* _zoomer;
 		
         void initStatusBar();
         QString formatValues(std::vector<int> values) const;
@@ -62,9 +70,11 @@ namespace genericinterface
         void showLeftClickedValue(int index, std::vector<int> values) const;
         void showRightClickedValue(int index, std::vector<int> values) const;
         void activated();
-
+        void zoom();
+        void resetZoomer(const QRectF &rect);
         void save(const QString& path = QString(), const QString& ext = QString());
         void saveAs();
+        void customizeBinsize();
 
         //void saveData();
 
@@ -75,7 +85,8 @@ namespace genericinterface
          * \param rect Rectangle to display on the source window
          */
         void selectRectChange(imagein::Rectangle rect, GenericHistogramView* source);
-        
+        void sendBinSize(double);
+
     protected:
       /*!
        * \brief Default constructor
@@ -89,6 +100,7 @@ namespace genericinterface
       GenericHistogramWindow(GenericHistogramView* view);
 
       QToolButton* _saveAsButton;
+      QToolButton* _zoomButton;
 
     public:
       /*!
@@ -97,6 +109,8 @@ namespace genericinterface
        * The HistogramView is deleted too
        */
       virtual ~GenericHistogramWindow();
+      void updateViewByBinSize(const imagein::ImageDouble* image, double binSize);
+      void updateCumulativeViewByBinSize(const imagein::ImageDouble* image, double binSize);
       
       virtual GenericHistogramView* getView() { return _view; }
     };

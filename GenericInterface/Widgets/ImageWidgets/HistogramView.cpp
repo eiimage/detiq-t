@@ -41,8 +41,18 @@ HistogramView::HistogramView(const ImageDouble *image, Rectangle rect, bool cumu
         _qwtPlot->setTitle(tr("Histogram"));
     }
     else {
-        _qwtPlot->setTitle(tr("Cumulated histogram"));
+        _qwtPlot->setTitle(tr("Cumulative histogram"));
     }
 }
 
+HistogramView::HistogramView(const ImageDouble *image, Rectangle rect, double binSize, bool cumul)
+    : GenericHistogramView(image, rect, binSize, false, 0, false, cumul)
+{
+    if(!cumul) {
+        _qwtPlot->setTitle(tr("Histogram"));
+    }
+    else {
+        _qwtPlot->setTitle(tr("Cumulative histogram"));
+    }
+}
     

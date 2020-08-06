@@ -66,10 +66,20 @@ namespace genericinterface
         HistogramWindow(const imagein::ImageDouble* image, imagein::Rectangle rect, QString name = "", bool cumul = false);
 
         /*!
-       * \brief HistogramWindow destructor.
-       *
-       * The HistogramView is deleted too
-       */
+         * \brief Alternative constructor
+         *
+         * Initializes and display the HistogramView from an ImageDouble and a given bin size
+         *
+         * \param image The image concerned by the histogram
+         * \param rect The part of the image where the histogram is applied
+         */
+        HistogramWindow(const imagein::ImageDouble* image, imagein::Rectangle rect, double binSize = 1.0, QString name = "", bool cumul = false);
+
+        /*!
+         * \brief HistogramWindow destructor.
+         *
+         * The HistogramView is deleted too
+         */
         virtual ~HistogramWindow();
 
     private:

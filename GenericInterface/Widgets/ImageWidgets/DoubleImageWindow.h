@@ -78,8 +78,6 @@ public:
     void setNormalized(bool norm){_normalize = norm;}
     void setAbsolute(bool abs){_abs = abs;}
 
-
-
 public slots:
 
     void offset();
@@ -96,9 +94,11 @@ public slots:
 
     virtual void showHistogram();
 
+    virtual void showCumulativeHistogram();
+
     void convertRgb();
 
-
+    void setBinSize(double);
 
 signals:
 
@@ -112,6 +112,7 @@ protected:
     bool _hough = false;
     double angleStep;
     double distanceStep;
+    double _binSize = 1.0;
 
     void init();
     void updateStatusBar();

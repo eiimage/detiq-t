@@ -40,7 +40,9 @@ StandardImageWindow::StandardImageWindow(const QString path)
     QString msg = "";
     imagein::Image* image;
     try {
-        image = new Image(path.toStdString());
+//        image = new Image(path.toStdString());
+        /*Returns the local 8-bit representation of the file path as a QByteArray.*/
+        image = new Image(path.toLocal8Bit().constData());
     }
     catch(const imagein::UnknownFormatException& e) {
         error = true;

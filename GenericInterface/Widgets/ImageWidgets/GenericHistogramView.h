@@ -73,7 +73,19 @@ public:
      * \param image The image concerned by the histogram
      * \param rect The part of the image where the histogram is applied
      */
+
     GenericHistogramView(const imagein::ImageDouble* image, imagein::Rectangle rect, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false);
+
+    /*!
+     * \brief Alternative constructor
+     *
+     * Initializes and display the histogram from an image with double values and customized bin size
+     *
+     * \param image The image concerned by the histogram
+     * \param rect The part of the image where the histogram is applied
+     */
+
+    GenericHistogramView(const imagein::ImageDouble* image, imagein::Rectangle rect, double binSize, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false);
 
     /*!
      * \brief GenericHistogramView destructor.
@@ -83,13 +95,17 @@ public:
     virtual ~GenericHistogramView();
 
     void update(const imagein::Image* image, imagein::Rectangle rect);
-    
+    void updateByBinSize(const ImageDouble *image, double binSize);
+    void updateCumulativeByBinSize(const ImageDouble *image, double binSize);
+
     //! Returns the image's histogram on the param channel
     //inline const imagein::Histogram* getHistogram(int channel) const { return new imagein::Histogram(*_image, channel, _rectangle); }
 
     //! Returns the graphical histogram
     inline QwtPlot* getGraphicalHistogram() const { return _qwtPlot; }
     inline imagein::Rectangle getApplicationArea() const { return _rectangle; }
+    inline bool isDouble() const { return _double; }
+    inline double getMaxBinSize() const { return _maxBinSize; }
 
 signals:
     /*!
@@ -145,6 +161,8 @@ private:
     bool _cumulated;
     bool _lineProfile;
     bool _columnProfile;
+    bool _double;
+    double _maxBinSize = 0;
     void init(uint nbChannels);
     // This is the origin value for the x axis. It is 0 by default on classical images,
     // but can be negative if the input image has negative values

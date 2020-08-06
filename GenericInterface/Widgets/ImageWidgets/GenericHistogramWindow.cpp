@@ -29,7 +29,6 @@
 #include <qwt_legend.h>
 #include <qwt_column_symbol.h>
 #include <qwt_series_data.h>
-
 #include "GenericHistogramWindow.h"
 #include <UnknownFormatException.h>
 using namespace genericinterface;
@@ -42,11 +41,47 @@ GenericHistogramWindow::GenericHistogramWindow(GenericHistogramView* view) : _vi
     scrollArea->setBackgroundRole(QPalette::Dark);
     scrollArea->setAlignment(Qt::AlignCenter);
 
-    initStatusBar();
+    /*Create a zoom widget that is activated by clicking the magnifier icon*/
+    _zoomer = new QwtPlotZoomer(_view->getGraphicalHistogram()->canvas());
+    _zoomer->setRubberBandPen( QColor( Qt::black ) );
+    _zoomer->setTrackerPen( QColor( Qt::black ) );
+    /*Left-click the selected part to zoom in, right-click to zoom out one step, CTRL & right-click to return to the original size*/
+    _zoomer->setMousePattern( QwtEventPattern::MouseSelect2,Qt::RightButton, Qt::ControlModifier );
+    _zoomer->setMousePattern( QwtEventPattern::MouseSelect3,Qt::RightButton );
+    /*Initialize the zoom stack to 0 and set the original rectangle as base*/
+    _zoomer->setZoomBase(true);
+    /*Every execution of zoom action call resetZoomer function*/
+    QObject::connect(_zoomer,SIGNAL(zoomed(const QRectF&)),this, SLOT(resetZoomer(const QRectF&)));
+    _zoomer->setEnabled(false);
 
+    initStatusBar();
+    /*Redesign the layout of buttons, pack the zoom button and save button on the right side*/
     QVBoxLayout* layout = new QVBoxLayout();
     layout->addWidget(_view->getGraphicalHistogram());
-    layout->addWidget(_statusBar);
+
+    _zoomButton = new QToolButton(this);
+    _zoomButton->setToolTip(tr("Zoom +/-"));
+    _zoomButton->setIcon(QIcon(":/images/zoom-in.svg.png"));
+    _zoomButton->setCheckable(true);
+    _zoomButton->setAutoRaise(true);
+    _zoomButton->setIconSize (QSize(24, 24));
+    QObject::connect(_zoomButton, SIGNAL(clicked()), this, SLOT(zoom()));
+
+    _saveAsButton = new QToolButton(this);
+    _saveAsButton->setToolTip(tr("Save As Image"));
+    _saveAsButton->setIcon(this->style()->standardIcon(QStyle::SP_DialogSaveButton));
+    _saveAsButton->setCheckable(false);
+    _saveAsButton->setAutoRaise(true);
+    _saveAsButton->setIconSize (QSize(24, 24));
+    QObject::connect(_saveAsButton, SIGNAL(clicked()), this, SLOT(saveAs()));
+
+    QHBoxLayout* layoutH = new QHBoxLayout();
+    layoutH->addWidget(_statusBar);
+    layoutH->addWidget(_zoomButton);
+    layoutH->addWidget(_saveAsButton);
+    QWidget* widgetH = new QWidget();
+    widgetH->setLayout(layoutH);
+    layout->addWidget(widgetH);
     this->setLayout(layout);
 
     connect(_view, SIGNAL(leftClickedValue(int, std::vector<int>)), this, SLOT(showLeftClickedValue(int, std::vector<int>)));
@@ -80,24 +115,17 @@ void GenericHistogramWindow::initStatusBar()
     font.setPointSize(8);
     _lHoveredValue->setFont(font);
     
-    _lSelectedValue1 = new QLabel(tr("Value 1") + " : ");
+//    _lSelectedValue1 = new QLabel(tr("Value 1") + " : ");
+    _lSelectedValue1 = new QLabel(tr("L click value") + " : ");
     font = _lSelectedValue1->font();
     font.setPointSize(8);
     _lSelectedValue1->setFont(font);
     
-    _lSelectedValue2 = new QLabel(tr("Value 2") + " : ");
+//    _lSelectedValue2 = new QLabel(tr("Value 2") + " : ");
+    _lSelectedValue2 = new QLabel(tr("R click value") + " : ");
     font = _lSelectedValue2->font();
     font.setPointSize(8);
     _lSelectedValue2->setFont(font);
-
-    _saveAsButton = new QToolButton(this);
-    _saveAsButton->setToolTip(tr("Save As Image"));
-    _saveAsButton->setIcon(this->style()->standardIcon(QStyle::SP_DialogSaveButton));
-    _saveAsButton->setCheckable(false);
-    _saveAsButton->setAutoRaise(true);
-    _saveAsButton->setIconSize (QSize(24, 24));
-
-    QObject::connect(_saveAsButton, SIGNAL(clicked()), this, SLOT(saveAs()));
 
 	QVBoxLayout* layout = new QVBoxLayout();
 	layout->setContentsMargins(0, 0, 0, 0);
@@ -106,26 +134,56 @@ void GenericHistogramWindow::initStatusBar()
 	QHBoxLayout* layout1 = new QHBoxLayout();
 	layout1->setContentsMargins(0, 0, 0, 0);
     QWidget* widget1 = new QWidget();
-	/*layout1->addWidget(_lImageName);*/
-	layout1->addSpacing(15);
+    layout1->addSpacing(8);
 	layout1->addWidget(_lHoveredValue);
-        layout1->addWidget(_saveAsButton);
-    widget1->setLayout(layout1);
-    layout->addWidget(widget1);
 	
 	QHBoxLayout* layout2 = new QHBoxLayout();
 	layout2->setContentsMargins(0, 0, 0, 0);
     QWidget* widget2 = new QWidget();
+    layout2->addSpacing(8);
 	layout2->addWidget(_lSelectedValue1);
-	layout2->addSpacing(15);
-	layout2->addWidget(_lSelectedValue2);
 
+    QHBoxLayout* layout3 = new QHBoxLayout();
+    layout3->setContentsMargins(0, 0, 0, 0);
+    QWidget* widget3 = new QWidget();
+    layout3->addSpacing(8);
+    layout3->addWidget(_lSelectedValue2);
+
+    widget1->setLayout(layout1);
     widget2->setLayout(layout2);
+    widget3->setLayout(layout3);
+    layout->addWidget(widget1);
     layout->addWidget(widget2);
+    layout->addWidget(widget3);
     
-    widget->setLayout(layout);
+    if(_view->isDouble()){
+        _lBinSize = new QLabel(tr("Bin size") + " : ");
+        font = _lBinSize->font();
+        font.setPointSize(8);
+        _lBinSize->setFont(font);
 
-	
+        _binSizeInput = new QLineEdit();
+         /*The default value of bin size is 1*/
+        _binSizeInput->setText("1.0");
+        _inputValidator = new MyDoubleValidator(_view->getMaxBinSize()/1000.0, ceil(_view->getMaxBinSize()), 5, _binSizeInput);
+        _inputValidator->setNotation(QDoubleValidator::StandardNotation);
+        _binSizeInput->setValidator(_inputValidator);
+        _button = new QPushButton(this);
+        _button->setText(tr("Enter"));
+        QObject::connect(_button, SIGNAL(clicked()), this, SLOT(customizeBinsize()));
+
+        QHBoxLayout* layout4 = new QHBoxLayout();
+        layout4->setContentsMargins(0, 0, 0, 0);
+        QWidget* widget4 = new QWidget();
+        layout4->addSpacing(8);
+        layout4->addWidget(_lBinSize);
+        layout4->addWidget(_binSizeInput);
+        layout4->addWidget(_button);
+        widget4->setLayout(layout4);
+        layout->addWidget(widget4);
+    }
+
+    widget->setLayout(layout);
     _statusBar->addWidget(widget);
 }
 
@@ -230,12 +288,14 @@ void GenericHistogramWindow::showHoveredValue(int index, std::vector<int> values
 
 void GenericHistogramWindow::showLeftClickedValue(int index, std::vector<int> values) const
 {
-	_lSelectedValue1->setText(tr("Value 1") + QString(" : %1\t").arg(index) + formatValues(values));
+//	_lSelectedValue1->setText(tr("Value 1") + QString(" : %1\t").arg(index) + formatValues(values));
+    _lSelectedValue1->setText(tr("L click value") + QString(" : %1\t").arg(index) + formatValues(values));
 }
 
 void GenericHistogramWindow::showRightClickedValue(int index, std::vector<int> values) const
 {
-	_lSelectedValue2->setText(tr("Value 2") + QString(" : %1\t").arg(index) + formatValues(values));
+//	_lSelectedValue2->setText(tr("Value 2") + QString(" : %1\t").arg(index) + formatValues(values));
+    _lSelectedValue2->setText(tr("R click value") + QString(" : %1\t").arg(index) + formatValues(values));
 }
 
 QString GenericHistogramWindow::formatValues(std::vector<int> values) const
@@ -254,4 +314,40 @@ QString GenericHistogramWindow::formatValues(std::vector<int> values) const
     }
 
 	return res;
+}
+
+/*Enable / disable the zoom widget according to the state of zoom button*/
+void GenericHistogramWindow::zoom() {
+    if(_zoomButton->isChecked()){
+        _zoomer->setEnabled(true);
+    }else{
+        _zoomer->setEnabled(false);
+    }
+}
+
+void GenericHistogramWindow::resetZoomer(const QRectF &rect)
+{
+    /*Check the depth of zoomer, if index back to 0, need to redraw the axis to prevent incorrect scaling*/
+    if (_zoomer->zoomRectIndex()==0){
+        _view->getGraphicalHistogram()->setAxisAutoScale(QwtPlot::xBottom);
+        _view->getGraphicalHistogram()->setAxisAutoScale(QwtPlot::yLeft);
+    }
+    _view->getGraphicalHistogram()->replot();
+}
+
+void GenericHistogramWindow::customizeBinsize()
+{
+    if(_binSizeInput->text().length()!=0){
+        emit sendBinSize(_binSizeInput->text().toDouble());
+    }
+}
+
+void GenericHistogramWindow::updateViewByBinSize(const imagein::ImageDouble* image, double binSize)
+{
+    _view->updateByBinSize(image, binSize);
+}
+
+void GenericHistogramWindow::updateCumulativeViewByBinSize(const imagein::ImageDouble* image, double binSize)
+{
+    _view->updateCumulativeByBinSize(image, binSize);
 }

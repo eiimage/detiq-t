@@ -37,7 +37,7 @@ namespace imagein
     class Histogram : public Array<unsigned int>
     {
             
-         public:
+        public:
         /*!
          * \brief Constructs an Histogram from an image.
          *
@@ -57,10 +57,23 @@ namespace imagein
           template <typename D>
           Histogram(const Image_t<D>& img, const Rectangle& rect = Rectangle());
 
+        /*!
+         * \brief Constructs an Histogram from a double image and a given bin size.
+         *
+         * \param img The image from which to compute the histogram.
+         * \param channel The channel to consider for the values.
+         * \param rect A rectangle used to crop the image before computing the Histogram.
+         */
+            template <typename D>
+            Histogram(const Image_t<D>& img, unsigned int channel, double binSize = 1.0, const Rectangle& rect = Rectangle());
+
           private:
 
           template<typename D>
           void computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect);
+
+          template<typename D>
+          void computeDoubleHistogram(const Image_t<D>& img, unsigned int channel, double binSize, const Rectangle& rect);
     };
 
     class CumulatedHistogram : public Array<double>
@@ -85,10 +98,22 @@ namespace imagein
           template <typename D>
           CumulatedHistogram(const Image_t<D>& img, const Rectangle& rect = Rectangle());
 
+        /*!
+         * \brief Constructs an Histogram from an image and a given bin size.
+         *
+         * \param img The image from which to compute the histogram.
+         * \param rect A rectangle used to crop the image before computing the Histogram.
+         */
+          template <typename D>
+          CumulatedHistogram(const Image_t<D>& img, unsigned int channel, double binSize = 1.0, const Rectangle& rect = Rectangle());
+
           private:
 
           template<typename D>
           void computeHistogram(const Image_t<D>& img, unsigned int channel, const Rectangle& rect);
+
+          template<typename D>
+          void computeDoubleHistogram(const Image_t<D>& img, unsigned int channel, double binSize, const Rectangle& rect);
     };
 }
 

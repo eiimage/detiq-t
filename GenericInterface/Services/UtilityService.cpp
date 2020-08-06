@@ -119,7 +119,12 @@ void UtilityService::showCumulHistogram()
     if(curWindow = dynamic_cast<StandardImageWindow*>(_currentWindowService->getCurrentImageWindow())) {
         curWindow->showCumulatedHistogram();
     }
-
+    /*Enable the cumulative histogram's calculation for double images*/
+    DoubleImageWindow* curDoubleWindow = NULL;
+    if(curDoubleWindow = dynamic_cast<DoubleImageWindow*>(_currentWindowService->
+    getCurrentImageWindow())) {
+        curDoubleWindow->showCumulativeHistogram();
+    }
 }
 
 void UtilityService::showHistogram()
@@ -181,7 +186,7 @@ void UtilityService::checkActionsValid(const QWidget* activeWidget)
         } else {
             _showHProjectionHistogram->setEnabled(false);
             _showVProjectionHistogram->setEnabled(false);
-            _showCumulHistogram->setEnabled(false);
+//            _showCumulHistogram->setEnabled(false);
             _showLineProfile->setEnabled(false);
             _showColumnProfile->setEnabled(false);
             _showConvertToBin->setEnabled(false);

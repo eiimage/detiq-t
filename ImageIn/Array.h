@@ -50,6 +50,11 @@ namespace imagein
             inline unsigned int size() const { return _width; }
             inline int getMin() const {return _min; }
             inline int getMax() const {return _max; }
+            /*Different from getMin() and getMin() which return the number of occurrences after counting,
+             *getvMin() and getvMax() return the maximum and minimum values of the processing image,
+             *in order to prepare for limiting the range of bin size input*/
+            inline double getvMin() const {return _vmin; }
+            inline double getvMax() const {return _vmax; }
             //! Access to the element at the given index.
             inline T operator[](int index) const { return (index >= _min && index <= _max ) ? _array[index - _min] : 0;}
             //! Constant access to the element at the given index.
@@ -69,6 +74,8 @@ namespace imagein
             unsigned int _width;
             int _min;
             int _max;
+            double _vmin;
+            double _vmax;
     };
 }
 

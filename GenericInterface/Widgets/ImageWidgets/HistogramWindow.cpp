@@ -29,7 +29,7 @@ HistogramWindow::HistogramWindow(const Image* image, imagein::Rectangle rect, QS
         this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
     }
     else {
-        this->setWindowTitle(name + QString(" - ") + tr("Cumulated histogram"));
+        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram"));
     }
 }
 
@@ -40,7 +40,18 @@ HistogramWindow::HistogramWindow(const ImageDouble *image, Rectangle rect, QStri
         this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
     }
     else {
-        this->setWindowTitle(name + QString(" - ") + tr("Cumulated histogram"));
+        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram"));
+    }
+}
+
+HistogramWindow::HistogramWindow(const ImageDouble *image, Rectangle rect, double binSize, QString name, bool cumul)
+    : GenericHistogramWindow(new HistogramView(image, rect, binSize, cumul))
+{
+    if(!cumul) {
+        this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
+    }
+    else {
+        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram"));
     }
 }
 

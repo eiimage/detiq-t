@@ -21,7 +21,7 @@
 #define QTINTERFACE_UTILITYSERVICE_H
 
 #include "../GenericInterface.h"
-
+#include "Widgets/ImageWidgets/DoubleImageWindow.h"
 #include <QMenu>
 
 namespace genericinterface

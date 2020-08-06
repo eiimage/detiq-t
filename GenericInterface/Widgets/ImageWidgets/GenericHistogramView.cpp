@@ -40,6 +40,7 @@ using namespace imagein;
 GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection, bool cumulated, bool lineProfile, bool columnProfile)
     : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated), _lineProfile(lineProfile), _columnProfile(columnProfile)
 {
+    _double = false;
     _qwtPlot = new QwtPlot();
     init(image->getNbChannels());
 
@@ -73,6 +74,7 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
 GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
     : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
 {
+    _double = true;
     _qwtPlot = new QwtPlot();
 
     init(image->getNbChannels());
@@ -85,10 +87,47 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
         if(_projection) {
             graphicalHisto->setValues(imagein::ProjectionHistogram_t<double>(*image, _value, _horizontal, _rectangle, channel));
         } else if(_cumulated) {
-            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, channel, _rectangle));
+//            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, channel, _rectangle));
+            imagein::CumulatedHistogram his = imagein::CumulatedHistogram(*image, channel, 1.0, _rectangle);
+            _maxBinSize = his.getvMax()-his.getvMin();
+            graphicalHisto->setValues(his);
         } else {
-            graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
+//            graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
+            imagein::Histogram his = imagein::Histogram(*image, channel, 1.0, _rectangle);
+            _maxBinSize = his.getvMax()-his.getvMin();
+            graphicalHisto->setValues(his);
+        }
+    }
 
+    // Store the origin, to apply on indexes passed when cursor moves on histogram or click on it
+    _originValue = qFloor(image->min());
+}
+
+GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle rect, double binSize, bool horizontal, int value, bool projection, bool cumulated)
+    : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
+{
+    _double = true;
+    _qwtPlot = new QwtPlot();
+
+    init(image->getNbChannels());
+    // Here we have to fix min and max for the current diagram
+    _qwtPlot->setAxisAutoScale(QwtPlot::xBottom);
+    _qwtPlot->setAxisAutoScale(QwtPlot::yLeft);
+
+    for(unsigned int channel = 0; channel < _graphicalHistos.size(); ++channel) {
+        GraphicalHistogram* graphicalHisto = _graphicalHistos[channel];
+
+        if(_projection) {
+            graphicalHisto->setValues(imagein::ProjectionHistogram_t<double>(*image, _value, _horizontal, _rectangle, channel));
+        } else if(_cumulated) {
+            imagein::CumulatedHistogram his = imagein::CumulatedHistogram(*image, channel, binSize, _rectangle);
+            /*Maximum bin size value cannot exceed the interval of extreme values, otherwise it is meaningless*/
+            _maxBinSize = his.getvMax() - his.getvMin();
+            graphicalHisto->setCumulativeValues(his, binSize);
+        } else {
+            imagein::Histogram his = imagein::Histogram(*image, channel, binSize, _rectangle);
+            _maxBinSize = his.getvMax() - his.getvMin();
+            graphicalHisto->setDoubleValues(his, binSize);
         }
     }
 
@@ -284,5 +323,21 @@ void GenericHistogramView::move(const QPointF& pos) const
 
     if(values.size() == _graphicalHistos.size()) {
         emit(hoveredValue(index, values));
+    }
+}
+
+void GenericHistogramView::updateByBinSize(const ImageDouble *image, double binSize)
+{
+    for(unsigned int i = 0; i < image->getNbChannels(); ++i)
+    {
+        _graphicalHistos[i]->setDoubleValues(imagein::Histogram(*image, i, binSize, _rectangle) , binSize);
+    }
+}
+
+void GenericHistogramView::updateCumulativeByBinSize(const ImageDouble *image, double binSize)
+{
+    for(unsigned int i = 0; i < image->getNbChannels(); ++i)
+    {
+        _graphicalHistos[i]->setCumulativeValues(imagein::CumulatedHistogram(*image, i, binSize, _rectangle) , binSize);
     }
 }

@@ -323,8 +323,40 @@ void DoubleImageWindow::setLogScale(int logScale) {
 
 void DoubleImageWindow::showHistogram()
 {
+//    HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle());
+//    showGenericHistogram(histogramWnd);
     HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle());
+    /*Modify _binSize after receiving the new value*/
+    QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), this, SLOT(setBinSize(double)));
     showGenericHistogram(histogramWnd);
+    /*Created an infinite event loop to wait for the incoming bin size value, the loop breaks when the window is closed*/
+    QEventLoop loop;
+    while(1){
+        QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), &loop, SLOT(quit()));
+        histogramWnd->updateViewByBinSize(_image, _binSize);
+        loop.exec();
+        if(!histogramWnd->isVisible()){
+            break;
+        }
+    }
+    histogramWnd->close();
+}
+
+void DoubleImageWindow::showCumulativeHistogram() {
+    HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), _binSize, this->windowTitle(), true);
+    /*It shares the same window as histogram, so the signal of bin size is also shared*/
+    QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), this, SLOT(setBinSize(double)));
+    showGenericHistogram(histogramWnd);
+    QEventLoop loop;
+    while(1){
+        QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), &loop, SLOT(quit()));
+        histogramWnd->updateCumulativeViewByBinSize(_image, _binSize);
+        loop.exec();
+        if(!histogramWnd->isVisible()){
+            break;
+        }
+    }
+    histogramWnd->close();
 }
 
 void DoubleImageWindow::offset(){
@@ -346,4 +378,9 @@ void DoubleImageWindow::offset(){
     }
     DoubleImageWindow* offsetImgWnd = new DoubleImageWindow(offsetImg, this->_path, false, this->_logScale, this->_logConstantScale, false);
     emit addImage(this, offsetImgWnd);
+}
+
+void DoubleImageWindow::setBinSize(double binSize)
+{
+    _binSize = binSize;
 }

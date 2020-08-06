@@ -80,6 +80,7 @@ set(GenInterface_SOURCES
 	Widgets/ImageWidgets/ImageWidget.h
 	Widgets/ImageWidgets/ImageWindow.cpp
 	Widgets/ImageWidgets/ImageWindow.h
+        Widgets/ImageWidgets/MyDoubleValidator.h
 	Widgets/ImageWidgets/PixelGrid.cpp
 	Widgets/ImageWidgets/PixelGrid.h
 	Widgets/ImageWidgets/ProjectionHistogramView.cpp
