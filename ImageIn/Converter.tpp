@@ -421,7 +421,6 @@ namespace imagein {
         return image;
     }
 
-
 template <typename D>
     Image_t<D>* Converter<Image_t<D> >::convertAndOffset(const Image_t<int>& from, std::string * to_print, int offset){
         Image_t<D>* image = new Image_t<D>(from.getWidth(), from.getHeight(), from.getNbChannels());

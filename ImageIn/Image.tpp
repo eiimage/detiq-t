@@ -249,6 +249,17 @@ double imagein::Image_t<D>::mean(unsigned int channel) const {
 }
 
 template <typename D>
+double imagein::Image_t<D>::meanOfAbs(unsigned int channel) const {
+    double mean = 0;
+    for(unsigned int j = 0; j < getHeight(); ++j) {
+        for(unsigned int i = 0; i < getWidth(); ++i) {
+            mean += abs(getPixel(i, j, channel));
+        }
+    }
+    return (mean / (getWidth()*getHeight()) );
+}
+
+template <typename D>
 double imagein::Image_t<D>::deviation(unsigned int channel, double mean) const {
     double deviation = 0;
     for(unsigned int j = 0; j < getHeight(); ++j) {
@@ -285,6 +296,15 @@ double imagein::Image_t<D>::mean() const {
     double mean = 0;
     for(unsigned int c = 0; c < getNbChannels(); ++c) {
         mean += this->mean(c);
+    }
+    return (mean / getNbChannels());
+}
+
+template <typename D>
+double imagein::Image_t<D>::meanOfAbs() const {
+    double mean = 0;
+    for(unsigned int c = 0; c < getNbChannels(); ++c) {
+        mean += this->meanOfAbs(c);
     }
     return (mean / getNbChannels());
 }

@@ -23,7 +23,7 @@
 #include <QDoubleSpinBox>
 #include <QSlider>
 #include <QPushButton>
-
+#include <QDebug>
 #include <QApplication>
 #include "../../../../../app/Operations/HoughDialog.h"
 #include "../../Utilities/Log.h"
@@ -278,7 +278,9 @@ void DoubleImageWindow::updateSrc(GenericHistogramView* /*histo*/, imagein::Rect
 Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
 
     Image_t<double>* tmpImg = new Image_t<double>(*image);
-    Image* resImg = new Image(image->getWidth(), image->getHeight(), image->getNbChannels());
+//    Image* resImg = new Image(image->getWidth(), image->getHeight(), image->getNbChannels());
+    /*Keep using double during processing steps*/
+    ImageDouble* resImg = new ImageDouble(image->getWidth(), image->getHeight(), image->getNbChannels());
 
     if(_abs) {
         for(Image_t<double>::iterator it = tmpImg->begin(); it < tmpImg->end(); ++it) {
@@ -289,10 +291,14 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
     if(_normalize) {
         tmpImg->normalize(0.0, 255.0);
     }
-
     std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
-    double mean = tmpImg->mean();
+
+    /*The log scale will not work if mean value too small, use mean of absolute values instead*/
+    double mean = tmpImg->meanOfAbs();
+    std::cout << "Mean value : "<< mean << std::endl;
+
     double logConstant = exp(-log2(mean)) / 8.;
+
     std::cout << "Log constant scale = " << _logConstantScale << std::endl;
     std::cout << "Log constant = " << logConstant << std::endl;
     for(unsigned int c = 0; c < image->getNbChannels(); ++c) {
@@ -302,19 +308,23 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
             for(unsigned int i = 0; i < image->getWidth(); ++i) {
                 double mag = tmpImg->getPixel(i, j, c);
                 if(_logScale) {
-                    mag = log(mag*logConstant*_logConstantScale + 1.0) * factor;
+                    mag = log(mag * logConstant * _logConstantScale + 1.0) * factor;
                 }
-                mag = std::min(255.0, std::max(0.0, mag));
                 resImg->setPixel(i, j, c, mag);
             }
         }
     }
-    return resImg;
+    /*Manually add an offset to the result image*/
+    Image* offSetResImg;
+    std::string outputMessage = "";
+    Image_t<int>* resImgToOffset = Converter<Image_t<int> >::convert(*resImg);
+    offSetResImg = Converter<Image>::convertAndOffset(*resImgToOffset, &outputMessage);
+    std::cout << outputMessage << std::endl;
+    return offSetResImg;
 }
 
 void DoubleImageWindow::setLogScale(int logScale) {
 
-//    _logConstant = logConstant;
     const Image* tmpImg = _displayImg;
     _logConstantScale = std::pow(8, logScale/2. - 3.);
     setDisplayImage(makeDisplayable(_image));
@@ -334,6 +344,8 @@ void DoubleImageWindow::showHistogram()
     while(1){
         QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), &loop, SLOT(quit()));
         histogramWnd->updateViewByBinSize(_image, _binSize);
+        /*Re-initialize after _binSize each execution to ensure that reopening the histogram window will not retain the previous result*/
+        _binSize = 1.0;
         loop.exec();
         if(!histogramWnd->isVisible()){
             break;
@@ -342,7 +354,8 @@ void DoubleImageWindow::showHistogram()
     histogramWnd->close();
 }
 
-void DoubleImageWindow::showCumulativeHistogram() {
+void DoubleImageWindow::showCumulativeHistogram()
+{
     HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), _binSize, this->windowTitle(), true);
     /*It shares the same window as histogram, so the signal of bin size is also shared*/
     QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), this, SLOT(setBinSize(double)));
@@ -351,6 +364,8 @@ void DoubleImageWindow::showCumulativeHistogram() {
     while(1){
         QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), &loop, SLOT(quit()));
         histogramWnd->updateCumulativeViewByBinSize(_image, _binSize);
+        /*Re-initialize after _binSize each execution to ensure that reopening the histogram window will not retain the previous result*/
+        _binSize = 1.0;
         loop.exec();
         if(!histogramWnd->isVisible()){
             break;

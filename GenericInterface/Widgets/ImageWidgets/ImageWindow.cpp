@@ -28,6 +28,7 @@
 #include <QClipboard>
 #include <QRect>
 #include <QAction>
+#include <string>
 using namespace std;
 using namespace genericinterface;
 using namespace imagein;
@@ -341,15 +342,24 @@ void ImageWindow::saveAs()
     //WindowService* ws = _gi->windowService();
     //ImageWindow* currentWindow = ws->getCurrentImageWindow();
     if(this != NULL) {
-        path = this->getPath();
+    /*Use the processed name as the default name to be proposed*/
+//        path = this->getPath();
+        path = this->windowTitle();
     }
     QString selectedFilter;
-    QString file = QFileDialog::getSaveFileName(this, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)"), &selectedFilter);
+    QString file = QFileDialog::getSaveFileName(this, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)"), &selectedFilter);
 
     QString ext = selectedFilter.right(5).left(4);
-
     if(file != "") {
-        if(!file.contains('.')) file += ext;
+//        if(!file.contains('.')) file += ext;
+        /*Verify that the suffix of the original picture is the same as expected
+         * if different, replace the suffix with the one requested by the user*/
+        std::string existExt = file.toStdString().substr(file.toStdString().find_last_of('.'));
+        if(strcmp(ext.toStdString().c_str(),existExt.c_str())!=0){
+            std::string newFile = file.toStdString().substr(0,file.toStdString().find_last_of('.'));
+            newFile.append(ext.toStdString());
+            file = QString::fromLocal8Bit(newFile.c_str());
+        }
         this->save(file, ext);
     }
 }

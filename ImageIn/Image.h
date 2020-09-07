@@ -274,11 +274,15 @@ namespace imagein
             depth_t min(unsigned int channel) const;
             depth_t max(unsigned int channel) const;
             double mean(unsigned int channel) const;
+            /*Calculate the mean value of a selected channel composed of absolute values*/
+            double meanOfAbs(unsigned int channel) const;
             double deviation(unsigned int channel, double mean) const;
             inline double deviation(unsigned int channel) const { return deviation(channel, mean()); }
             depth_t min() const;
             depth_t max() const;
             double mean() const;
+            /*Calculate the absolute mean value of an image*/
+            double meanOfAbs() const;
             double deviation(double mean) const;
             double deviation() const { return deviation(mean()); }
 
