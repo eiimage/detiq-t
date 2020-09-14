@@ -11,5 +11,6 @@
         <file>images/zoom-out.svg.png</file>
         <file>images/copy.svg.png</file>
         <file>images/application-dock.png</file>
+        <file>images/qcolor-hsv.png</file>
     </qresource>
 </RCC>

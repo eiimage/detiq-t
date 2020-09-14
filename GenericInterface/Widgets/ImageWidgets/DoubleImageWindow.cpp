@@ -278,9 +278,9 @@ void DoubleImageWindow::updateSrc(GenericHistogramView* /*histo*/, imagein::Rect
 Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
 
     Image_t<double>* tmpImg = new Image_t<double>(*image);
-//    Image* resImg = new Image(image->getWidth(), image->getHeight(), image->getNbChannels());
+    Image* resImg = new Image(image->getWidth(), image->getHeight(), image->getNbChannels());
     /*Keep using double during processing steps*/
-    ImageDouble* resImg = new ImageDouble(image->getWidth(), image->getHeight(), image->getNbChannels());
+//    ImageDouble* resImg = new ImageDouble(image->getWidth(), image->getHeight(), image->getNbChannels());
 
     if(_abs) {
         for(Image_t<double>::iterator it = tmpImg->begin(); it < tmpImg->end(); ++it) {
@@ -293,6 +293,7 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
     }
     std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
 
+//    double mean = tmpImg->mean();
     /*The log scale will not work if mean value too small, use mean of absolute values instead*/
     double mean = tmpImg->meanOfAbs();
     std::cout << "Mean value : "<< mean << std::endl;
@@ -310,17 +311,19 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
                 if(_logScale) {
                     mag = log(mag * logConstant * _logConstantScale + 1.0) * factor;
                 }
+                mag = std::min(255.0, std::max(0.0, mag));
                 resImg->setPixel(i, j, c, mag);
             }
         }
     }
-    /*Manually add an offset to the result image*/
-    Image* offSetResImg;
-    std::string outputMessage = "";
-    Image_t<int>* resImgToOffset = Converter<Image_t<int> >::convert(*resImg);
-    offSetResImg = Converter<Image>::convertAndOffset(*resImgToOffset, &outputMessage);
-    std::cout << outputMessage << std::endl;
-    return offSetResImg;
+//    /*Manually add an offset to the result image*/
+//    Image* offSetResImg;
+//    std::string outputMessage = "";
+//    Image_t<int>* resImgToOffset = Converter<Image_t<int> >::convert(*resImg);
+//    offSetResImg = Converter<Image>::convertAndOffset(*resImgToOffset, &outputMessage);
+//    std::cout << outputMessage << std::endl;
+//    return offSetResImg;
+    return resImg;
 }
 
 void DoubleImageWindow::setLogScale(int logScale) {
