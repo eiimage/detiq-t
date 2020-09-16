@@ -70,20 +70,15 @@ DoubleImageWindow::~DoubleImageWindow()
 void DoubleImageWindow::init()
 {
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
-
-    if(_normalize){
+    if(this->isOffsetNeeded()){
         QHBoxLayout* _offsetLayout= new QHBoxLayout();
-
-        _offsetButton = new QPushButton(tr("Disable Offset"));
-
-        QObject::connect(_offsetButton, SIGNAL(clicked()), this, SLOT(offset()));
-
-        _offsetLayout->addWidget(_offsetButton);
-
+        _offsetBox = new QCheckBox(tr("Enable / Disable Offset"));
+        _offsetBox->setContentsMargins(0,0,0,0);
+        _offsetBox->setChecked(false);
+        _offsetLayout->addWidget(_offsetBox);
         _infoLayout->addLayout(_offsetLayout);
-        menu()->addAction(tr("Offset (127)"), this, SLOT(offset()));
+        QObject::connect(_offsetBox,SIGNAL(stateChanged(int)), this, SLOT(offset(int)));
     }
-
     menu()->addAction(tr("Crop"), this, SLOT(crop()));
     menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
   //  menu()->addAction(tr("Convert to Rgb Image"), this, SLOT(convertRgb()));
@@ -286,12 +281,12 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
         for(Image_t<double>::iterator it = tmpImg->begin(); it < tmpImg->end(); ++it) {
             *it = std::abs(*it);
         }
-    }
-    std::cout << "Before normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
+    }    
     if(_normalize) {
+        std::cout << "Before normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
         tmpImg->normalize(0.0, 255.0);
+        std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
     }
-    std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
 
 //    double mean = tmpImg->mean();
     /*The log scale will not work if mean value too small, use mean of absolute values instead*/
@@ -316,13 +311,6 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
             }
         }
     }
-//    /*Manually add an offset to the result image*/
-//    Image* offSetResImg;
-//    std::string outputMessage = "";
-//    Image_t<int>* resImgToOffset = Converter<Image_t<int> >::convert(*resImg);
-//    offSetResImg = Converter<Image>::convertAndOffset(*resImgToOffset, &outputMessage);
-//    std::cout << outputMessage << std::endl;
-//    return offSetResImg;
     return resImg;
 }
 
@@ -377,25 +365,52 @@ void DoubleImageWindow::showCumulativeHistogram()
     histogramWnd->close();
 }
 
-void DoubleImageWindow::offset(){
+void DoubleImageWindow::offset(int i){
+    qDebug()<<"i is "<<i;
+    if(i==2){
+        this->enableOffset();
+    }
+    if(i==0){
+        this->disableOffset();
+    }
+}
+
+void DoubleImageWindow::enableOffset(){
 
     int height = _image->getHeight();
     int width = _image->getWidth();
+    double offset = fabs(_image->min());
     int nbChannels = _image->getNbChannels();
     Image_t<double>* offsetImg = new Image_t<double>(width, height, nbChannels, 0.);
     for(unsigned int c = 0; c < nbChannels; ++c) {
-
         for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
-
             for(unsigned int j = 0; j < width; ++j){
-
-                double pixOffset = _image->getPixelAt(j,i,c);
+                double pixOffset = _image->getPixelAt(j,i,c) + offset;
                 offsetImg->setPixelAt(j, i, c, pixOffset);
             }
         }
+
     }
-    DoubleImageWindow* offsetImgWnd = new DoubleImageWindow(offsetImg, this->_path, false, this->_logScale, this->_logConstantScale, false);
-    emit addImage(this, offsetImgWnd);
+    this->setDisplayImage(makeDisplayable(offsetImg));
+}
+
+void DoubleImageWindow::disableOffset(){
+
+    int height = _image->getHeight();
+    int width = _image->getWidth();
+    double offset = fabs(_image->min());
+    int nbChannels = _image->getNbChannels();
+    Image_t<double>* offsetImg = new Image_t<double>(width, height, nbChannels, 0.);
+    for(unsigned int c = 0; c < nbChannels; ++c) {
+        for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
+            for(unsigned int j = 0; j < width; ++j){
+                double pixOffset = _image->getPixelAt(j,i,c) - offset;
+                offsetImg->setPixelAt(j, i, c, pixOffset);
+            }
+        }
+
+    }
+    this->setDisplayImage(makeDisplayable(offsetImg));
 }
 
 void DoubleImageWindow::setBinSize(double binSize)

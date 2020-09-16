@@ -119,9 +119,9 @@ qt5_add_resources(RCC_FILES "res.qrc")
 set(TS_FILES genericinterface_en.ts genericinterface_fr.ts)
 # Uncomment only 1 of the 2 folowing commands, depending on your needs
 # -1- Use current translations files
-qt5_add_translation(QM_FILES ${TS_FILES})
+#qt5_add_translation(QM_FILES ${TS_FILES})
 # -2- Update translations files with changes from c++ sources
-#qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES})
+qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES})
 # -3- Update translations files with changes from c++ sources AND drop useless translations
 #qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES} OPTIONS -no-obsolete)
 

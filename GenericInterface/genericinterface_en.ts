@@ -24,7 +24,7 @@
         <translation>Contributors:</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+13"/>
         <source>Compiled on %1 at %2</source>
         <translation>Compiled on %1 at %2</translation>
     </message>
@@ -62,7 +62,7 @@
 <context>
     <name>genericinterface::DoubleImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+193"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+188"/>
         <source>Pixels Grid</source>
         <translation>Pixels Grid</translation>
     </message>
@@ -72,7 +72,12 @@
         <translation>Crop</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-7"/>
+        <source>Enable / Disable Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
         <source>Copy &amp; crop</source>
         <translation>Copy &amp; crop</translation>
     </message>
@@ -95,14 +100,12 @@
         <translation>Hovered</translation>
     </message>
     <message>
-        <location line="-55"/>
         <source>Disable Offset</source>
-        <translation>Disable Offset</translation>
+        <translation type="vanished">Disable Offset</translation>
     </message>
     <message>
-        <location line="+7"/>
         <source>Offset (127)</source>
-        <translation>Offset (127)</translation>
+        <translation type="vanished">Offset (127)</translation>
     </message>
 </context>
 <context>
@@ -186,7 +189,7 @@
 <context>
     <name>genericinterface::GenericHistogramView</name>
     <message>
-        <location filename="Widgets/ImageWidgets/GenericHistogramView.cpp" line="+111"/>
+        <location filename="Widgets/ImageWidgets/GenericHistogramView.cpp" line="+150"/>
         <source>Histogram</source>
         <translation>Histogram</translation>
     </message>
@@ -235,28 +238,24 @@
 <context>
     <name>genericinterface::GenericHistogramWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/GenericHistogramWindow.cpp" line="+78"/>
-        <location line="+150"/>
+        <location filename="Widgets/ImageWidgets/GenericHistogramWindow.cpp" line="+113"/>
+        <location line="+173"/>
         <source>Hovered</source>
         <oldsource>Hovered: </oldsource>
         <translation>Hovered</translation>
     </message>
     <message>
-        <location line="-145"/>
-        <location line="+150"/>
         <source>Value 1</source>
         <oldsource>Value 1: </oldsource>
-        <translation>Value 1</translation>
+        <translation type="vanished">Value 1</translation>
     </message>
     <message>
-        <location line="-145"/>
-        <location line="+150"/>
         <source>Value 2</source>
         <oldsource>Value 2: </oldsource>
-        <translation>Value 2</translation>
+        <translation type="vanished">Value 2</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+20"/>
         <source>C: %1</source>
         <translation>C: %1</translation>
     </message>
@@ -276,12 +275,39 @@
         <translation>R: %1, G: %2, B: %3, A: %4</translation>
     </message>
     <message>
-        <location line="-155"/>
+        <location line="-238"/>
         <source>Save As Image</source>
         <translation>Save As Image</translation>
     </message>
     <message>
-        <location line="+67"/>
+        <location line="-8"/>
+        <source>Zoom +/-</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+56"/>
+        <location line="+173"/>
+        <source>L click value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-167"/>
+        <location line="+173"/>
+        <source>R click value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-138"/>
+        <source>Bin size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Enter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+47"/>
         <source>Only images can be saved to a file.</source>
         <translation>Only images can be saved to a file.</translation>
     </message>
@@ -359,14 +385,20 @@
     <message>
         <location filename="Widgets/ImageWidgets/HistogramView.cpp" line="+30"/>
         <location line="+11"/>
+        <location line="+11"/>
         <source>Histogram</source>
         <translation>Histogram</translation>
     </message>
     <message>
-        <location line="-8"/>
-        <location line="+11"/>
+        <location line="-19"/>
         <source>Cumulated histogram</source>
         <translation>Cumulated histogram</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <location line="+11"/>
+        <source>Cumulative histogram</source>
+        <translation type="unfinished">Cumulated histogram</translation>
     </message>
 </context>
 <context>
@@ -374,20 +406,23 @@
     <message>
         <location filename="Widgets/ImageWidgets/HistogramWindow.cpp" line="+29"/>
         <location line="+11"/>
+        <location line="+11"/>
         <source>Histogram</source>
         <translation>Histogram</translation>
     </message>
     <message>
-        <location line="-8"/>
+        <location line="-19"/>
         <location line="+11"/>
-        <source>Cumulated histogram</source>
-        <translation>Cumulated histogram</translation>
+        <location line="+11"/>
+        <source>Cumulative histogram</source>
+        <oldsource>Cumulated histogram</oldsource>
+        <translation type="unfinished">Cumulated histogram</translation>
     </message>
 </context>
 <context>
     <name>genericinterface::ImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="+92"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="+93"/>
         <source>Rename</source>
         <translation>Rename</translation>
     </message>
@@ -403,12 +438,12 @@
     </message>
     <message>
         <location line="+11"/>
-        <location line="+270"/>
+        <location line="+279"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message>
-        <location line="-264"/>
+        <location line="-273"/>
         <source>Selection mode</source>
         <translation>Selection mode</translation>
     </message>
@@ -423,7 +458,12 @@
         <translation>Select all</translation>
     </message>
     <message>
-        <location line="+279"/>
+        <location line="+186"/>
+        <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+102"/>
         <source>Rename image</source>
         <translation>Rename image</translation>
     </message>
@@ -433,7 +473,7 @@
         <translation>New name:</translation>
     </message>
     <message>
-        <location line="-357"/>
+        <location line="-366"/>
         <location line="+100"/>
         <source>Save As</source>
         <translation>Save As</translation>
@@ -479,14 +519,13 @@
         <translation>Unknown exception</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+16"/>
         <source>Save a file</source>
         <translation>Save a file</translation>
     </message>
     <message>
-        <location line="+0"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</source>
-        <translation>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</translation>
+        <translation type="vanished">PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</translation>
     </message>
 </context>
 <context>
@@ -593,7 +632,7 @@
 <context>
     <name>genericinterface::SelectionWidget</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-304"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-306"/>
         <source>Selection : </source>
         <translation>Selection : </translation>
     </message>
@@ -621,7 +660,7 @@
 <context>
     <name>genericinterface::StandardImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="+47"/>
+        <location filename="Widgets/ImageWidgets/StandardImageWindow.cpp" line="+49"/>
         <source>Unknown file format !</source>
         <translation>Unknown file format !</translation>
     </message>
@@ -641,7 +680,7 @@
         <translation>Copy and crop</translation>
     </message>
     <message>
-        <location line="+141"/>
+        <location line="+140"/>
         <source>Pixels Grid</source>
         <translation>Pixels Grid</translation>
     </message>
@@ -650,16 +689,15 @@
         <translation type="vanished">Column Profile</translation>
     </message>
     <message>
-        <location line="-139"/>
         <source>Cumulated histogram</source>
-        <translation>Cumulated histogram</translation>
+        <translation type="vanished">Cumulated histogram</translation>
     </message>
     <message>
         <source>Line Profile</source>
         <translation type="vanished">Line Profile</translation>
     </message>
     <message>
-        <location line="-3"/>
+        <location line="-141"/>
         <source>Crop</source>
         <translation>Crop</translation>
     </message>
@@ -672,7 +710,7 @@
         <translation type="vanished">Convert to binary</translation>
     </message>
     <message>
-        <location line="+93"/>
+        <location line="+92"/>
         <location line="+12"/>
         <source>Threshold selection</source>
         <translation>Threshold selection</translation>
