@@ -22,9 +22,11 @@
 #include "GridView.h"
 #include <QDoubleSpinBox>
 #include <QSlider>
+#include <QObject>
+#include <QTranslator>
 #include <QPushButton>
-#include <QDebug>
 #include <QApplication>
+#include <Converter.h>
 #include "../../../../../app/Operations/HoughDialog.h"
 #include "../../Utilities/Log.h"
 #include <UnknownFormatException.h>
@@ -71,16 +73,19 @@ void DoubleImageWindow::init()
 {
     QObject::connect(this->view(), SIGNAL(updateSrc(GenericHistogramView*,imagein::Rectangle)), this, SLOT(updateSrc(GenericHistogramView*,imagein::Rectangle)));
     if(this->isOffsetNeeded()){
-        QHBoxLayout* _offsetLayout= new QHBoxLayout();
-        _offsetBox = new QCheckBox(tr("Enable / Disable Offset"));
-        _offsetBox->setContentsMargins(0,0,0,0);
+        _boxLayout= new QHBoxLayout();
+        _offsetBox = new QCheckBox(QObject::tr("Offset (127)"));
         _offsetBox->setChecked(false);
-        _offsetLayout->addWidget(_offsetBox);
-        _infoLayout->addLayout(_offsetLayout);
-        QObject::connect(_offsetBox,SIGNAL(stateChanged(int)), this, SLOT(offset(int)));
+        _scalingBox = new QCheckBox(QObject::tr("Scaling"));
+        _scalingBox->setChecked(false);
+        _boxLayout->addWidget(_offsetBox);
+        _boxLayout->addWidget(_scalingBox);
+        _infoLayout->addLayout(_boxLayout);
+        QObject::connect(_offsetBox,SIGNAL(stateChanged(int)), this, SLOT(offset_scaling(int)));
+        QObject::connect(_scalingBox,SIGNAL(stateChanged(int)), this, SLOT(offset_scaling(int)));
     }
-    menu()->addAction(tr("Crop"), this, SLOT(crop()));
-    menu()->addAction(tr("Copy & crop"), this, SLOT(copycrop()));
+    menu()->addAction(QObject::tr("Crop"), this, SLOT(crop()));
+    menu()->addAction(QObject::tr("Copy & crop"), this, SLOT(copycrop()));
   //  menu()->addAction(tr("Convert to Rgb Image"), this, SLOT(convertRgb()));
     updateStatusBar();
 
@@ -109,7 +114,7 @@ void DoubleImageWindow::updateStatusBar()
     lStats->setFont(font);
 
     //Selected pixel informations
-    _lSelectedPixelInfo = new QLabel(tr("Selected") + " : ");
+    _lSelectedPixelInfo = new QLabel(QObject::tr("Selected") + " : ");
     font = _lSelectedPixelInfo->font();
     font.setPointSize(8);
     font.setBold(true);
@@ -118,13 +123,13 @@ void DoubleImageWindow::updateStatusBar()
     font = _lSelectedPixelPosition->font();
     font.setPointSize(8);
     _lSelectedPixelPosition->setFont(font);
-    _lSelectedPixelColor = new QLabel(tr("Color") + " : ");
+    _lSelectedPixelColor = new QLabel(QObject::tr("Color") + " : ");
     font = _lSelectedPixelColor->font();
     font.setPointSize(8);
     _lSelectedPixelColor->setFont(font);
 
     //Hovered pixel informations
-    _lHoveredPixelInfo = new QLabel(tr("Hovered") + " : ");
+    _lHoveredPixelInfo = new QLabel(QObject::tr("Hovered") + " : ");
     font = _lHoveredPixelInfo->font();
     font.setBold(true);
     font.setPointSize(8);
@@ -133,7 +138,7 @@ void DoubleImageWindow::updateStatusBar()
     font = _lHoveredPixelPosition->font();
     font.setPointSize(8);
     _lHoveredPixelPosition->setFont(font);
-    _lHoveredPixelColor = new QLabel(tr("Color") + " : ");
+    _lHoveredPixelColor = new QLabel(QObject::tr("Color") + " : ");
     font = _lHoveredPixelColor->font();
     font.setPointSize(8);
     _lHoveredPixelColor->setFont(font);
@@ -184,8 +189,10 @@ void DoubleImageWindow::updateStatusBar()
 
 void DoubleImageWindow::showPixelsGrid()
 {
+//    ImageDouble* fakeImg = Converter<ImageDouble>::convert(*_displayImg);
+//    GridView* grid = new GridView(fakeImg, _displayImg);
     GridView* grid = new GridView(_image, _displayImg);
-    grid->setWindowTitle(this->windowTitle() + QString(" - ")  + tr("Pixels Grid"));
+    grid->setWindowTitle(this->windowTitle() + QString(" - ")  + QObject::tr("Pixels Grid"));
     emit addWidget(this, grid);
 }
 
@@ -228,7 +235,7 @@ void DoubleImageWindow::showSelectedPixelInformations(int x, int y) const
     {
         _lSelectedPixelPosition->setText(QString("%1x%2").arg(x).arg(y));
     }
-    _lSelectedPixelColor->setText(tr("Color") + " : ");
+    _lSelectedPixelColor->setText(QObject::tr("Color") + " : ");
     for(unsigned int i = 0; i < _image->getNbChannels(); i++)
     {
         try {
@@ -286,6 +293,10 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
         std::cout << "Before normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
         tmpImg->normalize(0.0, 255.0);
         std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
+    }
+
+    if(tmpImg->min()<0 || tmpImg->max()>255){
+        outInfo(QObject::tr("The display image is truncated, values outside the range of [0 , 255] have been eliminated\n\n-------------------------------------------"));
     }
 
 //    double mean = tmpImg->mean();
@@ -365,13 +376,16 @@ void DoubleImageWindow::showCumulativeHistogram()
     histogramWnd->close();
 }
 
-void DoubleImageWindow::offset(int i){
-    qDebug()<<"i is "<<i;
-    if(i==2){
-        this->enableOffset();
-    }
-    if(i==0){
-        this->disableOffset();
+void DoubleImageWindow::offset_scaling(int i){
+
+    if(_offsetBox->isChecked() && !_scalingBox->isChecked()){
+        enableOffset();
+    }else if(!_offsetBox->isChecked() && _scalingBox->isChecked()){
+        enableScaling();
+    }else if(_offsetBox->isChecked() && _scalingBox->isChecked()){
+         enableOffset_Scaling();
+    }else{
+        disableOffset_Scaling();
     }
 }
 
@@ -379,41 +393,75 @@ void DoubleImageWindow::enableOffset(){
 
     int height = _image->getHeight();
     int width = _image->getWidth();
-    double offset = fabs(_image->min());
     int nbChannels = _image->getNbChannels();
+
     Image_t<double>* offsetImg = new Image_t<double>(width, height, nbChannels, 0.);
     for(unsigned int c = 0; c < nbChannels; ++c) {
         for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
             for(unsigned int j = 0; j < width; ++j){
-                double pixOffset = _image->getPixelAt(j,i,c) + offset;
-                offsetImg->setPixelAt(j, i, c, pixOffset);
+                double oldPixel = _image->getPixelAt(j,i,c);
+                double newPixel = oldPixel + 127;
+                offsetImg->setPixelAt(j, i, c, newPixel);
             }
         }
-
     }
     this->setDisplayImage(makeDisplayable(offsetImg));
+    outInfo(QObject::tr("Offset applied : val_display = val_image + 127\n\n-------------------------------------------"));
 }
 
-void DoubleImageWindow::disableOffset(){
+void DoubleImageWindow::enableScaling(){
 
     int height = _image->getHeight();
     int width = _image->getWidth();
-    double offset = fabs(_image->min());
     int nbChannels = _image->getNbChannels();
+    double maxValue = _image->max();
+    double minValue = _image->min();
     Image_t<double>* offsetImg = new Image_t<double>(width, height, nbChannels, 0.);
+
     for(unsigned int c = 0; c < nbChannels; ++c) {
         for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
             for(unsigned int j = 0; j < width; ++j){
-                double pixOffset = _image->getPixelAt(j,i,c) - offset;
-                offsetImg->setPixelAt(j, i, c, pixOffset);
+                double oldPixel = _image->getPixelAt(j,i,c);
+                double newPixel = (maxValue==minValue) ? oldPixel : (oldPixel - minValue) * 255 / (maxValue - minValue);
+                offsetImg->setPixelAt(j, i, c, newPixel);
             }
         }
-
     }
     this->setDisplayImage(makeDisplayable(offsetImg));
+    outInfo(QObject::tr("Scaling applied : val_display = (val_image - minValue) * 255 / (maxValue - minValue)\n\n-------------------------------------------"));
+}
+
+void DoubleImageWindow::enableOffset_Scaling(){
+
+    int height = _image->getHeight();
+    int width = _image->getWidth();
+    int nbChannels = _image->getNbChannels();
+    double maxValue = _image->max();
+    double minValue = _image->min();
+    Image_t<double>* offsetImg = new Image_t<double>(width, height, nbChannels, 0.);
+
+    for(unsigned int c = 0; c < nbChannels; ++c) {
+        for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
+            for(unsigned int j = 0; j < width; ++j){
+                double oldPixel = _image->getPixelAt(j,i,c);
+                double newPixel = (maxValue==minValue) ? oldPixel : (oldPixel - minValue) * 127 / (maxValue - minValue) + 127;
+                offsetImg->setPixelAt(j, i, c, newPixel);
+            }
+        }
+    }
+    this->setDisplayImage(makeDisplayable(offsetImg));
+    outInfo(QObject::tr("Both Offset and Scaling applied : val_display = (val_image - minValue) * 127 / (maxValue - minValue) + 127\n\n-------------------------------------------"));
+}
+
+void DoubleImageWindow::disableOffset_Scaling(){
+    this->setDisplayImage(makeDisplayable(_image));
 }
 
 void DoubleImageWindow::setBinSize(double binSize)
 {
     _binSize = binSize;
+}
+
+void DoubleImageWindow::outInfo(QString str){
+    emit textToShow(str);
 }

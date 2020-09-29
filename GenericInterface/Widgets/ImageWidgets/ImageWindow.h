@@ -125,7 +125,7 @@ class ImageWindow : public QWidget
         virtual bool isDouble() const = 0;
         virtual bool isStandard() const = 0;
 
-         SelectionWidget* getSelectionWidget() const {return _selectWidget;}
+        SelectionWidget* getSelectionWidget() const {return _selectWidget;}
         QToolButton* getSelectionButton() const {return _selectButton;}
 
     public slots:

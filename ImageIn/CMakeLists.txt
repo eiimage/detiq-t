@@ -88,7 +88,7 @@ set(ImageIn_SOURCES
 	VffImage.h
 )
 set(CXX_TEMPLATES
-  ColumnProfile.tpp
+        ColumnProfile.tpp
 	SpecificAlgorithm.tpp
 	RgbImage.tpp
 	ProjectionHistogram.tpp

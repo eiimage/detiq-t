@@ -21,10 +21,10 @@
 #define DOUBLEIMAGEWINDOW_H
 
 #include "ImageWindow.h"
-
 #include <Converter.h>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
+#include "../../../../../core/Operation.h"
 
 namespace genericinterface
 {
@@ -34,6 +34,7 @@ namespace genericinterface
  * Creates and display the ImageView, and update the status bar.
  * Store the double Image and make a displayable version as a standard Image.
  */
+
 class DoubleImageWindow : public ImageWindow
 {
     Q_OBJECT
@@ -79,10 +80,14 @@ public:
     void setNormalized(bool norm){_normalize = norm;}
     void setAbsolute(bool abs){_abs = abs;}
     void enableOffset();
-    void disableOffset();
+    void enableScaling();
+    void enableOffset_Scaling();
+    void disableOffset_Scaling();
+    void outInfo(QString str);
+
 public slots:
 
-    void offset(int i);
+    void offset_scaling(int i);
     virtual void crop();
     virtual void copycrop();
     void showPixelsGrid();
@@ -103,7 +108,7 @@ public slots:
     void setBinSize(double);
 
 signals:
-
+    void textToShow(QString);
 protected:
     const imagein::Image_t<double>* _image;
 
@@ -126,9 +131,9 @@ protected:
     QLabel* _lSelectedPixelPosition;
     QLabel* _lSelectedPixelColor;
     QDoubleSpinBox* _logBox;
-    QHBoxLayout* _offsetLayout;
+    QHBoxLayout* _boxLayout;
     QCheckBox* _offsetBox;
-//    QPushButton* _offsetButton;
+    QCheckBox* _scalingBox;
 };
 }
 

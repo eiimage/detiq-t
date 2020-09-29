@@ -24,9 +24,92 @@
         <translation>Contributors:</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+14"/>
         <source>Compiled on %1 at %2</source>
         <translation>Compiled on %1 at %2</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+77"/>
+        <source>Offset (127)</source>
+        <oldsource> Offset (127) </oldsource>
+        <translation>Offset (127)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Scaling</source>
+        <oldsource> Scaling </oldsource>
+        <translation>Scaling</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Crop</source>
+        <translation>Crop</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Copy &amp; crop</source>
+        <translation>Copy &amp; crop</translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>Selected</source>
+        <translation>Selected</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+15"/>
+        <location line="+97"/>
+        <source>Color</source>
+        <translation>Color</translation>
+    </message>
+    <message>
+        <location line="-106"/>
+        <source>Hovered</source>
+        <translation>Hovered</translation>
+    </message>
+    <message>
+        <location line="+63"/>
+        <source>Pixels Grid</source>
+        <translation>Pixels Grid</translation>
+    </message>
+    <message>
+        <location line="+104"/>
+        <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
+
+-------------------------------------------</source>
+        <translation>The display image is truncated, values outside the range of [0 , 255] have been eliminated
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+110"/>
+        <source>Offset applied : val_display = val_image + 127
+
+-------------------------------------------</source>
+        <translation>Offset applied : val_display = val_image + 127
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+22"/>
+        <source>Scaling applied : val_display = (val_image - minValue) * 255 / (maxValue - minValue)
+
+-------------------------------------------</source>
+        <translation>Scaling applied : val_display = (val_image - minValue) * 255 / (maxValue - minValue)
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+22"/>
+        <source>Both Offset and Scaling applied : val_display = (val_image - minValue) * 127 / (maxValue - minValue) + 127
+
+-------------------------------------------</source>
+        <translation>Both Offset and Scaling applied : val_display = (val_image - minValue) * 127 / (maxValue - minValue) + 127
+
+-------------------------------------------</translation>
     </message>
 </context>
 <context>
@@ -62,42 +145,33 @@
 <context>
     <name>genericinterface::DoubleImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+188"/>
         <source>Pixels Grid</source>
-        <translation>Pixels Grid</translation>
+        <translation type="vanished">Pixels Grid</translation>
     </message>
     <message>
-        <location line="-106"/>
         <source>Crop</source>
-        <translation>Crop</translation>
+        <translation type="vanished">Crop</translation>
     </message>
     <message>
-        <location line="-7"/>
         <source>Enable / Disable Offset</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Enable / Disable Offset</translation>
     </message>
     <message>
-        <location line="+8"/>
         <source>Copy &amp; crop</source>
-        <translation>Copy &amp; crop</translation>
+        <translation type="vanished">Copy &amp; crop</translation>
     </message>
     <message>
-        <location line="+29"/>
         <source>Selected</source>
-        <translation>Selected</translation>
+        <translation type="vanished">Selected</translation>
     </message>
     <message>
-        <location line="+9"/>
-        <location line="+15"/>
-        <location line="+95"/>
-        <location line="+28"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-187"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>
     <message>
-        <location line="-132"/>
         <source>Hovered</source>
-        <translation>Hovered</translation>
+        <translation type="vanished">Hovered</translation>
     </message>
     <message>
         <source>Disable Offset</source>
@@ -282,29 +356,29 @@
     <message>
         <location line="-8"/>
         <source>Zoom +/-</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom +/-</translation>
     </message>
     <message>
         <location line="+56"/>
         <location line="+173"/>
         <source>L click value</source>
-        <translation type="unfinished"></translation>
+        <translation>L click value</translation>
     </message>
     <message>
         <location line="-167"/>
         <location line="+173"/>
         <source>R click value</source>
-        <translation type="unfinished"></translation>
+        <translation>R click value</translation>
     </message>
     <message>
         <location line="-138"/>
         <source>Bin size</source>
-        <translation type="unfinished"></translation>
+        <translation>Bin size</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Enter</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter</translation>
     </message>
     <message>
         <location line="+47"/>
@@ -398,7 +472,7 @@
         <location line="+11"/>
         <location line="+11"/>
         <source>Cumulative histogram</source>
-        <translation type="unfinished">Cumulated histogram</translation>
+        <translation>Cumulative histogram</translation>
     </message>
 </context>
 <context>
@@ -416,7 +490,7 @@
         <location line="+11"/>
         <source>Cumulative histogram</source>
         <oldsource>Cumulated histogram</oldsource>
-        <translation type="unfinished">Cumulated histogram</translation>
+        <translation>Cumulative histogram</translation>
     </message>
 </context>
 <context>
@@ -460,7 +534,7 @@
     <message>
         <location line="+186"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)</source>
-        <translation type="unfinished"></translation>
+        <translation>PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)</translation>
     </message>
     <message>
         <location line="+102"/>

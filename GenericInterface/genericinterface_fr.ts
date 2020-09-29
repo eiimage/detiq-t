@@ -24,9 +24,92 @@
         <translation>Contributeurs :</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+14"/>
         <source>Compiled on %1 at %2</source>
         <translation>Compilé le %1 à %2</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+77"/>
+        <source>Offset (127)</source>
+        <oldsource> Offset (127) </oldsource>
+        <translation>Décalage (127)</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Scaling</source>
+        <oldsource> Scaling </oldsource>
+        <translation>Mise à l&apos;échelle</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Crop</source>
+        <translation>Rogner</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Copy &amp; crop</source>
+        <translation>Copier &amp; rogner</translation>
+    </message>
+    <message>
+        <location line="+29"/>
+        <source>Selected</source>
+        <translation>Selectionné</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <location line="+15"/>
+        <location line="+97"/>
+        <source>Color</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <location line="-106"/>
+        <source>Hovered</source>
+        <translation>Survolé</translation>
+    </message>
+    <message>
+        <location line="+63"/>
+        <source>Pixels Grid</source>
+        <translation>Grille de pixels</translation>
+    </message>
+    <message>
+        <location line="+104"/>
+        <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
+
+-------------------------------------------</source>
+        <translation>L&apos;image affichée a été rogné, les valeurs en dehors de la plage de [0, 255] sont éliminées
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+110"/>
+        <source>Offset applied : val_display = val_image + 127
+
+-------------------------------------------</source>
+        <translation>Décalage appliqué: val_affichée = val_image + 127
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+22"/>
+        <source>Scaling applied : val_display = (val_image - minValue) * 255 / (maxValue - minValue)
+
+-------------------------------------------</source>
+        <translation>Mise à l&apos;échelle appliquée: val_affichée = (val_image - minValue) * 255 / (maxValue - minValue)
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+22"/>
+        <source>Both Offset and Scaling applied : val_display = (val_image - minValue) * 127 / (maxValue - minValue) + 127
+
+-------------------------------------------</source>
+        <translation>Décalage et mise à l&apos;échelle appliqués: val_affichée = (val_image - minValue) * 127 / (maxValue - minValue) + 127
+
+-------------------------------------------</translation>
     </message>
 </context>
 <context>
@@ -62,42 +145,33 @@
 <context>
     <name>genericinterface::DoubleImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+188"/>
         <source>Pixels Grid</source>
-        <translation>Grille de pixels</translation>
+        <translation type="vanished">Grille de pixels</translation>
     </message>
     <message>
-        <location line="-106"/>
         <source>Crop</source>
-        <translation>Rogner</translation>
+        <translation type="vanished">Rogner</translation>
     </message>
     <message>
-        <location line="-7"/>
         <source>Enable / Disable Offset</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Activer / Désactiver Décalage</translation>
     </message>
     <message>
-        <location line="+8"/>
         <source>Copy &amp; crop</source>
-        <translation>Copier &amp; rogner</translation>
+        <translation type="vanished">Copier &amp; rogner</translation>
     </message>
     <message>
-        <location line="+29"/>
         <source>Selected</source>
-        <translation>Selectionné</translation>
+        <translation type="vanished">Selectionné</translation>
     </message>
     <message>
-        <location line="+9"/>
-        <location line="+15"/>
-        <location line="+95"/>
-        <location line="+28"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-187"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location line="-132"/>
         <source>Hovered</source>
-        <translation>Survolé</translation>
+        <translation type="vanished">Survolé</translation>
     </message>
     <message>
         <source>Disable Offset</source>
@@ -257,7 +331,7 @@
     <message>
         <location line="-223"/>
         <source>Zoom +/-</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom +/-</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -268,23 +342,23 @@
         <location line="+48"/>
         <location line="+173"/>
         <source>L click value</source>
-        <translation type="unfinished"></translation>
+        <translation>G clic valeur</translation>
     </message>
     <message>
         <location line="-167"/>
         <location line="+173"/>
         <source>R click value</source>
-        <translation type="unfinished"></translation>
+        <translation>D clic valeur</translation>
     </message>
     <message>
         <location line="-138"/>
         <source>Bin size</source>
-        <translation type="unfinished"></translation>
+        <translation>Longueur de l&apos;intervalle</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Enter</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrer</translation>
     </message>
     <message>
         <location line="+47"/>
@@ -398,7 +472,7 @@
         <location line="+11"/>
         <location line="+11"/>
         <source>Cumulative histogram</source>
-        <translation type="unfinished">Histogramme cumulé</translation>
+        <translation>Histogramme cumulé</translation>
     </message>
 </context>
 <context>
@@ -416,7 +490,7 @@
         <location line="+11"/>
         <source>Cumulative histogram</source>
         <oldsource>Cumulated histogram</oldsource>
-        <translation type="unfinished">Histogramme cumulé</translation>
+        <translation>Histogramme cumulé</translation>
     </message>
 </context>
 <context>
@@ -510,7 +584,7 @@
     <message>
         <location line="+257"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location line="+102"/>

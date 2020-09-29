@@ -491,5 +491,5 @@ void ImageWindow::copyImage(){
 
 
 //void ImageWindow::keyPressEvent ( QKeyEvent * /*event*/ ) {
-////    if(event->
+//    if(event->
 //}
