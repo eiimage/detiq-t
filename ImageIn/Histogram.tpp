@@ -81,7 +81,7 @@ void imagein::Histogram::computeDoubleHistogram(const Image_t<D>& img, unsigned 
     }
     unsigned int maxw = rect.w > 0 ? rect.x+rect.w : img.getWidth();
     unsigned int maxh = rect.h > 0 ? rect.y+rect.h : img.getHeight();
-    /*Traversing the image again to find the corresponding position of each value in the array*/
+    /*Traversing the image again to find the corresponding position of each pixel value in the array*/
     for(unsigned int i=rect.y; i<maxh; i++) {
         for(unsigned int j=rect.x; j<maxw; j++) {
             double pixel = img.getPixel(j, i, channel);

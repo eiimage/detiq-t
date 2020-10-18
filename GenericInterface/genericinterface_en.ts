@@ -32,19 +32,19 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+77"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+75"/>
         <source>Offset (127)</source>
         <oldsource> Offset (127) </oldsource>
         <translation>Offset (127)</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+1"/>
         <source>Scaling</source>
         <oldsource> Scaling </oldsource>
         <translation>Scaling</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+10"/>
         <source>Crop</source>
         <translation>Crop</translation>
     </message>
@@ -76,7 +76,7 @@
         <translation>Pixels Grid</translation>
     </message>
     <message>
-        <location line="+104"/>
+        <location line="+93"/>
         <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
 
 -------------------------------------------</source>
@@ -85,7 +85,7 @@
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+110"/>
+        <location line="+131"/>
         <source>Offset applied : val_display = val_image + 127
 
 -------------------------------------------</source>
@@ -94,20 +94,32 @@
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+24"/>
+        <source>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
+
+-------------------------------------------</source>
+        <translation>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+
+-------------------------------------------</source>
+        <translation>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127</translation>
+    </message>
+    <message>
         <source>Scaling applied : val_display = (val_image - minValue) * 255 / (maxValue - minValue)
 
 -------------------------------------------</source>
-        <translation>Scaling applied : val_display = (val_image - minValue) * 255 / (maxValue - minValue)
+        <translation type="vanished">Scaling applied : val_display = (val_image - minValue) * 255 / (maxValue - minValue)
 
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+22"/>
         <source>Both Offset and Scaling applied : val_display = (val_image - minValue) * 127 / (maxValue - minValue) + 127
 
 -------------------------------------------</source>
-        <translation>Both Offset and Scaling applied : val_display = (val_image - minValue) * 127 / (maxValue - minValue) + 127
+        <translation type="vanished">Both Offset and Scaling applied : val_display = (val_image - minValue) * 127 / (maxValue - minValue) + 127
 
 -------------------------------------------</translation>
     </message>
@@ -165,7 +177,7 @@
         <translation type="vanished">Selected</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-187"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-201"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>

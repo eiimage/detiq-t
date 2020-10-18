@@ -79,10 +79,10 @@ public:
     double isHough(double angStep, double distStep){_hough = true; angleStep = angStep; distanceStep = distStep;}
     void setNormalized(bool norm){_normalize = norm;}
     void setAbsolute(bool abs){_abs = abs;}
-    void enableOffset();
-    void enableScaling();
-    void enableOffset_Scaling();
-    void disableOffset_Scaling();
+    Image* enableOffset(ImageDouble* imgD);
+    Image* enableScaling(ImageDouble* imgD);
+    Image* enableOffset_Scaling(ImageDouble* imgD);
+    Image* disableOffset_Scaling(ImageDouble* imgD);
     void outInfo(QString str);
 
 public slots:

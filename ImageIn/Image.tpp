@@ -344,6 +344,7 @@ void imagein::Image_t<D>::normalize(double dstMin, double dstMax) {
         }
     }
 }
+
 /*
 template<typename D>
 double imagein::Image_t<D>::getEntropy(){
