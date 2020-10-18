@@ -85,7 +85,7 @@
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+131"/>
+        <location line="+127"/>
         <source>Offset applied : val_display = val_image + 127
 
 -------------------------------------------</source>
@@ -98,14 +98,21 @@
         <source>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
 
 -------------------------------------------</source>
-        <translation>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue</translation>
+        <translation>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
+
+-------------------------------------------</translation>
     </message>
     <message>
         <location line="+24"/>
-        <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+        <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 
 
 -------------------------------------------</source>
-        <translation>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127</translation>
+        <oldsource>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+
+-------------------------------------------</oldsource>
+        <translation type="unfinished">Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+
+-------------------------------------------</translation>
     </message>
     <message>
         <source>Scaling applied : val_display = (val_image - minValue) * 255 / (maxValue - minValue)
@@ -177,7 +184,7 @@
         <translation type="vanished">Selected</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-201"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-197"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>

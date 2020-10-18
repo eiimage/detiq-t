@@ -85,7 +85,7 @@
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+131"/>
+        <location line="+127"/>
         <source>Offset applied : val_display = val_image + 127
 
 -------------------------------------------</source>
@@ -104,10 +104,13 @@
     </message>
     <message>
         <location line="+24"/>
-        <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+        <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 
 
 -------------------------------------------</source>
-        <translation>Décalage et mise à l&apos;échelle appliqués : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+        <oldsource>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+
+-------------------------------------------</oldsource>
+        <translation type="unfinished">Décalage et mise à l&apos;échelle appliqués : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</translation>
     </message>
@@ -181,7 +184,7 @@
         <translation type="vanished">Selectionné</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-201"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-197"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>

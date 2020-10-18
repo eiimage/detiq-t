@@ -323,11 +323,7 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
     }
 
     /*Offset and Scaling are applied by default if exist value < 0, the result of log scale is inherited*/
-//    if(this->isOffsetNeeded()){
 
-//    }else{
-//        resImg = disableOffset_Scaling(tmpImg);
-//    }
     if(_offsetBox->isChecked() && !_scalingBox->isChecked()){
         resImg = enableOffset(tmpImg);
     }else if(!_offsetBox->isChecked() && _scalingBox->isChecked()){
@@ -463,7 +459,7 @@ Image* DoubleImageWindow::enableOffset_Scaling(ImageDouble* imgD){
         }
     }
     if(!_logScale){
-        outInfo(QObject::tr("Both Offset and Scaling applied : val_display = (127-minValue) > (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127\n\n-------------------------------------------"));
+        outInfo(QObject::tr("Both Offset and Scaling applied : val_display = (127-minValue) > (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 \n\n-------------------------------------------"));
     }
     return offset_scalingImg;
 }
