@@ -30,6 +30,88 @@
     </message>
 </context>
 <context>
+    <name>KeyboardShortcut</name>
+    <message>
+        <location filename="Widgets/KeyboardShortcut.cpp" line="+27"/>
+        <source>Hot keys</source>
+        <translation>Raccourcis clavier</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Keyboard Shortcut List</source>
+        <translation>Liste des Raccourcis Clavier</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Image Window:</source>
+        <oldsource>Image Windows:</oldsource>
+        <translation>Fenêtre d&apos;Image:</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <location line="+9"/>
+        <source>Zoom In</source>
+        <translation>Agrandir</translation>
+    </message>
+    <message>
+        <location line="-9"/>
+        <source>Ctrl &amp; + / Ctrl &amp; Wheel Forward</source>
+        <translation>Ctrl &amp; + / Ctrl &amp; Roule Avant</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom Out</source>
+        <translation>Réduire</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Ctrl &amp; - / Ctrl &amp; Wheel Backward</source>
+        <translation>Ctrl &amp; - / Ctrl &amp; Roule Arrière</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+10"/>
+        <source>Save As</source>
+        <translation>Enregistrer Sous</translation>
+    </message>
+    <message>
+        <location line="-9"/>
+        <source>Copy Image to Clipboard</source>
+        <translation>Copier l&apos;Image Presse-papiers</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Histogram Window (magnifier icon pressed):</source>
+        <oldsource>Histogram Windows(magnifier icon pressed):</oldsource>
+        <translation>Fenêtre d&apos;Histogramme (icône de la loupe enfoncée):</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Left Area Selection</source>
+        <translation>Sélection de Zone par Gauche</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom Out One Step</source>
+        <translation>Zoom Arrière Une Etape</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Right Click</source>
+        <translation>Clic-Droit</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom Out to Origin</source>
+        <translation>Dézoomer Complètement</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Ctrl &amp; Right Click</source>
+        <translation>Ctrl &amp; Clic-Droit</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+75"/>
@@ -110,7 +192,7 @@
         <oldsource>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</oldsource>
-        <translation type="unfinished">Décalage et mise à l&apos;échelle appliqués : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+        <translation>Décalage et mise à l&apos;échelle appliqués : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</translation>
     </message>
@@ -428,7 +510,12 @@
 <context>
     <name>genericinterface::GenericInterface</name>
     <message>
-        <location filename="GenericInterface.cpp" line="+88"/>
+        <location filename="GenericInterface.cpp" line="+58"/>
+        <source>&amp;Hot keys</source>
+        <translation>&amp;Raccourcis clavier</translation>
+    </message>
+    <message>
+        <location line="+32"/>
         <location line="+100"/>
         <source>Interface&apos;s integrity compromised</source>
         <translation>Intégrité de l&apos;interface compromise</translation>
@@ -461,14 +548,15 @@
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location line="-228"/>
+        <location line="-229"/>
+        <location line="+1"/>
         <location line="+180"/>
         <location line="+1"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
-        <location line="-181"/>
+        <location line="-182"/>
         <source>&amp;About</source>
         <translation>&amp;À propos</translation>
     </message>

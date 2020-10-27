@@ -46,6 +46,8 @@ set(GenInterface_SOURCES
 	Widgets/ImageListBox.h
 	Widgets/AboutDialog.h
 	Widgets/AboutDialog.cpp
+        Widgets/KeyboardShortcut.cpp
+        Widgets/KeyboardShortcut.h
 	Widgets/ImageWidgets/AlternativeImageView.cpp
 	Widgets/ImageWidgets/AlternativeImageView.h
 	Widgets/ImageWidgets/ColumnView.cpp

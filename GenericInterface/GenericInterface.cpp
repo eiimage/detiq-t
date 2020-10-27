@@ -21,6 +21,7 @@
 
 #include "GenericInterface.h"
 #include "Widgets/AboutDialog.h"
+#include "Widgets/KeyboardShortcut.h"
 
 using namespace std;
 using namespace genericinterface;
@@ -54,6 +55,7 @@ GenericInterface::GenericInterface(QString name, Qt::DockWidgetArea navPos) : _n
     // Initialize the "Help" menu. Adds an "About" action entry in this menu. Directly
     // connect this action to the "show()" slot of the About dialog. Since About
     menu(tr("&Help"))->addAction(tr("&About"), new AboutDialog(this), SLOT(show()));
+    menu(tr("&Help"))->addAction(tr("&Hot keys"), new KeyboardShortcut(this), SLOT(show()));
 }
 
 GenericInterface::~GenericInterface() {

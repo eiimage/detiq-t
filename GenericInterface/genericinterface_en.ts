@@ -30,6 +30,88 @@
     </message>
 </context>
 <context>
+    <name>KeyboardShortcut</name>
+    <message>
+        <location filename="Widgets/KeyboardShortcut.cpp" line="+27"/>
+        <source>Hot keys</source>
+        <translation>Hot keys</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Keyboard Shortcut List</source>
+        <translation>Keyboard Shortcut List</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Image Window:</source>
+        <oldsource>Image Windows:</oldsource>
+        <translation>Image Window:</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <location line="+9"/>
+        <source>Zoom In</source>
+        <translation>Zoom In</translation>
+    </message>
+    <message>
+        <location line="-9"/>
+        <source>Ctrl &amp; + / Ctrl &amp; Wheel Forward</source>
+        <translation>Ctrl &amp; + / Ctrl &amp; Wheel Forward</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom Out</source>
+        <translation>Zoom Out</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Ctrl &amp; - / Ctrl &amp; Wheel Backward</source>
+        <translation>Ctrl &amp; - / Ctrl &amp; Wheel Backward</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+10"/>
+        <source>Save As</source>
+        <translation>Save As</translation>
+    </message>
+    <message>
+        <location line="-9"/>
+        <source>Copy Image to Clipboard</source>
+        <translation>Copy Image to Clipboard</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Histogram Window (magnifier icon pressed):</source>
+        <oldsource>Histogram Windows(magnifier icon pressed):</oldsource>
+        <translation>Histogram Window (magnifier icon pressed):</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Left Area Selection</source>
+        <translation>Left Area Selection</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom Out One Step</source>
+        <translation>Zoom Out One Step</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Right Click</source>
+        <translation>Right Click</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom Out to Origin</source>
+        <translation>Zoom Out to Origin</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Ctrl &amp; Right Click</source>
+        <translation>Ctrl &amp; Right Click</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+75"/>
@@ -110,7 +192,7 @@
         <oldsource>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</oldsource>
-        <translation type="unfinished">Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+        <translation>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</translation>
     </message>
@@ -428,16 +510,22 @@
 <context>
     <name>genericinterface::GenericInterface</name>
     <message>
-        <location filename="GenericInterface.cpp" line="+56"/>
+        <location filename="GenericInterface.cpp" line="+57"/>
+        <location line="+1"/>
         <location line="+180"/>
         <location line="+1"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location line="-181"/>
+        <location line="-182"/>
         <source>&amp;About</source>
         <translation>&amp;About</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&amp;Hot keys</source>
+        <translation>&amp;Hot keys</translation>
     </message>
     <message>
         <location line="+32"/>
