@@ -188,9 +188,9 @@ void DoubleImageWindow::updateStatusBar()
 
 void DoubleImageWindow::showPixelsGrid()
 {
-    ImageDouble* fakeImg = Converter<ImageDouble>::convert(*_displayImg);
-    GridView* grid = new GridView(fakeImg, _displayImg);
-//    GridView* grid = new GridView(_image, _displayImg);
+//    ImageDouble* fakeImg = Converter<ImageDouble>::convert(*_displayImg);
+//    GridView* grid = new GridView(fakeImg, _displayImg);
+    GridView* grid = new GridView(_image, _displayImg);
     grid->setWindowTitle(this->windowTitle() + QString(" - ")  + QObject::tr("Pixels Grid"));
     emit addWidget(this, grid);
 }
