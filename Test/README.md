@@ -1,43 +1,20 @@
-# The project Detiq-T
+# Manual of Test
 
-The project Detiq-T provides a solid basis for people who are interested
-by image processing. It can be used by students, teachers or researcher
-working on the topic, but not only. Anyone who wants to implement
-processing algorithm can find an interest in this project. Detiq-T is
-divided into two parts : ImageIn, the image processing library, and
-GenericInterface, which allows users to demonstrate their work easily.
+The test framework has been repaired and integrated into the main program through CMake, it will compile together with the application and generate an executable file called detiq-t_Test in your BUILD directory. 
+
+In order to run the test, you have to manually copy the res folder (where this file is located) to the same location of the executable. (Note: better to enable the "Run in terminal" option (found at Projects--Build & Run--Run Settings--Run) if you decide to run the test through Qt Creator.
 
 
-## ImageIn, the image processing library
+## Introduction of test content
 
-ImageIn is an image processing library providing several low-level
-actions, such as reading/writing in image file (currently supported :
-PNG, JPEG and BMP standards), converting from one format to another,
-etc. It provides a complete and solid structure capable of handling any
-type of image. It is written in plain C++, with a great wish of portability so
-it can be used on every popular systems such as Linux, Windows and Mac
-OS. Some algorithms are already implemented, but the philosophy of
-ImageIn is to be easy to extend and anyone can add his own algorithm to
-the library.
-
-The conception of ImageIn makes it very easy to extend. The user can add
-his own functions. The algorithms, for example, are all using the same
-interface, so they can be used together easily. This way of thinking
-helps to build an extensible and generic library.
+The test is mainly written for the ImageIn library, to test several low-level actions provided by this library, such as reading/writing operations towards different image formats, copy & crop operations, format conversion and serval algorithm tests including the MorphoMats.
 
 
-## GenericInterface, a basis for demonstrative applications
+## Development suggestions
 
-A demonstrative environment is included in Detiq-T, to help users
-demonstrate their work. It is called GenericInterface, and it provides a
-lot of services, based on ImageIn (such as opening, displaying and
-editing image files). Moreover, it gives useful widgets for a better
-understanding of image processing, like histograms.
+If you want to add other tests as a new developer, please refer to the Test.h and Tester.h files, they define a basic test framework to be inherited, including the common functions of a test such as constructor, init, test cleanup and info (to point out where the error occurred). 
 
-Thanks to Qt, GenericInterface is as portable as ImageIn, and it fits in
-you system easily. Its philosophy is the same than the library : we want
-you to be able to build an application quickly and effectively, so it is
-highly customizable with your own widgets and algorithms.
+You can add the content and method you want to test in your own test file and start the test by creating a tester file that can execute multiple tests (Testers need to be added to the main function for the purpose of unification).
 
 ## Copyright
 
