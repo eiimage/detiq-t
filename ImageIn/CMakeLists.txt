@@ -112,10 +112,3 @@ endif()
 
 add_library(ImageIn OBJECT ${ImageIn_SOURCES})
 
-add_executable(ImageIn_main main.cpp $<TARGET_OBJECTS:ImageIn>)
-target_link_libraries(ImageIn_main ${JPEG_LIBRARY} ${PNG_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-
-add_executable(ImageIn_test test_image.cpp $<TARGET_OBJECTS:ImageIn>)
-target_link_libraries(ImageIn_test ${JPEG_LIBRARY} ${PNG_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-# Needed to execute the tester
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test)

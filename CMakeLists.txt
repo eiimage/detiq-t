@@ -9,6 +9,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 add_subdirectory(ImageIn)
 add_subdirectory(GenericInterface)
+add_subdirectory(Test)
 
 # This should be uncommented when compilation issues will be fixed
 # add_subdirectory(Applications)
