@@ -921,13 +921,13 @@
     <message>
         <location line="+9"/>
         <location line="+15"/>
-        <location line="+125"/>
+        <location line="+126"/>
         <location line="+15"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location line="-149"/>
+        <location line="-150"/>
         <source>Hovered</source>
         <translation>Survolé</translation>
     </message>

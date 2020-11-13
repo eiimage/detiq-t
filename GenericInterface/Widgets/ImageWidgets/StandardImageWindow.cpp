@@ -263,7 +263,8 @@ void StandardImageWindow::copycrop() {
 }
 
 void StandardImageWindow::convertToGrayscale() {
-    GrayscaleImage* newImg = RgbToGrayscale()(Converter<RgbImage>::convert(*_displayImg));
+//    GrayscaleImage* newImg = RgbToGrayscale()(Converter<RgbImage>::convert(*_displayImg));
+    GrayscaleImage* newImg = Converter<GrayscaleImage>::convert(*_displayImg);
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
 
     emit addImage(this, newImgWnd);
