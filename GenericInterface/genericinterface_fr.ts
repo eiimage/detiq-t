@@ -691,7 +691,7 @@
     <message>
         <location line="+257"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+102"/>
@@ -1005,7 +1005,7 @@
 <context>
     <name>genericinterface::WindowService</name>
     <message>
-        <location filename="Services/WindowService.cpp" line="+43"/>
+        <location filename="Services/WindowService.cpp" line="+44"/>
         <source>Images</source>
         <translation>Images</translation>
     </message>

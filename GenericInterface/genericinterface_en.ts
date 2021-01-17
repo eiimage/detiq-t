@@ -1004,7 +1004,7 @@
 <context>
     <name>genericinterface::WindowService</name>
     <message>
-        <location filename="Services/WindowService.cpp" line="+43"/>
+        <location filename="Services/WindowService.cpp" line="+44"/>
         <source>Images</source>
         <translation>Images</translation>
     </message>

@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QFormLayout>
 #include <QLabel>
+#include <QTimer>
 #include <QDialogButtonBox>
 #include "../Widgets/ImageListBox.h"
 #include "../Widgets/ImageWidgets/StandardImageWindow.h"
@@ -58,7 +59,7 @@ void WindowService::display(GenericInterface* gi)
     QAction* dockimage = gi->menu(tr("&Window"))->addAction(tr("Hide/Show Image dock"));
     dockimage->setIcon(QIcon(":/images/application-dock.png"));
     gi->toolBar(GenericInterface::MAIN_TOOLBAR)->addAction(dockimage);
-        QObject::connect(dockimage, SIGNAL(triggered()), _nav, SLOT(hideshow()));
+    QObject::connect(dockimage, SIGNAL(triggered()), _nav, SLOT(hideshow()));
 }
 
 void WindowService::connect(GenericInterface* gi)
@@ -111,6 +112,7 @@ std::vector<const ImageWindow*> WindowService::getImageWindows() const {
     }
     return result;
 }
+
 NodeId WindowService::findNodeId(QMdiSubWindow* sw) const {
     QMutexLocker locker(&_mutex);
     for(std::map<NodeId, Node*>::const_iterator it = _widgets.begin() ; it != _widgets.end() ; ++it)
@@ -255,12 +257,11 @@ void WindowService::addImage(NodeId id, ImageWindow* imgWnd, int pos)
     QObject::connect(swc, SIGNAL(removeFromWindowsMap(QMdiSubWindow*)), 
                     this, SLOT(removeSubWindow(QMdiSubWindow*)));
 
+
     sw->show();
     _mdi->setActiveSubWindow(sw);
     sw->activateWindow();
     _nav->setActiveNode(id);
-    //signalMdiChange();
-
 }
 
 void WindowService::addImage(ImageWindow* srcWnd, ImageWindow* imgWnd) {
