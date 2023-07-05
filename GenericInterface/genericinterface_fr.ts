@@ -488,13 +488,21 @@
     </message>
     <message>
         <location line="+67"/>
-        <source>C: %1</source>
-        <translation>C: %1</translation>
+        <source>Number of pixels: %1</source>
+        <translation>Nombre de pixels: %1</translation>
     </message>
     <message>
         <location line="+1"/>
+        <source>Number of pixels: %1, A: %2</source>
+        <translation>Nombre de pixels: %1, A: %2</translation>
+    </message>
+    <message>
+        <source>C: %1</source>
+        <translation type="vanished">C: %1</translation>
+    </message>
+    <message>
         <source>C: %1, A: %2</source>
-        <translation>C: %1, A: %2</translation>
+        <translation type="vanished">C: %1, A: %2</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -572,14 +580,16 @@
     </message>
     <message>
         <location line="-19"/>
-        <source>Cumulated histogram</source>
-        <translation>Histogramme cumulé</translation>
+        <source>Cumulated histogram normalized</source>
+        <oldsource>Cumulated histogram</oldsource>
+        <translation>Histogramme cumulé normalisé</translation>
     </message>
     <message>
         <location line="+11"/>
         <location line="+11"/>
-        <source>Cumulative histogram</source>
-        <translation>Histogramme cumulé</translation>
+        <source>Cumulative histogram normalized</source>
+        <oldsource>Cumulative histogram</oldsource>
+        <translation>Histogramme cumulé normalisé</translation>
     </message>
 </context>
 <context>
@@ -595,9 +605,9 @@
         <location line="-19"/>
         <location line="+11"/>
         <location line="+11"/>
-        <source>Cumulative histogram</source>
-        <oldsource>Cumulated histogram</oldsource>
-        <translation>Histogramme cumulé</translation>
+        <source>Cumulative histogram normalized</source>
+        <oldsource>Cumulative histogram</oldsource>
+        <translation>Histogramme cumulé normalisé</translation>
     </message>
 </context>
 <context>

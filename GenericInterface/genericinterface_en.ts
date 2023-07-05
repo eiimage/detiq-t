@@ -430,17 +430,15 @@
         <translation type="vanished">Value 2</translation>
     </message>
     <message>
-        <location line="+20"/>
         <source>C: %1</source>
-        <translation>C: %1</translation>
+        <translation type="vanished">C: %1</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>C: %1, A: %2</source>
-        <translation>C: %1, A: %2</translation>
+        <translation type="vanished">C: %1, A: %2</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+22"/>
         <source>R: %1, G: %2, B: %3</source>
         <translation>R: %1, G: %2, B: %3</translation>
     </message>
@@ -505,6 +503,16 @@
         <location line="+0"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</source>
         <translation>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</translation>
+    </message>
+    <message>
+        <location line="+67"/>
+        <source>Number of pixels: %1</source>
+        <translation>Number of pixels: %1</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Number of pixels: %1, A: %2</source>
+        <translation>Number of pixels: %1, A: %2</translation>
     </message>
 </context>
 <context>
@@ -572,14 +580,16 @@
     </message>
     <message>
         <location line="-19"/>
-        <source>Cumulated histogram</source>
-        <translation>Cumulated histogram</translation>
+        <source>Cumulated histogram normalized</source>
+        <oldsource>Cumulated histogram</oldsource>
+        <translation>Cumulated histogram normalized</translation>
     </message>
     <message>
         <location line="+11"/>
         <location line="+11"/>
-        <source>Cumulative histogram</source>
-        <translation>Cumulative histogram</translation>
+        <source>Cumulative histogram normalized</source>
+        <oldsource>Cumulative histogram</oldsource>
+        <translation>Cumulative histogram normalized</translation>
     </message>
 </context>
 <context>
@@ -595,9 +605,9 @@
         <location line="-19"/>
         <location line="+11"/>
         <location line="+11"/>
-        <source>Cumulative histogram</source>
-        <oldsource>Cumulated histogram</oldsource>
-        <translation>Cumulative histogram</translation>
+        <source>Cumulative histogram normalized</source>
+        <oldsource>Cumulative histogram</oldsource>
+        <translation>Cumulative histogram normalized</translation>
     </message>
 </context>
 <context>
