@@ -303,8 +303,8 @@ QString GenericHistogramWindow::formatValues(std::vector<int> values) const
 	QString res;
 
     switch(values.size()) {
-        case 1 : res = tr("C: %1"); break;
-        case 2 : res = tr("C: %1, A: %2"); break;
+        case 1 : res = tr("Number of pixels: %1"); break;
+        case 2 : res = tr("Number of pixels: %1, A: %2"); break;
         case 3 : res = tr("R: %1, G: %2, B: %3"); break;
         default: res = tr("R: %1, G: %2, B: %3, A: %4");
     }

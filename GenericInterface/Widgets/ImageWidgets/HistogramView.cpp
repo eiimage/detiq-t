@@ -30,7 +30,7 @@ HistogramView::HistogramView(const Image* image, imagein::Rectangle rect, bool c
         _qwtPlot->setTitle(tr("Histogram"));
     }
     else {
-        _qwtPlot->setTitle(tr("Cumulated histogram"));
+        _qwtPlot->setTitle(tr("Cumulated histogram normalized"));
     }
 }
 
@@ -41,7 +41,7 @@ HistogramView::HistogramView(const ImageDouble *image, Rectangle rect, bool cumu
         _qwtPlot->setTitle(tr("Histogram"));
     }
     else {
-        _qwtPlot->setTitle(tr("Cumulative histogram"));
+        _qwtPlot->setTitle(tr("Cumulative histogram normalized"));
     }
 }
 
@@ -52,7 +52,7 @@ HistogramView::HistogramView(const ImageDouble *image, Rectangle rect, double bi
         _qwtPlot->setTitle(tr("Histogram"));
     }
     else {
-        _qwtPlot->setTitle(tr("Cumulative histogram"));
+        _qwtPlot->setTitle(tr("Cumulative histogram normalized"));
     }
 }
     
