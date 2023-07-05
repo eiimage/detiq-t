@@ -198,7 +198,15 @@ void DoubleImageWindow::showPixelsGrid()
 void DoubleImageWindow::crop() {
     const Image_t<double>* oldImg = _image;
     const Image* oldDisplayImg = _displayImg;
-    Image_t<double>* newImg = oldImg->crop(_imageView->getRectangle());
+    auto rect = _imageView->getRectangle();
+
+    //Empeche de faire un rognage plus grand que l'image
+    if(_displayImg->getWidth()<rect.w+rect.x || _displayImg->getHeight()<rect.h+rect.y){
+        rect.w = _displayImg->getWidth() - rect.x;
+        rect.h = _displayImg->getHeight() - rect.y;
+    }
+
+    Image_t<double>* newImg = oldImg->crop(rect);
     this->setDisplayImage(this->makeDisplayable(newImg));
     _image = newImg;
     delete oldImg;
@@ -209,8 +217,15 @@ void DoubleImageWindow::crop() {
     this->updateGeometry();
 }
 
-void DoubleImageWindow::copycrop() {    
-    Image_t<double>* newImg = _image->crop(_imageView->getRectangle());
+void DoubleImageWindow::copycrop() {
+    auto rect = _imageView->getRectangle();
+
+    //Empeche de faire un rognage plus grand que l'image
+    if(_displayImg->getWidth()<rect.w+rect.x || _displayImg->getHeight()<rect.h+rect.y){
+        rect.w = _displayImg->getWidth() - rect.x;
+        rect.h = _displayImg->getHeight() - rect.y;
+    }
+    Image_t<double>* newImg = _image->crop(rect);
     DoubleImageWindow* newImgWnd = new DoubleImageWindow(*this, newImg);
     emit addImage(this, newImgWnd);
 }
