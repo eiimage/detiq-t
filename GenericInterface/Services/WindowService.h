@@ -79,7 +79,6 @@ namespace genericinterface
     void updateDisplay();
     void removeId(NodeId id);
     void moveToNode(StandardImageWindow* siw, int pos = -1);
-    void applyBinaryMask(ImageWindow* imgWnd);
 
   signals:
     void activeWidgetChanged(const QWidget*) const;
