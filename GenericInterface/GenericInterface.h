@@ -108,7 +108,7 @@ namespace genericinterface
     * @param id the identifier of the service
     * @param s the service to add
     */
-    void addService(int id, Service* s) throw (BadIdException);
+    void addService(int id, Service* s);
 
     /**
     * @brief Change the id service to a custom one.
@@ -120,7 +120,7 @@ namespace genericinterface
     * @param id
     * @param s
     */
-    void changeService(int id, Service* s) throw (BadIdException);
+    void changeService(int id, Service* s);
 
     /**
     * @brief Provides a direct access to the wanted service, mostly used by the Service::connect(GenericInterface*)
@@ -130,7 +130,7 @@ namespace genericinterface
     *
     * @return the wanted Service
     */
-    Service* getService(int id) throw (BadIdException);
+    Service* getService(int id);
 
     /**
     * @brief Return a pointer on the WindowService
