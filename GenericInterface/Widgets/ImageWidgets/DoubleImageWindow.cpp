@@ -338,7 +338,6 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
     }
 
     /*Offset and Scaling are applied by default if exist value < 0, the result of log scale is inherited*/
-
     if(_offsetBox->isChecked() && !_scalingBox->isChecked()){
         resImg = enableOffset(tmpImg);
     }else if(!_offsetBox->isChecked() && _scalingBox->isChecked()){
@@ -460,14 +459,15 @@ Image* DoubleImageWindow::enableOffset_Scaling(ImageDouble* imgD){
     int height = imgD->getHeight();
     int width = imgD->getWidth();
     int nbChannels = imgD->getNbChannels();
-    double maxValue = imgD->max();
-    double minValue = imgD->min();
+    double maxValue = min(255.0,imgD->max()+127);
+    double minValue = min(255.0,imgD->min()+127);
     Image* offset_scalingImg = new Image(width, height, nbChannels, 0.);
     for(unsigned int c = 0; c < nbChannels; ++c) {
         for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
             for(unsigned int j = 0; j < width; ++j){
-                double oldPixel = imgD->getPixelAt(j,i,c);
-                double newPixel = (127-minValue) > (maxValue-127) ? oldPixel * 127 / (- minValue) + 127 : oldPixel * 128 / maxValue + 127;
+                double oldPixel = min(255.0,imgD->getPixelAt(j,i,c)+127);
+                //double newPixel = (127-minValue) > (maxValue-127) ? oldPixel * 127 / (- minValue) + 127 : oldPixel * 128 / maxValue + 127;
+                double newPixel = (oldPixel - minValue)*255/(maxValue-minValue);
                 newPixel  = std::min(255.0, std::max(0.0, newPixel));
                 offset_scalingImg->setPixelAt(j, i, c, newPixel);
             }
