@@ -43,8 +43,8 @@ public:
     /**
     * @brief Default constructor, layout the elements
     */
-    NavigationDock(const QString & title, QWidget * parent = 0, Qt::WindowFlags flags = 0);
-    virtual ~NavigationDock();
+    explicit NavigationDock(const QString & title, QWidget * parent = 0);
+    ~NavigationDock() override;
 
     QList<NodeId> getSelection();    
 

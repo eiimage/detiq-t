@@ -34,7 +34,7 @@ namespace imagein {
 			_nameToSize.clear();
 			_synonyms.clear();
 			
-			const GrayscaleImage_t<D>* img = dynamic_cast<const GrayscaleImage_t<D>*>(imgs.at(0));
+			const auto* img = dynamic_cast<const GrayscaleImage_t<D>*>(imgs.at(0));
 			if(img == NULL) {
 				throw ImageTypeException(__LINE__, __FILE__);
 			}
@@ -291,6 +291,7 @@ namespace imagein {
 					return i;
 				}
 			}
+            return -1;
 		}
 	}
 }

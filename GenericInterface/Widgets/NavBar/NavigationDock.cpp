@@ -27,7 +27,7 @@ using namespace genericinterface;
 using namespace imagein;
 using namespace std;
 
-NavigationDock::NavigationDock(const QString & title, QWidget * parent, Qt::WindowFlags flags) : QDockWidget(title, parent, flags)
+NavigationDock::NavigationDock(const QString & title, QWidget * parent) : QDockWidget(title, parent)
 {
     /* Creation of the attributs */
     //_model->setSupportedDragActions(Qt::MoveAction);

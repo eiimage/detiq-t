@@ -422,9 +422,10 @@ void ImageWindow::updateZoom(double z) const
 
 void ImageWindow::wheelEvent (QWheelEvent * event) {
     bool ctrlPressed = event->modifiers().testFlag(Qt::ControlModifier);
-    if (ctrlPressed && event->orientation() == Qt::Vertical)
+    if (ctrlPressed && event->angleDelta().y() != 0)
     {
-        this->zoom(event->delta());
+        this->zoom(event->angleDelta().y());
+
     }
 }
 
