@@ -104,6 +104,7 @@ namespace genericinterface
     * </ul>
     *
     * <p>
+    *if an error is detected, a BadIdException will be thrown
     *
     * @param id the identifier of the service
     * @param s the service to add
@@ -116,6 +117,7 @@ namespace genericinterface
     * Be careful : the new service has to implemant the signals and slots of the
     * former one. If not, the connect method will throw an ServiceConnectionException
     * and your application won't be able to assume the basics tasks.
+    * if an error is detected, a BadIdException will be thrown
     *
     * @param id
     * @param s
@@ -125,6 +127,7 @@ namespace genericinterface
     /**
     * @brief Provides a direct access to the wanted service, mostly used by the Service::connect(GenericInterface*)
     * function.
+    * if an error is detected, a BadIdException will be thrown
     *
     * @param id its id
     *
@@ -159,6 +162,7 @@ namespace genericinterface
     * @brief Create the Mdi Widget of the main window
     *
     * This function will throw an exception if it was already called
+    * if an error is detected, a AlreadyInitException will be thrown
     *
     * @return a pointer to the created widget
     */
