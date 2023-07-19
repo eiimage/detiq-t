@@ -20,24 +20,19 @@
 #include "GenericInterface.h"
 #include "DoubleImageWindow.h"
 #include "GridView.h"
-#include <QDoubleSpinBox>
 #include <QSlider>
 #include <QDebug>
 #include <QObject>
 #include <QTranslator>
-#include <QPushButton>
-#include <QApplication>
 #include <Converter.h>
-#include "../../../../../app/Operations/HoughDialog.h"
-#include "../../Utilities/Log.h"
 #include <UnknownFormatException.h>
 
 using namespace genericinterface;
 using namespace imagein;
 using namespace std;
 
-DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path, bool normalize, bool logScale, double logConstantScale, bool abs)
-    : ImageWindow(path), _image(image), _normalize(normalize), _logScale(logScale), _logConstantScale(logConstantScale), _abs(abs)
+DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path, boxSetting scaled, boxSetting offset, bool logScale, double logConstantScale, bool abs)
+        : ImageWindow(path), _image(image), _scaled(scaled), _offset(offset), _logScale(logScale), _logConstantScale(logConstantScale), _abs(abs)
 {
     init();
     _image = image;
@@ -47,8 +42,9 @@ DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path,
     this->setWindowTitle(ImageWindow::getTitleFromPath(path));
 }
 
+
 DoubleImageWindow::DoubleImageWindow(const DoubleImageWindow& siw, imagein::Image_t<double>* image)
-    : ImageWindow(siw.getPath()), _normalize(siw._normalize), _logScale(siw._logScale), _logConstantScale(siw._logConstantScale)
+    : ImageWindow(siw.getPath()), _scaled(siw._scaled), _logScale(siw._logScale), _logConstantScale(siw._logConstantScale)
 {
     init();
     if(image == NULL) {
@@ -83,6 +79,28 @@ void DoubleImageWindow::init()
     }
     QObject::connect(_offsetBox,SIGNAL(stateChanged(int)), this, SLOT(offset_scaling(int)));
     QObject::connect(_scalingBox,SIGNAL(stateChanged(int)), this, SLOT(offset_scaling(int)));
+
+    //Si _offset ou _scaled sont différents de AUTO, c'est que l'affichage par défaut a été renseigné dans le code
+    //qui génère l'image.
+    if (_offset == ENABLE && _scaled == DISABLE) {
+        _offsetBox->setChecked(true);
+        _scalingBox->setChecked(false);
+    } else if (_offset == DISABLE && _scaled == ENABLE) {
+        _offsetBox->setChecked(false);
+        _scalingBox->setChecked(true);
+    } else if (_offset == ENABLE && _scaled == ENABLE) {
+        _offsetBox->setChecked(true);
+        _scalingBox->setChecked(true);
+    }else if (_offset == ENABLE && _scaled == AUTO){
+        _offsetBox->setChecked(true);
+    }else if (_offset == DISABLE && _scaled == AUTO){
+        _offsetBox->setChecked(false);
+    }else if (_offset == AUTO && _scaled == ENABLE){
+        _scalingBox->setChecked(true);
+    }else if (_offset == AUTO && _scaled == DISABLE){
+        _scalingBox->setChecked(false);
+    }
+
     menu()->addAction(QObject::tr("Crop"), this, SLOT(crop()));
     menu()->addAction(QObject::tr("Copy & crop"), this, SLOT(copycrop()));
   //  menu()->addAction(tr("Convert to Rgb Image"), this, SLOT(convertRgb()));
@@ -308,13 +326,6 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
         }
     }
 
-    /*Normalize option takes no effect when output a double image, since Offset and Scaling are applied by default, they can be managed after by user*/
-    if(_normalize) {
-//        std::cout << "Before normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
-//        tmpImg->normalize(0.0, 255.0);
-//        std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
-    }
-
     if(_logScale){
         /*The log scale will not work if mean value too small,
         In case of negatif values, we take use mean of absolute values instead*/
@@ -430,16 +441,20 @@ Image* DoubleImageWindow::enableOffset_Scaling(ImageDouble* imgD){
     int height = imgD->getHeight();
     int width = imgD->getWidth();
     int nbChannels = imgD->getNbChannels();
-    double maxValue = min(255.0,imgD->max()+127);
-    double minValue = min(255.0,imgD->min()+127);
+    double maxValue = imgD->max();
+    double minValue = imgD->min();
     Image* offset_scalingImg = new Image(width, height, nbChannels, 0.);
     for(unsigned int c = 0; c < nbChannels; ++c) {
         for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
             for(unsigned int j = 0; j < width; ++j){
-                double oldPixel = min(255.0,imgD->getPixelAt(j,i,c)+127);
-                //double newPixel = (127-minValue) > (maxValue-127) ? oldPixel * 127 / (- minValue) + 127 : oldPixel * 128 / maxValue + 127;
-                double newPixel = (oldPixel - minValue)*255/(maxValue-minValue);
-                newPixel  = std::min(255.0, std::max(0.0, newPixel));
+                double oldPixel = imgD->getPixelAt(j,i,c);
+                double newPixel;
+                if(maxValue > -minValue)
+                    newPixel = oldPixel*128/maxValue+127;
+                else if(maxValue < -minValue)
+                    newPixel = oldPixel * 127 / (- minValue) + 127;
+                else    //Cas où l'image est entièrement noire
+                    newPixel  = 127;
                 offset_scalingImg->setPixelAt(j, i, c, newPixel);
             }
         }

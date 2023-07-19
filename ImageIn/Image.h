@@ -311,6 +311,11 @@ namespace imagein
 
     typedef Image_t<double> ImageDouble; //!< Standard Image with double values for each pixel
 }
+enum boxSetting {    //!< Provide display functionalities for double images
+    ENABLE,
+    DISABLE,
+    AUTO,
+};
 
 #include "Image.tpp"
 

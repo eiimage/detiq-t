@@ -50,9 +50,8 @@ public:
      * \param gi The interface associated with this
      * \param image The image which is used
      */
-    DoubleImageWindow(Image_t<double>* image, const QString path = QString(), bool normalize = false, bool logScale = false, double logConstantScale = 1.0, bool abs = false);
+    DoubleImageWindow(Image_t<double>* image, const QString path = QString(), boxSetting scaled = AUTO, boxSetting offset = AUTO, bool logScale = false, double logConstantScale = 1.0, bool abs = false);
     DoubleImageWindow(const DoubleImageWindow&, imagein::Image_t<double>* img = NULL);
-
 
     /*!
      * \brief DoubleImageWindow destructor.
@@ -71,13 +70,11 @@ public:
     imagein::Image* makeDisplayable(const imagein::Image_t<double>*);
     virtual bool isDouble() const { return true; }
     virtual bool isStandard() const { return false; }
-    inline bool isNormalized() const { return _normalize; }
     inline bool isLogScaled() const { return _logScale; }
     inline double getLogScale() const  { return _logConstantScale; }
     inline bool isAbsolute() const { return _abs; }
     inline bool isOffsetNeeded() const { return (_image->min()<0); }
     double isHough(double angStep, double distStep){_hough = true; angleStep = angStep; distanceStep = distStep;}
-    void setNormalized(bool norm){_normalize = norm;}
     void setAbsolute(bool abs){_abs = abs;}
     Image* enableOffset(ImageDouble* imgD);
     Image* enableScaling(ImageDouble* imgD);
@@ -111,13 +108,14 @@ signals:
 protected:
     const imagein::Image_t<double>* _image;
 
-    bool _normalize;
     bool _logScale;
     double _logConstantScale;
     bool _abs;
     bool _hough = false;
     double angleStep;
     double distanceStep;
+    boxSetting _offset = AUTO, _scaled = AUTO;
+
 
     void init();
     void updateStatusBar();
