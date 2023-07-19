@@ -51,6 +51,7 @@ namespace genericinterface
 		Q_OBJECT
     private:
         GenericHistogramView* _view;
+        double _binSize = 1.0;
         QLabel* _lImageName;
         QLabel* _lHoveredValue;
         QLabel* _lSelectedValue1;
@@ -75,6 +76,8 @@ namespace genericinterface
         void save(const QString& path = QString(), const QString& ext = QString());
         void saveAs();
         void customizeBinsize();
+        void updateViewByBinSize();
+        void updateCumulativeViewByBinSize();
 
         //void saveData();
 
@@ -85,7 +88,7 @@ namespace genericinterface
          * \param rect Rectangle to display on the source window
          */
         void selectRectChange(imagein::Rectangle rect, GenericHistogramView* source);
-        void sendBinSize(double);
+        void sendBinSize();
 
     protected:
       /*!
@@ -102,6 +105,8 @@ namespace genericinterface
       QToolButton* _saveAsButton;
       QToolButton* _zoomButton;
 
+      const imagein::ImageDouble* _image; //Only initialised on HistogramWindow /!\
+
     public:
       /*!
        * \brief HistogramWindow destructor.
@@ -109,9 +114,8 @@ namespace genericinterface
        * The HistogramView is deleted too
        */
       virtual ~GenericHistogramWindow();
-      void updateViewByBinSize(const imagein::ImageDouble* image, double binSize);
-      void updateCumulativeViewByBinSize(const imagein::ImageDouble* image, double binSize);
-      
+
+      void setBinSize(double binSize);
       virtual GenericHistogramView* getView() { return _view; }
     };
 }

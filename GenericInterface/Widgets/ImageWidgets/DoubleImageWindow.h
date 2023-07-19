@@ -105,7 +105,6 @@ public slots:
 
     void convertRgb();
 
-    void setBinSize(double);
 
 signals:
     void textToShow(QString);
@@ -119,7 +118,6 @@ protected:
     bool _hough = false;
     double angleStep;
     double distanceStep;
-    double _binSize = 1.0;
 
     void init();
     void updateStatusBar();
