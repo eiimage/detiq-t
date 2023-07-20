@@ -114,7 +114,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+75"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+71"/>
         <source>Offset (127)</source>
         <oldsource> Offset (127) </oldsource>
         <translation>Décalage (127)</translation>
@@ -126,7 +126,7 @@
         <translation>Mise à l&apos;échelle</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+32"/>
         <source>Crop</source>
         <translation>Rogner</translation>
     </message>
@@ -143,12 +143,12 @@
     <message>
         <location line="+9"/>
         <location line="+15"/>
-        <location line="+97"/>
+        <location line="+112"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location line="-106"/>
+        <location line="-121"/>
         <source>Hovered</source>
         <translation>Survolé</translation>
     </message>
@@ -158,7 +158,7 @@
         <translation>Grille de pixels</translation>
     </message>
     <message>
-        <location line="+93"/>
+        <location line="+108"/>
         <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
 
 -------------------------------------------</source>
@@ -167,7 +167,7 @@
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+127"/>
+        <location line="+90"/>
         <source>Offset applied : val_display = val_image + 127
 
 -------------------------------------------</source>
@@ -185,7 +185,7 @@
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+24"/>
+        <location line="+29"/>
         <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 
 
 -------------------------------------------</source>
@@ -266,7 +266,7 @@
         <translation type="vanished">Selectionné</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-197"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-165"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
@@ -413,7 +413,7 @@
 <context>
     <name>genericinterface::GenericHistogramWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/GenericHistogramWindow.cpp" line="+113"/>
+        <location filename="Widgets/ImageWidgets/GenericHistogramWindow.cpp" line="+115"/>
         <location line="+173"/>
         <source>Hovered</source>
         <oldsource>Hovered: </oldsource>
@@ -539,7 +539,7 @@
         <translation>Une erreur est survenue lors de l&apos;ajout d&apos;un nouveau service. Il se peut que l&apos;interface n&apos;offre pas toutes les fonctionnalités attendues.</translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+43"/>
         <location line="+1"/>
         <source>&amp;Window</source>
         <translation>Fe&amp;nêtre</translation>
@@ -556,15 +556,15 @@
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location line="-229"/>
+        <location line="-228"/>
         <location line="+1"/>
-        <location line="+180"/>
+        <location line="+179"/>
         <location line="+1"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
-        <location line="-182"/>
+        <location line="-181"/>
         <source>&amp;About</source>
         <translation>&amp;À propos</translation>
     </message>
@@ -595,16 +595,16 @@
 <context>
     <name>genericinterface::HistogramWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/HistogramWindow.cpp" line="+29"/>
-        <location line="+11"/>
-        <location line="+11"/>
+        <location filename="Widgets/ImageWidgets/HistogramWindow.cpp" line="+31"/>
+        <location line="+12"/>
+        <location line="+12"/>
         <source>Histogram</source>
         <translation>Histogramme</translation>
     </message>
     <message>
-        <location line="-19"/>
-        <location line="+11"/>
-        <location line="+11"/>
+        <location line="-21"/>
+        <location line="+12"/>
+        <location line="+12"/>
         <source>Cumulative histogram normalized</source>
         <oldsource>Cumulative histogram</oldsource>
         <translation>Histogramme cumulé normalisé</translation>
@@ -613,13 +613,13 @@
 <context>
     <name>genericinterface::ImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="+132"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="+130"/>
         <source>Image</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location line="-45"/>
-        <location line="+100"/>
+        <location line="-43"/>
+        <location line="+98"/>
         <source>Save As</source>
         <translation>Enregistrer sous</translation>
     </message>
@@ -650,7 +650,7 @@
         <translation>Sélectionner tout</translation>
     </message>
     <message>
-        <location line="-74"/>
+        <location line="-72"/>
         <source>Zoom + (Ctrl+Scroll Wheel)</source>
         <translation>Zoom + (Ctrl+Molette)</translation>
     </message>
@@ -660,7 +660,7 @@
         <translation>Zoom - (Ctrl+Molette)</translation>
     </message>
     <message>
-        <location line="+81"/>
+        <location line="+79"/>
         <source>Zoom +</source>
         <translation>Zoom +</translation>
     </message>
@@ -694,12 +694,12 @@
         <translation type="vanished">Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG(*.jpg *.jpeg);; Image VFF (*.vff)</translation>
     </message>
     <message>
-        <location line="-257"/>
+        <location line="-255"/>
         <source>Rename</source>
         <translation>Renommer</translation>
     </message>
     <message>
-        <location line="+257"/>
+        <location line="+255"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)</source>
         <translation></translation>
     </message>
@@ -714,9 +714,8 @@
         <translation>Nouveau nom :</translation>
     </message>
     <message>
-        <location line="-358"/>
         <source>Apply mask</source>
-        <translation>Appliquer un masque</translation>
+        <translation type="vanished">Appliquer un masque</translation>
     </message>
 </context>
 <context>
@@ -823,7 +822,7 @@
 <context>
     <name>genericinterface::SelectionWidget</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-51"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-407"/>
         <source>Selection : </source>
         <translation>Sélection : </translation>
     </message>
@@ -931,13 +930,13 @@
     <message>
         <location line="+9"/>
         <location line="+15"/>
-        <location line="+126"/>
+        <location line="+141"/>
         <location line="+15"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location line="-150"/>
+        <location line="-165"/>
         <source>Hovered</source>
         <translation>Survolé</translation>
     </message>
@@ -1037,7 +1036,7 @@
         <translation>Arranger en &amp;cascade</translation>
     </message>
     <message>
-        <location line="+301"/>
+        <location line="+300"/>
         <source>Attention</source>
         <translation>Attention</translation>
     </message>
@@ -1047,17 +1046,15 @@
         <translation>Vous êtes sur le point de fermer toutes les fenêtres relatives, êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
-        <location line="+152"/>
         <source>Mask to apply : </source>
-        <translation>Masque à appliquer : </translation>
+        <translation type="vanished">Masque à appliquer : </translation>
     </message>
     <message>
-        <location line="+64"/>
         <source> - masked</source>
-        <translation> - masquée</translation>
+        <translation type="vanished"> - masquée</translation>
     </message>
     <message>
-        <location line="-511"/>
+        <location line="-294"/>
         <source>Hide/Show Image dock</source>
         <translation>Cacher/Montrer la barre d&apos;image</translation>
     </message>
