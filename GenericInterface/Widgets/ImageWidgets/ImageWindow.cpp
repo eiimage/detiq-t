@@ -197,6 +197,7 @@ void ImageWindow::initStatusBar()
     _infoLayout = new QVBoxLayout(_infoWidget);
 
     QObject::connect(_mouseButton, SIGNAL(toggled(bool)), this, SLOT(toggleMouseMode(bool)));
+    QObject::connect(_mouseButton, SIGNAL(toggled(bool)), _imageView, SLOT(selectAll()));
     QObject::connect(_selectButton, SIGNAL(toggled(bool)), this, SLOT(toggleSelectMode(bool)));
     QObject::connect(_selectAllButton, SIGNAL(clicked()), _imageView, SLOT(selectAll()));
     QObject::connect(_zoomInButton, SIGNAL(clicked()), this, SLOT(zoom_in()));
