@@ -82,23 +82,12 @@ void DoubleImageWindow::init()
 
     //Si _offset ou _scaled sont différents de AUTO, c'est que l'affichage par défaut a été renseigné dans le code
     //qui génère l'image.
-    if (_offset == ENABLE && _scaled == DISABLE) {
-        _offsetBox->setChecked(true);
-        _scalingBox->setChecked(false);
-    } else if (_offset == DISABLE && _scaled == ENABLE) {
-        _offsetBox->setChecked(false);
-        _scalingBox->setChecked(true);
-    } else if (_offset == ENABLE && _scaled == ENABLE) {
-        _offsetBox->setChecked(true);
-        _scalingBox->setChecked(true);
-    }else if (_offset == ENABLE && _scaled == AUTO){
-        _offsetBox->setChecked(true);
-    }else if (_offset == DISABLE && _scaled == AUTO){
-        _offsetBox->setChecked(false);
-    }else if (_offset == AUTO && _scaled == ENABLE){
-        _scalingBox->setChecked(true);
-    }else if (_offset == AUTO && _scaled == DISABLE){
-        _scalingBox->setChecked(false);
+
+    if(_offset != AUTO){
+        _offsetBox->setChecked(_offset == ENABLE);
+    }
+    if(_scaled != AUTO){
+        _scalingBox->setChecked(_scaled == ENABLE);
     }
 
     menu()->addAction(QObject::tr("Crop"), this, SLOT(crop()));
@@ -460,7 +449,14 @@ Image* DoubleImageWindow::enableOffset_Scaling(ImageDouble* imgD){
         }
     }
     if(!_logScale){
-        outInfo(QObject::tr("Both Offset and Scaling applied : val_display = (127-minValue) > (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 \n\n-------------------------------------------"));
+        outInfo(QObject::tr("Both Offset and Scaling applied "
+                            "<br><br> <b>case 1</b> : -minValue > maxValue"
+                            "<br> pixel displayed = pixel image * 127 / (- minValue) + 127 "
+                            "<br> <b>case 2</b> : -minValue > maxValue "
+                            "<br> pixel displayed = pixel image * 128 / maxValue + 127"
+                            "<br> <b>case 3</b> : -minValue = maxValue"
+                            "<br> pixel displayed = 127"
+                            "<br><br> -------------------------------------------"));
     }
     return offset_scalingImg;
 }

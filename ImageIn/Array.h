@@ -41,8 +41,8 @@ namespace imagein
              *
              * Values are not initialized.
              */
-            inline Array(int width = 0) : _width(width), _min(0), _max(width - 1) { _array = new T[width]; }
-            inline Array(int min, int max) : _min(min), _max(max), _width(max - min + 1 ) { _array = new T[ 1 + max - min]; }
+            inline Array(int width = 0) : _width(width), _min(0), _max(width - 1), _vmin(0),_vmax(0) { _array = new T[width]; }
+            inline Array(int min, int max) : _min(min), _max(max), _width(max - min + 1 ), _vmin(0),_vmax(0) { _array = new T[ 1 + max - min]; }
             inline virtual ~Array() { delete _array; }
 
             //! Returns the size of the array.
