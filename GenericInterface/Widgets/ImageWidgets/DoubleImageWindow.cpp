@@ -305,7 +305,9 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
     Image* resImg = new Image(tmpImg->getWidth(), tmpImg->getHeight(), tmpImg->getNbChannels());
 
     /*This truncation message becomes annoying when user slide the log scale bar, better not to emit it*/
-    if(!_logScale && (tmpImg->min()<0 || tmpImg->max()>255)){
+    //! if the _offsetBox is checked, the message send is determine in the enableOffset method
+    //! if the _scalingBox is checked, the is no truncation
+    if(!_logScale && (tmpImg->min()<0 || tmpImg->max()>255 && !_offsetBox->isChecked() && !_scalingBox->isChecked())){
         outInfo(QObject::tr("The display image is truncated, values outside the range of [0 , 255] have been eliminated\n\n-------------------------------------------"));
     }
 
@@ -396,7 +398,7 @@ Image* DoubleImageWindow::enableOffset(ImageDouble* imgD){
         }
     }
     if(!_logScale){
-        outInfo(QObject::tr("Offset applied : val_display = val_image + 127\n\n-------------------------------------------"));
+        outInfo(QObject::tr("Offset applied : pixel display = pixel image + 127\n\n-------------------------------------------"));
     }
     return offsetImg;
 }
@@ -419,9 +421,12 @@ Image* DoubleImageWindow::enableScaling(ImageDouble* imgD){
             }
         }
     }
-    if(!_logScale){
-        outInfo(QObject::tr("Scaling applied : val_display = (val_image < 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue\n\n-------------------------------------------"));
+    if(!_logScale  && (imgD->min()<0 || imgD->max()>255)){
+        outInfo(QObject::tr("The display image is truncated, values outside the range of [0 , 255] have been eliminated. <Br>"
+                            "For other values : pixel display = pixel image * 255 / maxValue<Br><Br>-------------------------------------------"));
     }
+    else if (!_logScale)
+        outInfo(QObject::tr("pixel display = pixel image * 255 / maxValue\n\n-------------------------------------------"));
     return scalingImg;
 }
 
@@ -439,7 +444,7 @@ Image* DoubleImageWindow::enableOffset_Scaling(ImageDouble* imgD){
                 double oldPixel = imgD->getPixelAt(j,i,c);
                 double newPixel;
                 if(maxValue > -minValue)
-                    newPixel = oldPixel*128/maxValue+127;
+                    newPixel = oldPixel*127/maxValue+127;
                 else if(maxValue < -minValue)
                     newPixel = oldPixel * 127 / (- minValue) + 127;
                 else    //Cas où l'image est entièrement noire
@@ -449,13 +454,7 @@ Image* DoubleImageWindow::enableOffset_Scaling(ImageDouble* imgD){
         }
     }
     if(!_logScale){
-        outInfo(QObject::tr("Both Offset and Scaling applied "
-                            "<br><br> <b>case 1</b> : -minValue > maxValue"
-                            "<br> pixel displayed = pixel image * 127 / (- minValue) + 127 "
-                            "<br> <b>case 2</b> : -minValue > maxValue "
-                            "<br> pixel displayed = pixel image * 128 / maxValue + 127"
-                            "<br> <b>case 3</b> : -minValue = maxValue"
-                            "<br> pixel displayed = 127"
+        outInfo(QObject::tr("Both Offset and Scaling applied : pixel display = 127 +  pixel image * 127/Max(|minValue|,|minValue|)"
                             "<br><br> -------------------------------------------"));
     }
     return offset_scalingImg;
