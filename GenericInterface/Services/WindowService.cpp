@@ -285,7 +285,7 @@ bool WindowService::addWidget(NodeId id, QWidget* widget)
         QObject::connect(sw, SIGNAL(aboutToActivate()), widget, SLOT(activated()));
     }
     QObject::connect(sw, SIGNAL(destroyed()), swc, SLOT(closeSubWindow()));
-    QObject::connect(swc, SIGNAL(removeFromWindowsMap(QMdiSubWindow*)), 
+    QObject::connect(swc, SIGNAL(removeFromWindowsMap(QMdiSubWindow*)),
                     this, SLOT(removeSubWindow(QMdiSubWindow*)));
 
     sw->show();
@@ -434,7 +434,7 @@ bool WindowService::validWindow(QMdiSubWindow* sw) const {
 
 void WindowService::updateDisplay()
 {
-    //std::cout << "updateDisplay::lock" << std::endl;
+//    std::cout << "updateDisplay::lock" << std::endl;
     QMutexLocker locker(&_mutex);
     const QList<NodeId>& selection = _nav->getSelection();
     

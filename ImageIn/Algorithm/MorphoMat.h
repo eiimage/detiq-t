@@ -39,10 +39,16 @@ namespace imagein {
         StructElem(Dir);
         StructElem(std::string filename);
         StructElem(GrayscaleImage_t<bool> elem, unsigned int centerX, unsigned int centerY);
+
         inline unsigned char getScale() const { return _scale; }
+        inline unsigned int getCenterX() const { return _centerX; }
+        inline unsigned int getCenterY() const { return _centerY; }
+        unsigned char getScaleMemory() const;
+        unsigned char getShapeSizeMemory() const;
+
         inline void setScale(unsigned char scale) { if(scale>0) { _scale = scale; } }
-        inline unsigned int getCenterX() { return _centerX; }
-        inline unsigned int getCenterY() { return _centerY; }
+        void setScaleMemory(unsigned char scaleMemory);
+        void setShapeSizeMemory(unsigned char shapeSizeMemory);
         inline void setCenterX(unsigned int centerX) { _centerX = centerX; }
         inline void setCenterY(unsigned int centerY) { _centerY = centerY; }
         inline void setCenter(unsigned int centerX, unsigned int centerY) { _centerX = centerX; _centerY = centerY; }
@@ -67,9 +73,13 @@ namespace imagein {
             return res;
         }
 
-      private:
+    private:
         unsigned char _scale;
         unsigned int _centerX, _centerY;
+        //! 2 variables utilisées pour mémoriser l'état des variables de mise à l'échelle et de la taille de l'ES
+        //! lors de la fermeture de la fenêtre "Element Structurant"
+        unsigned char _scaleMemory;
+        unsigned char _shapeSizeMemory;
     };
 
     template <typename D>

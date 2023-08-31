@@ -337,8 +337,8 @@ void ImageWindow::save(const QString& path, const QString& ext)
 
 void ImageWindow::saveAs()
 {
-    //! Le chemin par défaut pour la boîte de dialogue
-    QString path = ":/";
+    //! Nom par défaut pour la boîte de dialogue
+    QString path = this->windowTitle();
     QString selectedFilter;
 
     QString file = QFileDialog::getSaveFileName(
