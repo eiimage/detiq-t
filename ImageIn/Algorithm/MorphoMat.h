@@ -76,8 +76,8 @@ namespace imagein {
     private:
         unsigned char _scale;
         unsigned int _centerX, _centerY;
-        //! 2 variables utilisées pour mémoriser l'état des variables de mise à l'échelle et de la taille de l'ES
-        //! lors de la fermeture de la fenêtre "Element Structurant"
+
+        //! 2 variables utilisées pour mémoriser l'état des variables scale et shapeSize à la fermeture du menu
         unsigned char _scaleMemory;
         unsigned char _shapeSizeMemory;
     };
