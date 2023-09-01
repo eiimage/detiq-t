@@ -308,7 +308,7 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
     //! if the _offsetBox is checked, the message send is determine in the enableOffset method
     //! if the _scalingBox is checked, the is no truncation
     if(!_logScale && (tmpImg->min()<0 || tmpImg->max()>255 && !_offsetBox->isChecked() && !_scalingBox->isChecked())){
-        outInfo(QObject::tr("The display image is truncated, values outside the range of [0 , 255] have been eliminated\n\n-------------------------------------------"));
+        outInfo(QObject::tr("The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255\n\n-------------------------------------------"));
     }
 
     if(_abs) {
@@ -422,7 +422,7 @@ Image* DoubleImageWindow::enableScaling(ImageDouble* imgD){
         }
     }
     if(!_logScale  && (imgD->min()<0 || imgD->max()>255)){
-        outInfo(QObject::tr("The display image is truncated, values outside the range of [0 , 255] have been eliminated. <Br>"
+        outInfo(QObject::tr("The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255. <Br>"
                             "For other values : pixel display = pixel image * 255 / maxValue<Br><Br>-------------------------------------------"));
     }
     else if (!_logScale)
