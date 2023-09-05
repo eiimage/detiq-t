@@ -126,7 +126,7 @@
         <translation>Mise à l&apos;échelle</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+21"/>
         <source>Crop</source>
         <translation>Rogner</translation>
     </message>
@@ -158,41 +158,74 @@
         <translation>Grille de pixels</translation>
     </message>
     <message>
-        <location line="+108"/>
-        <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
+        <location line="+110"/>
+        <source>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255
 
 -------------------------------------------</source>
-        <translation>L&apos;image affichée a été rogné, les valeurs en dehors de la plage de [0, 255] sont éliminées
+        <translation>L&apos;image d&apos;entrée a été tronquée, les valeurs en dehors de l&apos;intervalle [0 , 255] ont été remplacées par 0 ou 255.
 
 -------------------------------------------</translation>
     </message>
     <message>
         <location line="+90"/>
-        <source>Offset applied : val_display = val_image + 127
+        <source>Offset applied : pixel display = pixel image + 127
 
 -------------------------------------------</source>
-        <translation>Décalage appliqué: val_affichée = val_image + 127
+        <translation>Décalage appliqué : pixel affiché = pixel image + 127
 
 -------------------------------------------</translation>
     </message>
     <message>
         <location line="+24"/>
-        <source>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
+        <source>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : pixel display = pixel image * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</source>
+        <translation>L&apos;image d&apos;entrée a été tronquée, les valeurs en dehors de l&apos;intervalle [0 , 255] ont été remplacées par 0 ou 255. &lt;Br&gt;Pour les autres valeurs : pixel affiché = pixel image * 255 / valeurMax&lt;Br&gt;&lt;Br&gt;-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>pixel display = pixel image * 255 / maxValue
 
 -------------------------------------------</source>
-        <translation>Mise à l&apos;échelle appliquée : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
+        <translation>pixel affiché = pixel image * 255 / valeurMax
 
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+28"/>
+        <source>Both Offset and Scaling applied : pixel display = 127 +  pixel image * 127/Max(|minValue|,|minValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</source>
+        <translation>Décalage et mise à l&apos;échelle appliqués : pixel affiché = 127 + pixel image * 127/Max(|valeurMin|,|valeurMax|)&lt;br&gt;&lt;br&gt; -------------------------------------------</translation>
+    </message>
+    <message>
+        <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
+
+-------------------------------------------</source>
+        <translation type="vanished">L&apos;image affichée a été rogné, les valeurs en dehors de la plage de [0, 255] sont éliminées
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <source>Offset applied : val_display = val_image + 127
+
+-------------------------------------------</source>
+        <translation type="vanished">Décalage appliqué: val_affichée = val_image + 127
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <source>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
+
+-------------------------------------------</source>
+        <translation type="vanished">Mise à l&apos;échelle appliquée : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
+
+-------------------------------------------</translation>
+    </message>
+    <message>
         <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 
 
 -------------------------------------------</source>
         <oldsource>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</oldsource>
-        <translation>Décalage et mise à l&apos;échelle appliqués : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+        <translation type="vanished">Décalage et mise à l&apos;échelle appliqués : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</translation>
     </message>
@@ -266,7 +299,7 @@
         <translation type="vanished">Selectionné</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-165"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-170"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
@@ -625,12 +658,12 @@
     </message>
     <message>
         <location line="-44"/>
-        <location line="+279"/>
+        <location line="+282"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message>
-        <location line="-325"/>
+        <location line="-328"/>
         <source>Copy image</source>
         <translation>Copier l&apos;image</translation>
     </message>
@@ -670,7 +703,7 @@
         <translation>Zoom -</translation>
     </message>
     <message>
-        <location line="+149"/>
+        <location line="+150"/>
         <source>Only images can be saved to a file.</source>
         <translation>Seules les images peuvent être sauvegardées dans un fichier.</translation>
     </message>
@@ -685,7 +718,7 @@
         <translation>Exception inconnue</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+13"/>
         <source>Save a file</source>
         <translation>Sauvegarder dans un fichier</translation>
     </message>
@@ -694,7 +727,7 @@
         <translation type="vanished">Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG(*.jpg *.jpeg);; Image VFF (*.vff)</translation>
     </message>
     <message>
-        <location line="-255"/>
+        <location line="-253"/>
         <source>Rename</source>
         <translation>Renommer</translation>
     </message>
@@ -704,7 +737,7 @@
         <translation></translation>
     </message>
     <message>
-        <location line="+102"/>
+        <location line="+105"/>
         <source>Rename image</source>
         <translation>Renommer l&apos;image</translation>
     </message>
@@ -822,7 +855,7 @@
 <context>
     <name>genericinterface::SelectionWidget</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-407"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-410"/>
         <source>Selection : </source>
         <translation>Sélection : </translation>
     </message>
