@@ -24,7 +24,7 @@
         <translation>Contributeurs :</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+15"/>
         <source>Compiled on %1 at %2</source>
         <translation>Compilé le %1 à %2</translation>
     </message>
@@ -159,9 +159,12 @@
     </message>
     <message>
         <location line="+110"/>
-        <source>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255
+        <source>The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255
 
 -------------------------------------------</source>
+        <oldsource>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255
+
+-------------------------------------------</oldsource>
         <translation>L&apos;image d&apos;entrée a été tronquée, les valeurs en dehors de l&apos;intervalle [0 , 255] ont été remplacées par 0 ou 255.
 
 -------------------------------------------</translation>
@@ -177,7 +180,8 @@
     </message>
     <message>
         <location line="+24"/>
-        <source>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : pixel display = pixel image * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</source>
+        <source>The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : pixel display = pixel image * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</source>
+        <oldsource>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : pixel display = pixel image * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</oldsource>
         <translation>L&apos;image d&apos;entrée a été tronquée, les valeurs en dehors de l&apos;intervalle [0 , 255] ont été remplacées par 0 ou 255. &lt;Br&gt;Pour les autres valeurs : pixel affiché = pixel image * 255 / valeurMax&lt;Br&gt;&lt;Br&gt;-------------------------------------------</translation>
     </message>
     <message>
@@ -191,8 +195,9 @@
     </message>
     <message>
         <location line="+28"/>
-        <source>Both Offset and Scaling applied : pixel display = 127 +  pixel image * 127/Max(|minValue|,|minValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</source>
-        <translation>Décalage et mise à l&apos;échelle appliqués : pixel affiché = 127 + pixel image * 127/Max(|valeurMin|,|valeurMax|)&lt;br&gt;&lt;br&gt; -------------------------------------------</translation>
+        <source>Both Offset and Scaling applied : pixel displayed = 127 +  pixel image * 127 / Max(|minValue|, |minValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</source>
+        <oldsource>Both Offset and Scaling applied : pixel display = 127 +  pixel image * 127/Max(|minValue|,|minValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</oldsource>
+        <translation>Décalage et mise à l&apos;échelle appliqués : pixel affiché = 127 + pixel image * 127 / Max(|valeurMin|, |valeurMax|)&lt;br&gt;&lt;br&gt; -------------------------------------------</translation>
     </message>
     <message>
         <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
