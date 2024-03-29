@@ -90,12 +90,12 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, const Recta
 //            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, channel, _rectangle));
             imagein::CumulatedHistogram his = imagein::CumulatedHistogram(*image, channel, 1.0, _rectangle);
             _maxBinSize = his.getvMax()-his.getvMin();
-            graphicalHisto->setValues(his);
+            graphicalHisto->setCumulativeValues(his,1.0);
         } else {
 //            graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
             imagein::Histogram his = imagein::Histogram(*image, channel, 1.0, _rectangle);
             _maxBinSize = his.getvMax()-his.getvMin();
-            graphicalHisto->setValues(his);
+            graphicalHisto->setDoubleValues(his,1.0);
         }
     }
 
