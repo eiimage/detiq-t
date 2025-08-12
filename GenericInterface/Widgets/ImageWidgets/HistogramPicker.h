@@ -22,7 +22,7 @@
 
 #include <QPainter>
 
-#include <QwtText>
+#include <qwt_text.h>
 #include <qwt_plot.h>
 #include <qwt_plot_picker.h>
 #include <qwt_plot_canvas.h>
