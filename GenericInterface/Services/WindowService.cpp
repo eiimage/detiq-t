@@ -32,7 +32,7 @@
 using namespace std;
 using namespace genericinterface;
 using namespace imagein;
-WindowService::WindowService(Qt::DockWidgetArea navPos) : _navPos(navPos),  _mutex(QMutex::Recursive) {
+WindowService::WindowService(Qt::DockWidgetArea navPos) : _navPos(navPos) {
 
 }
 

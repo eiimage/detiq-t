@@ -28,7 +28,13 @@
 #include <QStatusBar>
 #include <sstream>
 
-#include <qwt_plot_zoomer.h>
+#if __has_include(<qwt/qwt_plot_zoomer.h>)
+#  include <qwt/qwt_plot_zoomer.h>
+#elif __has_include(<qwt_plot_zoomer.h>)
+#  include <qwt_plot_zoomer.h>
+#else
+#  error "qwt_plot_zoomer.h not found. Check QWT include directories."
+#endif
 #include <QToolButton>
 #include <QPushButton>
 #include <QLineEdit>

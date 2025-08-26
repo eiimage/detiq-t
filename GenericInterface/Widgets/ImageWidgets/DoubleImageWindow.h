@@ -74,7 +74,8 @@ public:
     inline double getLogScale() const  { return _logConstantScale; }
     inline bool isAbsolute() const { return _abs; }
     inline bool isOffsetNeeded() const { return (_image->min()<0); }
-    double isHough(double angStep, double distStep){_hough = true; angleStep = angStep; distanceStep = distStep;}
+    double isHough(double angStep, double distStep){ _hough = true; angleStep = angStep; distanceStep = distStep; return 0.0; }
+
     void setAbsolute(bool abs){_abs = abs;}
     Image* enableOffset(ImageDouble* imgD);
     Image* enableScaling(ImageDouble* imgD);

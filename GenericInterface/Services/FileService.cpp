@@ -71,7 +71,7 @@ void FileService::display (GenericInterface* gi)
         availableLangs << lang;
 
         QTranslator translator;
-        translator.load(qm.canonicalFilePath());
+        (void)translator.load(qm.canonicalFilePath());
         if(translator.translate("genericinterface::FileService","&Open") == tr("&Open")) {
             currentLanguage = lang;
         }

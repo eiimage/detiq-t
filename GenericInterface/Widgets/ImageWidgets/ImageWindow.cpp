@@ -84,7 +84,7 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
     QObject::connect(_imageView, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
     _statusBar = new QWidget();
     initStatusBar();
-    menu()->addAction(tr("Save As"), this, SLOT(saveAs()),QKeySequence::Save);
+    menu()->addAction(tr("Save As"), QKeySequence::Save, this, SLOT(saveAs()));
     menu()->addSeparator();
 
     menu()->addAction(tr("Zoom + (Ctrl+Scroll Wheel)"), this, SLOT(zoom_in()),QKeySequence::ZoomIn);
@@ -425,9 +425,9 @@ void ImageWindow::updateZoom(double z) const
 
 void ImageWindow::wheelEvent (QWheelEvent * event) {
     bool ctrlPressed = event->modifiers().testFlag(Qt::ControlModifier);
-    if (ctrlPressed && event->orientation() == Qt::Vertical)
+    if (ctrlPressed && event->angleDelta().y() != 0)
     {
-        this->zoom(event->delta());
+        this->zoom(event->angleDelta().y());
     }
 }
 

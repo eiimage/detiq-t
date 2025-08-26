@@ -24,7 +24,7 @@
 
 #include <QDockWidget>
 #include <QMdiSubWindow>
-#include <QMutex>
+#include <QRecursiveMutex>
 #include <QMutexLocker>
 
 #include "Node.h"
@@ -94,7 +94,7 @@ namespace genericinterface
     NavigationDock* _nav;
     std::map<NodeId, Node*> _widgets;
     Qt::DockWidgetArea _navPos;
-    mutable QMutex _mutex;
+    mutable QRecursiveMutex _mutex;
   };
 
 

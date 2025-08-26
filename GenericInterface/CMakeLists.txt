@@ -1,11 +1,11 @@
-project(GenericInterface C CXX)
-cmake_minimum_required(VERSION 2.8.11)
-
+cmake_minimum_required(VERSION 3.16)
+project(GenericInterface LANGUAGES C CXX)
 include_directories(../ImageIn)
 
-# Instruct CMake to run moc automatically when needed.
+# Auto-génération (moc/uic/rcc) côté sous-projet
 set(CMAKE_AUTOMOC ON)
-
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 find_package(Qwt 6.0 REQUIRED)
 if(QWT_FOUND)
 	include_directories(${QWT_INCLUDE_DIRS})
@@ -14,16 +14,15 @@ else()
 endif()
 
 # Find the Qt libraries
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5LinguistTools REQUIRED)
+find_package(Qt6Core REQUIRED)
+find_package(Qt6Gui REQUIRED)
+find_package(Qt6Widgets REQUIRED)
+find_package(Qt6Svg REQUIRED)
+find_package(Qt6OpenGL REQUIRED)
+find_package(Qt6OpenGLWidgets REQUIRED)
+find_package(Qt6PrintSupport REQUIRED)
+find_package(Qt6LinguistTools REQUIRED)
 
-include_directories(
-	${Qt5Core_INCLUDE_DIRS}
-	${Qt5Widgets_INCLUDE_DIRS}
-	${Qt5Gui_INCLUDE_DIRS}
-)
 
 set(GenInterface_SOURCES
 	Exceptions.h
@@ -116,16 +115,15 @@ if(NOT CMAKE_BUILD_TYPE MATCHES Debug)
 	add_custom_target(DoRebuildAbout ALL ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_SOURCE_DIR}/Widgets/AboutDialog.cpp)
 endif()
 
-qt5_add_resources(RCC_FILES "res.qrc")
-
+qt_add_resources(RCC_FILES "res.qrc")
 set(TS_FILES genericinterface_en.ts genericinterface_fr.ts)
 # Uncomment only 1 of the 2 folowing commands, depending on your needs
 # -1- Use current translations files
-#qt5_add_translation(QM_FILES ${TS_FILES})
+#qt_add_translation(QM_FILES ${TS_FILES})
 # -2- Update translations files with changes from c++ sources
-qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES})
+qt_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES})
 # -3- Update translations files with changes from c++ sources AND drop useless translations
-#qt5_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES} OPTIONS -no-obsolete)
+#qt_create_translation(QM_FILES ${GenInterface_SOURCES} ${TS_FILES} OPTIONS -no-obsolete)
 
 if(NOT WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -136,6 +134,21 @@ add_library(GenericInterface OBJECT ${GenInterface_SOURCES} ${RCC_FILES})
 # This target is defined for convenience only, and shouldn't be used to link with another target.
 add_library(static_GenericInterface STATIC $<TARGET_OBJECTS:GenericInterface> ${TS_FILES} ${QM_FILES})
 
+# Inclure/lier Qt6 + Qwt pour cette cible
+target_include_directories(GenericInterface PRIVATE
+		  ${CMAKE_CURRENT_SOURCE_DIR}
+		  ${CMAKE_CURRENT_BINARY_DIR}
+		  ${QWT_INCLUDE_DIRS}
+		  ${QWT_INCLUDE_DIR}        # au cas où FindQwt ne renseigne que celui-ci
+		  ${QWT_INCLUDE_DIR}/qwt    # layout avec sous-dossier
+		  ${QWT_INCLUDE_DIR}/qwt6   # certaines builds emballent les headers ici
+		)
+
+target_link_libraries(GenericInterface PRIVATE
+  Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Svg Qt6::PrintSupport
+  Qt6::OpenGL Qt6::OpenGLWidgets
+  ${QWT_LIBRARIES}
+)
 add_custom_command(TARGET static_GenericInterface POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E make_directory ${DEPLOY_OUTPUT_DIRECTORY}/lang
 	COMMENT "Create directory ${DEPLOY_OUTPUT_DIRECTORY}/lang")

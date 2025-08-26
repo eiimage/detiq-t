@@ -33,7 +33,13 @@
 #include <ColumnProfile.h>
 #include "AlternativeImageView.h"
 
-#include <qwt_legend_data.h>
+#if __has_include(<qwt/qwt_legend_data.h>)
+#  include <qwt/qwt_legend_data.h>
+#elif __has_include(<qwt_legend_data.h>)
+#  include <qwt_legend_data.h>
+#else
+#  error "qwt_legend_data.h not found. Check QWT include directories."
+#endif
 #include "../../Utilities/Log.h"
 
 class QwtPlot;

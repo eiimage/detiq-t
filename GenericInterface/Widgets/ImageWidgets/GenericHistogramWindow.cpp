@@ -203,7 +203,7 @@ void GenericHistogramWindow::save(const QString& path, const QString& ext)
                 if(this != NULL) {
                     try {
                       //  QString name= path.toStdString();
-                        QPixmap pixmap = QPixmap::grabWidget(this);
+                        QPixmap pixmap = this->grab();
                         pixmap.save(path, "PNG");
 
 
@@ -213,7 +213,7 @@ void GenericHistogramWindow::save(const QString& path, const QString& ext)
                     catch(const UnknownFormatException& e) {
                         if(ext == "")
                             throw e;
-                        QPixmap pix = QPixmap::grabWidget(_view);
+                        QPixmap pix = _view->grab();
                         pix.save((path+ext/*.toStdString()*/));
                     }
                 }
