@@ -1,5 +1,5 @@
 project(ImageIn C CXX)
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.21)
 
 find_package(JPEG)
 if(JPEG_FOUND)

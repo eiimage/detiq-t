@@ -87,12 +87,12 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
     menu()->addAction(tr("Save As"), QKeySequence::Save, this, SLOT(saveAs()));
     menu()->addSeparator();
 
-    menu()->addAction(tr("Zoom + (Ctrl+Scroll Wheel)"), this, SLOT(zoom_in()),QKeySequence::ZoomIn);
-    menu()->addAction(tr("Zoom - (Ctrl+Scroll Wheel)"), this, SLOT(zoom_out()),QKeySequence::ZoomOut);
+    menu()->addAction(tr("Zoom + (Ctrl+Scroll Wheel)"), QKeySequence::ZoomIn, this, SLOT(zoom_in()));
+    menu()->addAction(tr("Zoom - (Ctrl+Scroll Wheel)"), QKeySequence::ZoomOut, this, SLOT(zoom_out()));
     menu()->addSeparator();
     menu()->addAction(tr("Rename"), this, SLOT(rename()));
     menu()->addSeparator();
-    menu()->addAction(tr("Copy image"), this, SLOT(copyImage()),QKeySequence::Copy);
+    menu()->addAction(tr("Copy image"), QKeySequence::Copy, this, SLOT(copyImage()));
     menu()->addSeparator();
 
     QVBoxLayout* layout = new QVBoxLayout(this);

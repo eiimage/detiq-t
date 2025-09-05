@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 
 namespace imagein {
 	namespace algorithm {
@@ -291,6 +292,7 @@ namespace imagein {
 					return i;
 				}
 			}
+			throw std::out_of_range("DisjointSet::find: element not found");
 		}
 	}
 }
