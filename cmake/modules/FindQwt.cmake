@@ -45,8 +45,8 @@
 
 find_path ( QWT_INCLUDE_DIR
   NAMES qwt_plot.h
-  HINTS ${QT_INCLUDE_DIR}
-  PATH_SUFFIXES qwt qwt-qt3 qwt-qt4 qwt-qt5
+        HINTS ${QT_INCLUDE_DIR}               # souvent vide avec Qt6, pas grave
+        PATH_SUFFIXES qwt qwt-qt3 qwt-qt4 qwt-qt5 qwt-qt6
 )
 
 set ( QWT_INCLUDE_DIRS ${QWT_INCLUDE_DIR} )
@@ -80,8 +80,8 @@ endif ()
 
 
 find_library ( QWT_LIBRARY
-  NAMES qwt qwt-qt3 qwt-qt4 qwt-qt5
-  HINTS ${QT_LIBRARY_DIR}
+        NAMES qwt qwt-qt3 qwt-qt4 qwt-qt5 qwt-qt6
+        HINTS ${QT_LIBRARY_DIR}
 )
 
 set ( QWT_LIBRARIES ${QWT_LIBRARY} )
@@ -98,7 +98,7 @@ endif ()
 
 # handle the QUIETLY and REQUIRED arguments
 include ( FindPackageHandleStandardArgs )
-if ( CMAKE_VERSION LESS 2.8.3 )
+if ( CMAKE_VERSION LESS 3.21 )
   find_package_handle_standard_args( Qwt DEFAULT_MSG QWT_LIBRARY QWT_INCLUDE_DIR _QWT_VERSION_MATCH )
 else ()
   find_package_handle_standard_args( Qwt REQUIRED_VARS QWT_LIBRARY QWT_INCLUDE_DIR _QWT_VERSION_MATCH VERSION_VAR QWT_VERSION_STRING )
