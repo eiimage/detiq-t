@@ -24,7 +24,9 @@
 
 #include <cstdlib>
 #include <vector>
-
+#ifdef TOTO
+#error
+#endif
 #include <Image.h>
 #include <Rectangle.h>
 #include <Histogram.h>

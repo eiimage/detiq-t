@@ -24,7 +24,7 @@
         <translation>Contributors:</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+16"/>
         <source>Compiled on %1 at %2</source>
         <translation>Compiled on %1 at %2</translation>
     </message>
@@ -605,6 +605,11 @@
         <location line="+0"/>
         <source>&amp;Exit</source>
         <translation>&amp;Exit</translation>
+    </message>
+    <message>
+        <location filename="GenericInterface.h" line="+69"/>
+        <source></source>
+        <translation></translation>
     </message>
 </context>
 <context>

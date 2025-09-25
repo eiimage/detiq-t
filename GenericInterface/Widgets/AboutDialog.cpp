@@ -53,6 +53,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     theText.append("<li>").append("Bertrand Provot").append("</li>");
     theText.append("<li>").append("Yu Liu").append("</li>");
     theText.append("<li>").append("Tanguy Raufflet").append("</li>");
+    theText.append("<li>").append("LOTFI Soufiane").append("</li>");
     theText.append("</ul>");
 
 

@@ -21,7 +21,7 @@
 #define IMAGECONTEXTMENU_H
 
 #include <QMenu>
-#include <QMouseEvent>
+#include <QtGui/QMouseEvent>
 #include <QPoint>
 #include <iostream>
 

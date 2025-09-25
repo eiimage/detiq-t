@@ -24,7 +24,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QScrollArea>
-#include <QFont>
+#include <QtGui/QFont>
 #include <sstream>
 
 #include "GenericHistogramWindow.h"

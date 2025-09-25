@@ -20,14 +20,14 @@
 #ifndef STANDARDIMAGEVIEW_H
 #define STANDARDIMAGEVIEW_H
 
-#include <QCursor>
+#include <QtGui/QCursor>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QString>
 #include <QGraphicsSceneWheelEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneHoverEvent>
-#include <QKeyEvent>
+#include <QtGui/QKeyEvent>
 #include <QObject>
 #include <QRubberBand>
 //#include <QGLWidget>
