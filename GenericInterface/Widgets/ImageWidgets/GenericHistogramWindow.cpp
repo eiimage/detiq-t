@@ -36,6 +36,8 @@ using namespace imagein;
 
 GenericHistogramWindow::GenericHistogramWindow(GenericHistogramView* view) : _view(view)
 {
+    _image = nullptr;
+
     QScrollArea* scrollArea = new QScrollArea();
     scrollArea->setWidget(_view);
     scrollArea->setBackgroundRole(QPalette::Dark);
@@ -201,7 +203,7 @@ void GenericHistogramWindow::save(const QString& path, const QString& ext)
                 if(this != NULL) {
                     try {
                       //  QString name= path.toStdString();
-                        QPixmap pixmap = QPixmap::grabWidget(this);
+                        QPixmap pixmap = this->grab();
                         pixmap.save(path, "PNG");
 
 
@@ -211,7 +213,7 @@ void GenericHistogramWindow::save(const QString& path, const QString& ext)
                     catch(const UnknownFormatException& e) {
                         if(ext == "")
                             throw e;
-                        QPixmap pix = QPixmap::grabWidget(_view);
+                        QPixmap pix = _view->grab();
                         pix.save((path+ext/*.toStdString()*/));
                     }
                 }
@@ -303,8 +305,8 @@ QString GenericHistogramWindow::formatValues(std::vector<int> values) const
 	QString res;
 
     switch(values.size()) {
-        case 1 : res = tr("C: %1"); break;
-        case 2 : res = tr("C: %1, A: %2"); break;
+        case 1 : res = tr("Number of pixels: %1"); break;
+        case 2 : res = tr("Number of pixels: %1, A: %2"); break;
         case 3 : res = tr("R: %1, G: %2, B: %3"); break;
         default: res = tr("R: %1, G: %2, B: %3, A: %4");
     }
@@ -338,16 +340,24 @@ void GenericHistogramWindow::resetZoomer(const QRectF &rect)
 void GenericHistogramWindow::customizeBinsize()
 {
     if(_binSizeInput->text().length()!=0){
-        emit sendBinSize(_binSizeInput->text().toDouble());
+        setBinSize(_binSizeInput->text().toDouble());
+//        On utilise un signal au lieu d'appeler updateView car l'update ne se fait pas de la même
+//        manière entre l'histogramme cumulé ou non.
+        emit sendBinSize();
     }
 }
 
-void GenericHistogramWindow::updateViewByBinSize(const imagein::ImageDouble* image, double binSize)
+void GenericHistogramWindow::updateViewByBinSize()
 {
-    _view->updateByBinSize(image, binSize);
+    _view->updateByBinSize(_image, _binSize);
 }
 
-void GenericHistogramWindow::updateCumulativeViewByBinSize(const imagein::ImageDouble* image, double binSize)
+void GenericHistogramWindow::updateCumulativeViewByBinSize()
 {
-    _view->updateCumulativeByBinSize(image, binSize);
+    _view->updateCumulativeByBinSize(_image, _binSize);
+}
+
+void GenericHistogramWindow::setBinSize(double binSize)
+{
+    _binSize = binSize;
 }

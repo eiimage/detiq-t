@@ -37,7 +37,7 @@
 using namespace genericinterface;
 using namespace imagein;
 
-GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangle rect, bool horizontal, int value, bool projection, bool cumulated, bool lineProfile, bool columnProfile)
+GenericHistogramView::GenericHistogramView(const Image* image, const imagein::Rectangle& rect, bool horizontal, int value, bool projection, bool cumulated, bool lineProfile, bool columnProfile)
     : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated), _lineProfile(lineProfile), _columnProfile(columnProfile)
 {
     _double = false;
@@ -71,7 +71,7 @@ GenericHistogramView::GenericHistogramView(const Image* image, imagein::Rectangl
     _originValue = qFloor(image->min());
 }
 
-GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle rect, bool horizontal, int value, bool projection, bool cumulated)
+GenericHistogramView::GenericHistogramView(const ImageDouble *image, const Rectangle& rect, bool horizontal, int value, bool projection, bool cumulated)
     : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
 {
     _double = true;
@@ -90,12 +90,12 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
 //            graphicalHisto->setValues(imagein::CumulatedHistogram(*image, channel, _rectangle));
             imagein::CumulatedHistogram his = imagein::CumulatedHistogram(*image, channel, 1.0, _rectangle);
             _maxBinSize = his.getvMax()-his.getvMin();
-            graphicalHisto->setValues(his);
+            graphicalHisto->setCumulativeValues(his,1.0);
         } else {
 //            graphicalHisto->setValues(imagein::Histogram(*image, channel, _rectangle));
             imagein::Histogram his = imagein::Histogram(*image, channel, 1.0, _rectangle);
             _maxBinSize = his.getvMax()-his.getvMin();
-            graphicalHisto->setValues(his);
+            graphicalHisto->setDoubleValues(his,1.0);
         }
     }
 
@@ -103,7 +103,7 @@ GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle r
     _originValue = qFloor(image->min());
 }
 
-GenericHistogramView::GenericHistogramView(const ImageDouble *image, Rectangle rect, double binSize, bool horizontal, int value, bool projection, bool cumulated)
+GenericHistogramView::GenericHistogramView(const ImageDouble *image, const Rectangle& rect, double binSize, bool horizontal, int value, bool projection, bool cumulated)
     : _rectangle(rect), _horizontal(horizontal), _value(value), _projection(projection), _cumulated(cumulated)
 {
     _double = true;
@@ -159,7 +159,7 @@ void GenericHistogramView::init(uint nbChannels)
     }
 
 
-    QwtLegend *legend = new QwtLegend;
+    auto *legend = new QwtLegend;
     legend->setDefaultItemMode(QwtLegendData::Checkable);
     _qwtPlot->insertLegend(legend, QwtPlot::RightLegend);
 
@@ -198,7 +198,7 @@ void GenericHistogramView::init(uint nbChannels)
 
     _qwtPlot->setAutoReplot(true);
 
-    QwtPlotGrid* grid = new QwtPlotGrid();
+    auto* grid = new QwtPlotGrid();
     grid->enableX(false);
     grid->enableY(true);
     grid->enableXMin(false);
@@ -241,7 +241,7 @@ void GenericHistogramView::init(uint nbChannels)
 
         // By default, check each legend entry
         QWidget *legendWidget = legend->legendWidget(_qwtPlot->itemToInfo(graphicalHisto));
-        QwtLegendLabel *label = qobject_cast<QwtLegendLabel *>(legendWidget);
+        auto *label = qobject_cast<QwtLegendLabel *>(legendWidget);
         if(label) {
             label->setChecked(true);
         }
@@ -249,7 +249,7 @@ void GenericHistogramView::init(uint nbChannels)
     }
 }
 
-void GenericHistogramView::update(const imagein::Image* image, imagein::Rectangle rect)
+void GenericHistogramView::update(const imagein::Image* image, const imagein::Rectangle& rect)
 {
     _rectangle = rect;
 
@@ -277,7 +277,7 @@ void GenericHistogramView::update(const imagein::Image* image, imagein::Rectangl
     }
 }
 
-void GenericHistogramView::showItem(QVariant itemInfo, bool visible, int) const
+void GenericHistogramView::showItem(const QVariant& itemInfo, bool visible, int) const
 {
     QwtPlotItem* item = _qwtPlot->infoToItem(itemInfo);
     if(item) {
@@ -289,10 +289,16 @@ std::vector<int> GenericHistogramView::getValues(int index) const {
     std::vector<int> values;
 
     uint dataIndex = index - _originValue;
-    for(unsigned int i = 0; i < _graphicalHistos.size(); ++i) {
-        const QwtSeriesData<QwtIntervalSample> *data = _graphicalHistos[i]->data();
+    for(auto _graphicalHisto : _graphicalHistos) {
+        const QwtSeriesData<QwtIntervalSample> *data = _graphicalHisto->data();
         if(dataIndex < data->size()) {
-            values.push_back(static_cast<int>(data->sample(dataIndex).value));
+            if (_cumulated && !_double)
+                values.push_back(static_cast<int>(data->sample(index).value * _rectangle.h * _rectangle.w));
+            else if (_cumulated && _double)
+                values.push_back(static_cast<int>(data->sample(dataIndex).value * _rectangle.h * _rectangle.w));
+            else {
+                values.push_back(static_cast<int>(data->sample(dataIndex).value));
+            }
         }
     }
     return values;

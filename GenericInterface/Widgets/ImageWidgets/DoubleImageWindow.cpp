@@ -20,24 +20,19 @@
 #include "GenericInterface.h"
 #include "DoubleImageWindow.h"
 #include "GridView.h"
-#include <QDoubleSpinBox>
 #include <QSlider>
 #include <QDebug>
 #include <QObject>
 #include <QTranslator>
-#include <QPushButton>
-#include <QApplication>
 #include <Converter.h>
-#include "../../../../../app/Operations/HoughDialog.h"
-#include "../../Utilities/Log.h"
 #include <UnknownFormatException.h>
 
 using namespace genericinterface;
 using namespace imagein;
 using namespace std;
 
-DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path, bool normalize, bool logScale, double logConstantScale, bool abs)
-    : ImageWindow(path), _image(image), _normalize(normalize), _logScale(logScale), _logConstantScale(logConstantScale), _abs(abs)
+DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path, boxSetting scaled, boxSetting offset, bool logScale, double logConstantScale, bool abs)
+        : ImageWindow(path), _image(image), _scaled(scaled), _offset(offset), _logScale(logScale), _logConstantScale(logConstantScale), _abs(abs)
 {
     init();
     _image = image;
@@ -47,8 +42,9 @@ DoubleImageWindow::DoubleImageWindow(Image_t<double>* image, const QString path,
     this->setWindowTitle(ImageWindow::getTitleFromPath(path));
 }
 
+
 DoubleImageWindow::DoubleImageWindow(const DoubleImageWindow& siw, imagein::Image_t<double>* image)
-    : ImageWindow(siw.getPath()), _normalize(siw._normalize), _logScale(siw._logScale), _logConstantScale(siw._logConstantScale)
+    : ImageWindow(siw.getPath()), _scaled(siw._scaled), _logScale(siw._logScale), _logConstantScale(siw._logConstantScale)
 {
     init();
     if(image == NULL) {
@@ -83,6 +79,17 @@ void DoubleImageWindow::init()
     }
     QObject::connect(_offsetBox,SIGNAL(stateChanged(int)), this, SLOT(offset_scaling(int)));
     QObject::connect(_scalingBox,SIGNAL(stateChanged(int)), this, SLOT(offset_scaling(int)));
+
+    //Si _offset ou _scaled sont différents de AUTO, c'est que l'affichage par défaut a été renseigné dans le code
+    //qui génère l'image.
+
+    if(_offset != AUTO){
+        _offsetBox->setChecked(_offset == ENABLE);
+    }
+    if(_scaled != AUTO){
+        _scalingBox->setChecked(_scaled == ENABLE);
+    }
+
     menu()->addAction(QObject::tr("Crop"), this, SLOT(crop()));
     menu()->addAction(QObject::tr("Copy & crop"), this, SLOT(copycrop()));
   //  menu()->addAction(tr("Convert to Rgb Image"), this, SLOT(convertRgb()));
@@ -198,7 +205,15 @@ void DoubleImageWindow::showPixelsGrid()
 void DoubleImageWindow::crop() {
     const Image_t<double>* oldImg = _image;
     const Image* oldDisplayImg = _displayImg;
-    Image_t<double>* newImg = oldImg->crop(_imageView->getRectangle());
+    auto rect = _imageView->getRectangle();
+
+    //Empeche de faire un rognage plus grand que l'image
+    if(_displayImg->getWidth()<rect.w+rect.x || _displayImg->getHeight()<rect.h+rect.y){
+        rect.w = _displayImg->getWidth() - rect.x;
+        rect.h = _displayImg->getHeight() - rect.y;
+    }
+
+    Image_t<double>* newImg = oldImg->crop(rect);
     this->setDisplayImage(this->makeDisplayable(newImg));
     _image = newImg;
     delete oldImg;
@@ -209,8 +224,15 @@ void DoubleImageWindow::crop() {
     this->updateGeometry();
 }
 
-void DoubleImageWindow::copycrop() {    
-    Image_t<double>* newImg = _image->crop(_imageView->getRectangle());
+void DoubleImageWindow::copycrop() {
+    auto rect = _imageView->getRectangle();
+
+    //Empeche de faire un rognage plus grand que l'image
+    if(_displayImg->getWidth()<rect.w+rect.x || _displayImg->getHeight()<rect.h+rect.y){
+        rect.w = _displayImg->getWidth() - rect.x;
+        rect.h = _displayImg->getHeight() - rect.y;
+    }
+    Image_t<double>* newImg = _image->crop(rect);
     DoubleImageWindow* newImgWnd = new DoubleImageWindow(*this, newImg);
     emit addImage(this, newImgWnd);
 }
@@ -283,21 +305,16 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
     Image* resImg = new Image(tmpImg->getWidth(), tmpImg->getHeight(), tmpImg->getNbChannels());
 
     /*This truncation message becomes annoying when user slide the log scale bar, better not to emit it*/
-    if(!_logScale && (tmpImg->min()<0 || tmpImg->max()>255)){
-        outInfo(QObject::tr("The display image is truncated, values outside the range of [0 , 255] have been eliminated\n\n-------------------------------------------"));
+    //! if the _offsetBox is checked, the message send is determine in the enableOffset method
+    //! if the _scalingBox is checked, the is no truncation
+    if(!_logScale && (tmpImg->min()<0 || tmpImg->max()>255 && !_offsetBox->isChecked() && !_scalingBox->isChecked())){
+        outInfo(QObject::tr("The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255\n\n-------------------------------------------"));
     }
 
     if(_abs) {
         for(Image_t<double>::iterator it = tmpImg->begin(); it < tmpImg->end(); ++it) {
             *it = std::abs(*it);
         }
-    }
-
-    /*Normalize option takes no effect when output a double image, since Offset and Scaling are applied by default, they can be managed after by user*/
-    if(_normalize) {
-//        std::cout << "Before normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
-//        tmpImg->normalize(0.0, 255.0);
-//        std::cout << "After normalize : " << tmpImg->min() << ":" << tmpImg->max() << std::endl;
     }
 
     if(_logScale){
@@ -323,7 +340,6 @@ Image* DoubleImageWindow::makeDisplayable(const Image_t<double>* image) {
     }
 
     /*Offset and Scaling are applied by default if exist value < 0, the result of log scale is inherited*/
-
     if(_offsetBox->isChecked() && !_scalingBox->isChecked()){
         resImg = enableOffset(tmpImg);
     }else if(!_offsetBox->isChecked() && _scalingBox->isChecked()){
@@ -348,45 +364,16 @@ void DoubleImageWindow::setLogScale(int logScale) {
 
 void DoubleImageWindow::showHistogram()
 {
-//    HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle());
-//    showGenericHistogram(histogramWnd);
-    HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle());
-    /*Modify _binSize after receiving the new value*/
-    QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), this, SLOT(setBinSize(double)));
+    auto* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle());
     showGenericHistogram(histogramWnd);
-    /*Created an infinite event loop to wait for the incoming bin size value, the loop breaks when the window is closed*/
-    QEventLoop loop;
-    while(1){
-        QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), &loop, SLOT(quit()));
-        histogramWnd->updateViewByBinSize(_image, _binSize);
-        /*Re-initialize after _binSize each execution to ensure that reopening the histogram window will not retain the previous result*/
-        _binSize = 1.0;
-        loop.exec();
-        if(!histogramWnd->isVisible()){
-            break;
-        }
-    }
-    histogramWnd->close();
+    QObject::connect(histogramWnd, SIGNAL(sendBinSize()), histogramWnd, SLOT(updateViewByBinSize()));
 }
 
 void DoubleImageWindow::showCumulativeHistogram()
 {
-    HistogramWindow* histogramWnd = new HistogramWindow(_image, selection(), _binSize, this->windowTitle(), true);
-    /*It shares the same window as histogram, so the signal of bin size is also shared*/
-    QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), this, SLOT(setBinSize(double)));
+    auto* histogramWnd = new HistogramWindow(_image, selection(), this->windowTitle(),true);
     showGenericHistogram(histogramWnd);
-    QEventLoop loop;
-    while(1){
-        QObject::connect(histogramWnd, SIGNAL(sendBinSize(double)), &loop, SLOT(quit()));
-        histogramWnd->updateCumulativeViewByBinSize(_image, _binSize);
-        /*Re-initialize after _binSize each execution to ensure that reopening the histogram window will not retain the previous result*/
-        _binSize = 1.0;
-        loop.exec();
-        if(!histogramWnd->isVisible()){
-            break;
-        }
-    }
-    histogramWnd->close();
+    QObject::connect(histogramWnd, SIGNAL(sendBinSize()), histogramWnd, SLOT(updateCumulativeViewByBinSize()));
 }
 
 void DoubleImageWindow::offset_scaling(int i){
@@ -411,7 +398,7 @@ Image* DoubleImageWindow::enableOffset(ImageDouble* imgD){
         }
     }
     if(!_logScale){
-        outInfo(QObject::tr("Offset applied : val_display = val_image + 127\n\n-------------------------------------------"));
+        outInfo(QObject::tr("Offset applied : pixel display = pixel image + 127\n\n-------------------------------------------"));
     }
     return offsetImg;
 }
@@ -434,9 +421,12 @@ Image* DoubleImageWindow::enableScaling(ImageDouble* imgD){
             }
         }
     }
-    if(!_logScale){
-        outInfo(QObject::tr("Scaling applied : val_display = (val_image < 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue\n\n-------------------------------------------"));
+    if(!_logScale  && (imgD->min()<0 || imgD->max()>255)){
+        outInfo(QObject::tr("The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255. <Br>"
+                            "For other values : pixel display = pixel image * 255 / maxValue<Br><Br>-------------------------------------------"));
     }
+    else if (!_logScale)
+        outInfo(QObject::tr("pixel display = pixel image * 255 / maxValue\n\n-------------------------------------------"));
     return scalingImg;
 }
 
@@ -452,14 +442,20 @@ Image* DoubleImageWindow::enableOffset_Scaling(ImageDouble* imgD){
         for(unsigned int i = 0; i < height; ++i){ // on parcourt l'image
             for(unsigned int j = 0; j < width; ++j){
                 double oldPixel = imgD->getPixelAt(j,i,c);
-                double newPixel = (127-minValue) > (maxValue-127) ? oldPixel * 127 / (- minValue) + 127 : oldPixel * 128 / maxValue + 127;
-                newPixel  = std::min(255.0, std::max(0.0, newPixel));
+                double newPixel;
+                if(maxValue > -minValue)
+                    newPixel = oldPixel*127/maxValue+127;
+                else if(maxValue < -minValue)
+                    newPixel = oldPixel * 127 / (- minValue) + 127;
+                else    //Cas où l'image est entièrement noire
+                    newPixel  = 127;
                 offset_scalingImg->setPixelAt(j, i, c, newPixel);
             }
         }
     }
     if(!_logScale){
-        outInfo(QObject::tr("Both Offset and Scaling applied : val_display = (127-minValue) > (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 \n\n-------------------------------------------"));
+        outInfo(QObject::tr("Both Offset and Scaling applied : pixel displayed = 127 +  pixel image * 127 / Max(|minValue|, |minValue|)"
+                            "<br><br> -------------------------------------------"));
     }
     return offset_scalingImg;
 }
@@ -483,10 +479,7 @@ Image* DoubleImageWindow::disableOffset_Scaling(ImageDouble* imgD){
     return resImg;
 }
 
-void DoubleImageWindow::setBinSize(double binSize)
-{
-    _binSize = binSize;
-}
+
 
 void DoubleImageWindow::outInfo(QString str){
     emit textToShow(str);

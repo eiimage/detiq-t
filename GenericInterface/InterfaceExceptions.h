@@ -46,9 +46,11 @@ namespace genericinterface
       *
       * @param id The id which caused the creation of the exception
       */
-      BadIdException (int id)
+      explicit BadIdException(int id) : _id(id)
       {
-        _id = id;
+          std::ostringstream err;
+          err << "the id " << _id << " is already used";
+          _errorString = err.str();
       }
 
       /**
@@ -56,35 +58,40 @@ namespace genericinterface
       *
       * @return a simple phrase explain which id caused the error
       */
-      virtual const char* what () const throw ()
+      virtual const char* what ()
       {
-        std::ostringstream err;
-        err << "the id " << _id << " is already used";
-
-        return err.str ().c_str ();
+          return _errorString.c_str();
       }
     private:
       /**
       * @brief The wrong id
       */
       int _id;
+      std::string _errorString;
   };
 
   class AlreadyInitException : public std::exception
   {
     public:
+
+      explicit AlreadyInitException()= default;
+
       /**
       * @brief Getter for the error message
       *
       * @return a simple phrase explain which id caused the error
       */
-      virtual const char* what () const throw ()
+      virtual const char* what ()
       {
-        std::ostringstream err;
-        err << "the central widget has already been initialized";
+          std::ostringstream err;
+          err << "the central widget has already been initialized";
+          _errorString = err.str();
 
-        return err.str ().c_str ();
+        return _errorString.c_str();
       }
+
+    private:
+        std::string _errorString;
   };
 }
 #endif

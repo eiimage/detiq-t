@@ -247,7 +247,14 @@ void StandardImageWindow::showPixelsGrid()
 }
 void StandardImageWindow::crop() {
     const Image* oldImg = _displayImg;
-    Image* newImg = oldImg->crop(_imageView->getRectangle());
+    auto rect = _imageView->getRectangle();
+
+    //Empeche de faire un rognage plus grand que l'image
+    if(_displayImg->getWidth()<rect.w+rect.x || _displayImg->getHeight()<rect.h+rect.y){
+        rect.w = _displayImg->getWidth() - rect.x;
+        rect.h = _displayImg->getHeight() - rect.y;
+    }
+    Image* newImg = oldImg->crop(rect);
     this->setDisplayImage(newImg);
     delete oldImg;
     view()->update();
@@ -257,7 +264,15 @@ void StandardImageWindow::crop() {
 
 void StandardImageWindow::copycrop() {
     const Image* oldImg = _displayImg;
-    Image* newImg = oldImg->crop(_imageView->getRectangle());
+    auto rect = _imageView->getRectangle();
+
+    //Empeche de faire un rognage plus grand que l'image
+    if(_displayImg->getWidth()<rect.w+rect.x || _displayImg->getHeight()<rect.h+rect.y){
+        rect.w = _displayImg->getWidth() - rect.x;
+        rect.h = _displayImg->getHeight() - rect.y;
+    }
+
+    Image* newImg = oldImg->crop(rect);
     StandardImageWindow* newImgWnd = new StandardImageWindow(*this, newImg);
     emit addImage(this, newImgWnd);
 }

@@ -31,6 +31,6 @@ QwtText HistogramPicker::trackerTextF(const QPointF& pos) const
     emit(moved(p));
     
     QString label;	
-	label.sprintf("%d", (int)pos.x());    
+	label = QString::asprintf("%d", static_cast<int>(pos.x()));
     return label;
 }

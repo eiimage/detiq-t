@@ -24,7 +24,7 @@
         <translation>Contributeurs :</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+16"/>
         <source>Compiled on %1 at %2</source>
         <translation>Compilé le %1 à %2</translation>
     </message>
@@ -114,7 +114,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+75"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+71"/>
         <source>Offset (127)</source>
         <oldsource> Offset (127) </oldsource>
         <translation>Décalage (127)</translation>
@@ -126,7 +126,7 @@
         <translation>Mise à l&apos;échelle</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+21"/>
         <source>Crop</source>
         <translation>Rogner</translation>
     </message>
@@ -143,12 +143,12 @@
     <message>
         <location line="+9"/>
         <location line="+15"/>
-        <location line="+97"/>
+        <location line="+112"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location line="-106"/>
+        <location line="-121"/>
         <source>Hovered</source>
         <translation>Survolé</translation>
     </message>
@@ -158,41 +158,79 @@
         <translation>Grille de pixels</translation>
     </message>
     <message>
-        <location line="+93"/>
+        <location line="+110"/>
+        <source>The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255
+
+-------------------------------------------</source>
+        <oldsource>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255
+
+-------------------------------------------</oldsource>
+        <translation>L&apos;image d&apos;entrée a été tronquée, les valeurs en dehors de l&apos;intervalle [0 , 255] ont été remplacées par 0 ou 255.
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+90"/>
+        <source>Offset applied : pixel display = pixel image + 127
+
+-------------------------------------------</source>
+        <translation>Décalage appliqué : pixel affiché = pixel image + 127
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : pixel display = pixel image * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</source>
+        <oldsource>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : pixel display = pixel image * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</oldsource>
+        <translation>L&apos;image d&apos;entrée a été tronquée, les valeurs en dehors de l&apos;intervalle [0 , 255] ont été remplacées par 0 ou 255. &lt;Br&gt;Pour les autres valeurs : pixel affiché = pixel image * 255 / valeurMax&lt;Br&gt;&lt;Br&gt;-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>pixel display = pixel image * 255 / maxValue
+
+-------------------------------------------</source>
+        <translation>pixel affiché = pixel image * 255 / valeurMax
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+28"/>
+        <source>Both Offset and Scaling applied : pixel displayed = 127 +  pixel image * 127 / Max(|minValue|, |minValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</source>
+        <oldsource>Both Offset and Scaling applied : pixel display = 127 +  pixel image * 127/Max(|minValue|,|minValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</oldsource>
+        <translation>Décalage et mise à l&apos;échelle appliqués : pixel affiché = 127 + pixel image * 127 / Max(|valeurMin|, |valeurMax|)&lt;br&gt;&lt;br&gt; -------------------------------------------</translation>
+    </message>
+    <message>
         <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
 
 -------------------------------------------</source>
-        <translation>L&apos;image affichée a été rogné, les valeurs en dehors de la plage de [0, 255] sont éliminées
+        <translation type="vanished">L&apos;image affichée a été rogné, les valeurs en dehors de la plage de [0, 255] sont éliminées
 
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+127"/>
         <source>Offset applied : val_display = val_image + 127
 
 -------------------------------------------</source>
-        <translation>Décalage appliqué: val_affichée = val_image + 127
+        <translation type="vanished">Décalage appliqué: val_affichée = val_image + 127
 
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+24"/>
         <source>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
 
 -------------------------------------------</source>
-        <translation>Mise à l&apos;échelle appliquée : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
+        <translation type="vanished">Mise à l&apos;échelle appliquée : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
 
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+24"/>
         <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 
 
 -------------------------------------------</source>
         <oldsource>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</oldsource>
-        <translation>Décalage et mise à l&apos;échelle appliqués : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+        <translation type="vanished">Décalage et mise à l&apos;échelle appliqués : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</translation>
     </message>
@@ -266,7 +304,7 @@
         <translation type="vanished">Selectionné</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-197"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-170"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
@@ -413,7 +451,7 @@
 <context>
     <name>genericinterface::GenericHistogramWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/GenericHistogramWindow.cpp" line="+113"/>
+        <location filename="Widgets/ImageWidgets/GenericHistogramWindow.cpp" line="+115"/>
         <location line="+173"/>
         <source>Hovered</source>
         <oldsource>Hovered: </oldsource>
@@ -488,13 +526,21 @@
     </message>
     <message>
         <location line="+67"/>
-        <source>C: %1</source>
-        <translation>C: %1</translation>
+        <source>Number of pixels: %1</source>
+        <translation>Nombre de pixels: %1</translation>
     </message>
     <message>
         <location line="+1"/>
+        <source>Number of pixels: %1, A: %2</source>
+        <translation>Nombre de pixels: %1, A: %2</translation>
+    </message>
+    <message>
+        <source>C: %1</source>
+        <translation type="vanished">C: %1</translation>
+    </message>
+    <message>
         <source>C: %1, A: %2</source>
-        <translation>C: %1, A: %2</translation>
+        <translation type="vanished">C: %1, A: %2</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -531,7 +577,7 @@
         <translation>Une erreur est survenue lors de l&apos;ajout d&apos;un nouveau service. Il se peut que l&apos;interface n&apos;offre pas toutes les fonctionnalités attendues.</translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+43"/>
         <location line="+1"/>
         <source>&amp;Window</source>
         <translation>Fe&amp;nêtre</translation>
@@ -548,17 +594,22 @@
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location line="-229"/>
+        <location line="-228"/>
         <location line="+1"/>
-        <location line="+180"/>
+        <location line="+179"/>
         <location line="+1"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
-        <location line="-182"/>
+        <location line="-181"/>
         <source>&amp;About</source>
         <translation>&amp;À propos</translation>
+    </message>
+    <message>
+        <location filename="GenericInterface.h" line="+69"/>
+        <source></source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -572,55 +623,57 @@
     </message>
     <message>
         <location line="-19"/>
-        <source>Cumulated histogram</source>
-        <translation>Histogramme cumulé</translation>
+        <source>Cumulated histogram normalized</source>
+        <oldsource>Cumulated histogram</oldsource>
+        <translation>Histogramme cumulé normalisé</translation>
     </message>
     <message>
         <location line="+11"/>
         <location line="+11"/>
-        <source>Cumulative histogram</source>
-        <translation>Histogramme cumulé</translation>
+        <source>Cumulative histogram normalized</source>
+        <oldsource>Cumulative histogram</oldsource>
+        <translation>Histogramme cumulé normalisé</translation>
     </message>
 </context>
 <context>
     <name>genericinterface::HistogramWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/HistogramWindow.cpp" line="+29"/>
-        <location line="+11"/>
-        <location line="+11"/>
+        <location filename="Widgets/ImageWidgets/HistogramWindow.cpp" line="+31"/>
+        <location line="+12"/>
+        <location line="+12"/>
         <source>Histogram</source>
         <translation>Histogramme</translation>
     </message>
     <message>
-        <location line="-19"/>
-        <location line="+11"/>
-        <location line="+11"/>
-        <source>Cumulative histogram</source>
-        <oldsource>Cumulated histogram</oldsource>
-        <translation>Histogramme cumulé</translation>
+        <location line="-21"/>
+        <location line="+12"/>
+        <location line="+12"/>
+        <source>Cumulative histogram normalized</source>
+        <oldsource>Cumulative histogram</oldsource>
+        <translation>Histogramme cumulé normalisé</translation>
     </message>
 </context>
 <context>
     <name>genericinterface::ImageWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="+132"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="+130"/>
         <source>Image</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location line="-45"/>
-        <location line="+100"/>
+        <location line="-43"/>
+        <location line="+98"/>
         <source>Save As</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
         <location line="-44"/>
-        <location line="+279"/>
+        <location line="+282"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message>
-        <location line="-325"/>
+        <location line="-328"/>
         <source>Copy image</source>
         <translation>Copier l&apos;image</translation>
     </message>
@@ -640,7 +693,7 @@
         <translation>Sélectionner tout</translation>
     </message>
     <message>
-        <location line="-74"/>
+        <location line="-72"/>
         <source>Zoom + (Ctrl+Scroll Wheel)</source>
         <translation>Zoom + (Ctrl+Molette)</translation>
     </message>
@@ -650,7 +703,7 @@
         <translation>Zoom - (Ctrl+Molette)</translation>
     </message>
     <message>
-        <location line="+81"/>
+        <location line="+79"/>
         <source>Zoom +</source>
         <translation>Zoom +</translation>
     </message>
@@ -660,7 +713,7 @@
         <translation>Zoom -</translation>
     </message>
     <message>
-        <location line="+149"/>
+        <location line="+150"/>
         <source>Only images can be saved to a file.</source>
         <translation>Seules les images peuvent être sauvegardées dans un fichier.</translation>
     </message>
@@ -675,7 +728,7 @@
         <translation>Exception inconnue</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+13"/>
         <source>Save a file</source>
         <translation>Sauvegarder dans un fichier</translation>
     </message>
@@ -684,17 +737,17 @@
         <translation type="vanished">Image PNG (*.png);;Image BMP (*.bmp);; Image JPEG(*.jpg *.jpeg);; Image VFF (*.vff)</translation>
     </message>
     <message>
-        <location line="-257"/>
+        <location line="-253"/>
         <source>Rename</source>
         <translation>Renommer</translation>
     </message>
     <message>
-        <location line="+257"/>
+        <location line="+255"/>
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)</source>
         <translation></translation>
     </message>
     <message>
-        <location line="+102"/>
+        <location line="+105"/>
         <source>Rename image</source>
         <translation>Renommer l&apos;image</translation>
     </message>
@@ -704,9 +757,8 @@
         <translation>Nouveau nom :</translation>
     </message>
     <message>
-        <location line="-358"/>
         <source>Apply mask</source>
-        <translation>Appliquer un masque</translation>
+        <translation type="vanished">Appliquer un masque</translation>
     </message>
 </context>
 <context>
@@ -813,7 +865,7 @@
 <context>
     <name>genericinterface::SelectionWidget</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-51"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-410"/>
         <source>Selection : </source>
         <translation>Sélection : </translation>
     </message>
@@ -921,13 +973,13 @@
     <message>
         <location line="+9"/>
         <location line="+15"/>
-        <location line="+126"/>
+        <location line="+141"/>
         <location line="+15"/>
         <source>Color</source>
         <translation>Couleur</translation>
     </message>
     <message>
-        <location line="-150"/>
+        <location line="-165"/>
         <source>Hovered</source>
         <translation>Survolé</translation>
     </message>
@@ -1027,7 +1079,7 @@
         <translation>Arranger en &amp;cascade</translation>
     </message>
     <message>
-        <location line="+301"/>
+        <location line="+300"/>
         <source>Attention</source>
         <translation>Attention</translation>
     </message>
@@ -1037,17 +1089,15 @@
         <translation>Vous êtes sur le point de fermer toutes les fenêtres relatives, êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
-        <location line="+152"/>
         <source>Mask to apply : </source>
-        <translation>Masque à appliquer : </translation>
+        <translation type="vanished">Masque à appliquer : </translation>
     </message>
     <message>
-        <location line="+64"/>
         <source> - masked</source>
-        <translation> - masquée</translation>
+        <translation type="vanished"> - masquée</translation>
     </message>
     <message>
-        <location line="-511"/>
+        <location line="-294"/>
         <source>Hide/Show Image dock</source>
         <translation>Cacher/Montrer la barre d&apos;image</translation>
     </message>

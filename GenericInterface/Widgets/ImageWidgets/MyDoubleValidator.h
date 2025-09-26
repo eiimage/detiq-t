@@ -37,7 +37,7 @@ public:
         }
 
         // Decimal position checking
-        QChar point = locale().decimalPoint();
+        const QChar point = locale().decimalPoint().at(0);
         if(s.indexOf(point) != -1) {
             int lengthDecimal = s.length() - s.indexOf(point) - 1;
             if (lengthDecimal > decimals()) {

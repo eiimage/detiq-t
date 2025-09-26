@@ -128,7 +128,7 @@ void imagein::CumulatedHistogram::computeHistogram(const Image_t<D>& img, unsign
         cumul += histo[i] / imgSize;
         _array[i - _min] = cumul;
     }
-    for(int i=histo.getMax() + 1; i<this->getMax(); i++) {
+    for(int i=histo.getMax() + 1; i<=this->getMax(); i++) {
         _array[i - _min] = cumul;
     }
 }

@@ -18,6 +18,7 @@
 */
 
 #include "HistogramWindow.h"
+#include "Converter.h"
 
 using namespace genericinterface;
 using namespace imagein;
@@ -25,33 +26,36 @@ using namespace imagein;
 HistogramWindow::HistogramWindow(const Image* image, imagein::Rectangle rect, QString name, bool cumul)
     : GenericHistogramWindow(new HistogramView(image, rect, cumul))
 {
+    _image = Converter<Image_t<double>>::convert(*image);
     if(!cumul) {
         this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
     }
     else {
-        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram"));
+        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram normalized"));
     }
 }
 
 HistogramWindow::HistogramWindow(const ImageDouble *image, Rectangle rect, QString name, bool cumul)
     : GenericHistogramWindow(new HistogramView(image, rect, cumul))
 {
+    _image = image;
     if(!cumul) {
         this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
     }
     else {
-        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram"));
+        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram normalized"));
     }
 }
 
 HistogramWindow::HistogramWindow(const ImageDouble *image, Rectangle rect, double binSize, QString name, bool cumul)
     : GenericHistogramWindow(new HistogramView(image, rect, binSize, cumul))
 {
+    _image = image;
     if(!cumul) {
         this->setWindowTitle(name + QString(" - ") + tr("Histogram"));
     }
     else {
-        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram"));
+        this->setWindowTitle(name + QString(" - ") + tr("Cumulative histogram normalized"));
     }
 }
 

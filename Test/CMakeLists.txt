@@ -1,6 +1,5 @@
-project(ImageIn_Test C CXX)
-cmake_minimum_required(VERSION 2.8.11)
-
+cmake_minimum_required(VERSION 3.16)
+project(ImageIn_Test LANGUAGES C CXX)
 find_package(JPEG)
 if(JPEG_FOUND)
 	include_directories(${JPEG_INCLUDE_DIR})
@@ -17,12 +16,14 @@ endif()
 
 find_package(Threads REQUIRED)
 
-find_package(Qt5Test REQUIRED)
+# Qt6 (tests)
+find_package(Qt6Core REQUIRED)
+find_package(Qt6Widgets REQUIRED)
+find_package(Qt6Test REQUIRED)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
-enable_testing(true)
-
+enable_testing()
 
 # On Unix platforms, ImageIn library have to be compiled with Positional Independent code flag.
 # This ensure the shared libraries built in 'plugins' folder will link with ImageIn
@@ -69,12 +70,16 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/../ImageIn/Algorithm)
 add_executable(detiq-t_Test main.cpp  $<TARGET_OBJECTS:GenericInterface> $<TARGET_OBJECTS:ImageIn>)
 
 target_link_libraries(detiq-t_Test
-	Qt5::Core
-	Qt5::Widgets
-	Qt5::Test
-	${QWT_LIBRARY}
-	${QWT_LIBRARIES}
-	${JPEG_LIBRARY}
-	${PNG_LIBRARIES}
-	${CMAKE_THREAD_LIBS_INIT}
-)
+		  Qt6::Core
+		  Qt6::Widgets
+		  Qt6::Test
+		  # ↓ Ces libs Qt6 supplémentaires couvrent les objets provenant de GenericInterface/ImageIn +  Qt6::Svg
+		  Qt6::PrintSupport
+		  Qt6::OpenGL
+		  Qt6::OpenGLWidgets
+		  ${QWT_LIBRARY}       # Qwt (Qt6)
+		  ${QWT_LIBRARIES}     # si votre FindQwt définit aussi QWT_LIBRARIES, on garde
+		  ${JPEG_LIBRARY}
+		  ${PNG_LIBRARIES}
+		  Threads::Threads
+		)

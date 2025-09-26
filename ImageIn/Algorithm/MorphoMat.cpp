@@ -21,6 +21,8 @@
 
 using namespace imagein::MorphoMat;
 StructElem::StructElem(Dir dir) {
+    _scaleMemory = 1;
+    _shapeSizeMemory = 3;
     _width = (dir == Top || dir == Bottom) ? 1 : 2;
     _height = (dir == Left || dir == Right) ? 1 : 2;
     _mat = new bool[_width * _height];
@@ -35,6 +37,9 @@ StructElem::StructElem(Dir dir) {
     _centerY = (dir == TopLeft || dir == Top || dir == TopRight) ? 1 : 0;
 }
 StructElem::StructElem(std::string filename) {
+    _scaleMemory = 1;
+    _shapeSizeMemory = 3;
+
     Image image(filename);
     algorithm::Otsu algo;
     GrayscaleImage* im_tmp = Converter<GrayscaleImage>::convert(image);
@@ -54,7 +59,8 @@ StructElem::StructElem(std::string filename) {
     _centerX = getWidth()/2;
     _centerY = getHeight()/2;
 }
-StructElem::StructElem(GrayscaleImage_t<bool> elem, unsigned int centerX, unsigned int centerY) : GrayscaleImage_t<bool>(elem), _scale(1), _centerX(centerX), _centerY(centerY) {}
+
+StructElem::StructElem(GrayscaleImage_t<bool> elem, unsigned int centerX, unsigned int centerY) : GrayscaleImage_t<bool>(elem), _scale(1), _centerX(centerX), _centerY(centerY),_shapeSizeMemory(3),_scaleMemory(1) {}
 
 void StructElem::save(const std::string& filename) const {
     GrayscaleImage img(getWidth(), getHeight());
@@ -88,4 +94,20 @@ void StructElem::dilate(const StructElem& elem) {
     delete data;
     std::copy(resImg->begin(), resImg->end(), this->begin());
     delete resImg;
+}
+
+unsigned char StructElem::getScaleMemory() const {
+    return _scaleMemory;
+}
+
+void StructElem::setScaleMemory(unsigned char scaleMemory) {
+    _scaleMemory = scaleMemory;
+}
+
+unsigned char StructElem::getShapeSizeMemory() const {
+    return _shapeSizeMemory;
+}
+
+void StructElem::setShapeSizeMemory(unsigned char shapeSizeMemory) {
+    _shapeSizeMemory = shapeSizeMemory;
 }

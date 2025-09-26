@@ -24,7 +24,7 @@
         <translation>Contributors:</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+16"/>
         <source>Compiled on %1 at %2</source>
         <translation>Compiled on %1 at %2</translation>
     </message>
@@ -114,7 +114,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+75"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="+71"/>
         <source>Offset (127)</source>
         <oldsource> Offset (127) </oldsource>
         <translation>Offset (127)</translation>
@@ -126,7 +126,7 @@
         <translation>Scaling</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+21"/>
         <source>Crop</source>
         <translation>Crop</translation>
     </message>
@@ -143,12 +143,12 @@
     <message>
         <location line="+9"/>
         <location line="+15"/>
-        <location line="+97"/>
+        <location line="+112"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>
     <message>
-        <location line="-106"/>
+        <location line="-121"/>
         <source>Hovered</source>
         <translation>Hovered</translation>
     </message>
@@ -158,41 +158,79 @@
         <translation>Pixels Grid</translation>
     </message>
     <message>
-        <location line="+93"/>
+        <location line="+110"/>
+        <source>The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255
+
+-------------------------------------------</source>
+        <oldsource>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255
+
+-------------------------------------------</oldsource>
+        <translation>The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+90"/>
+        <source>Offset applied : pixel display = pixel image + 127
+
+-------------------------------------------</source>
+        <translation>Offset applied : displayed pixel = image pixel + 127
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : pixel display = pixel image * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</source>
+        <oldsource>The input image is truncated, values outside the range of [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : pixel display = pixel image * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</oldsource>
+        <translation>The input image is truncated, values outside [0 , 255] have been replaced by 0 or 255. &lt;Br&gt;For other values : displayed pixel = image pixel * 255 / maxValue&lt;Br&gt;&lt;Br&gt;-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>pixel display = pixel image * 255 / maxValue
+
+-------------------------------------------</source>
+        <translation>displayed pixel = image pixel * 255 / maxValue
+
+-------------------------------------------</translation>
+    </message>
+    <message>
+        <location line="+28"/>
+        <source>Both Offset and Scaling applied : pixel displayed = 127 +  pixel image * 127 / Max(|minValue|, |minValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</source>
+        <oldsource>Both Offset and Scaling applied : pixel display = 127 +  pixel image * 127/Max(|minValue|,|minValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</oldsource>
+        <translation>Both Offset and Scaling applied : displayed pixel = 127 + image pixel * 127 / Max(|minValue|, |maxValue|)&lt;br&gt;&lt;br&gt; -------------------------------------------</translation>
+    </message>
+    <message>
         <source>The display image is truncated, values outside the range of [0 , 255] have been eliminated
 
 -------------------------------------------</source>
-        <translation>The display image is truncated, values outside the range of [0 , 255] have been eliminated
+        <translation type="vanished">The display image is truncated, values outside the range of [0 , 255] have been eliminated
 
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+127"/>
         <source>Offset applied : val_display = val_image + 127
 
 -------------------------------------------</source>
-        <translation>Offset applied : val_display = val_image + 127
+        <translation type="vanished">Offset applied : val_display = val_image + 127
 
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+24"/>
         <source>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
 
 -------------------------------------------</source>
-        <translation>Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
+        <translation type="vanished">Scaling applied : val_display = (val_image &lt; 0 || maxValue == 0) ? 0 : val_image * 255 / maxValue
 
 -------------------------------------------</translation>
     </message>
     <message>
-        <location line="+24"/>
         <source>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127 
 
 -------------------------------------------</source>
         <oldsource>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</oldsource>
-        <translation>Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
+        <translation type="vanished">Both Offset and Scaling applied : val_display = (127-minValue) &gt; (maxValue-127) ? val_image * 127 / (- minValue) + 127 : val_image * 128 / maxValue + 127
 
 -------------------------------------------</translation>
     </message>
@@ -266,7 +304,7 @@
         <translation type="vanished">Selected</translation>
     </message>
     <message>
-        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-197"/>
+        <location filename="Widgets/ImageWidgets/DoubleImageWindow.cpp" line="-170"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>
@@ -413,7 +451,7 @@
 <context>
     <name>genericinterface::GenericHistogramWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/GenericHistogramWindow.cpp" line="+113"/>
+        <location filename="Widgets/ImageWidgets/GenericHistogramWindow.cpp" line="+115"/>
         <location line="+173"/>
         <source>Hovered</source>
         <oldsource>Hovered: </oldsource>
@@ -430,17 +468,15 @@
         <translation type="vanished">Value 2</translation>
     </message>
     <message>
-        <location line="+20"/>
         <source>C: %1</source>
-        <translation>C: %1</translation>
+        <translation type="vanished">C: %1</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>C: %1, A: %2</source>
-        <translation>C: %1, A: %2</translation>
+        <translation type="vanished">C: %1, A: %2</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+22"/>
         <source>R: %1, G: %2, B: %3</source>
         <translation>R: %1, G: %2, B: %3</translation>
     </message>
@@ -506,19 +542,29 @@
         <source>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</source>
         <translation>PNG image (*.png);;BMP image (*.bmp);; JPEG image(*.jpg *.jpeg);; VFF image (*.vff)</translation>
     </message>
+    <message>
+        <location line="+67"/>
+        <source>Number of pixels: %1</source>
+        <translation>Number of pixels: %1</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Number of pixels: %1, A: %2</source>
+        <translation>Number of pixels: %1, A: %2</translation>
+    </message>
 </context>
 <context>
     <name>genericinterface::GenericInterface</name>
     <message>
         <location filename="GenericInterface.cpp" line="+57"/>
         <location line="+1"/>
-        <location line="+180"/>
+        <location line="+179"/>
         <location line="+1"/>
         <source>&amp;Help</source>
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <location line="-182"/>
+        <location line="-181"/>
         <source>&amp;About</source>
         <translation>&amp;About</translation>
     </message>
@@ -544,7 +590,7 @@
         <translation>An error occurred in the addition of a service. The interface may not offer all the expected features. See the log file for more informations.</translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+43"/>
         <location line="+1"/>
         <source>&amp;Window</source>
         <translation>&amp;Window</translation>
@@ -560,6 +606,11 @@
         <source>&amp;Exit</source>
         <translation>&amp;Exit</translation>
     </message>
+    <message>
+        <location filename="GenericInterface.h" line="+69"/>
+        <source></source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>genericinterface::HistogramView</name>
@@ -572,32 +623,34 @@
     </message>
     <message>
         <location line="-19"/>
-        <source>Cumulated histogram</source>
-        <translation>Cumulated histogram</translation>
+        <source>Cumulated histogram normalized</source>
+        <oldsource>Cumulated histogram</oldsource>
+        <translation>Cumulated histogram normalized</translation>
     </message>
     <message>
         <location line="+11"/>
         <location line="+11"/>
-        <source>Cumulative histogram</source>
-        <translation>Cumulative histogram</translation>
+        <source>Cumulative histogram normalized</source>
+        <oldsource>Cumulative histogram</oldsource>
+        <translation>Cumulative histogram normalized</translation>
     </message>
 </context>
 <context>
     <name>genericinterface::HistogramWindow</name>
     <message>
-        <location filename="Widgets/ImageWidgets/HistogramWindow.cpp" line="+29"/>
-        <location line="+11"/>
-        <location line="+11"/>
+        <location filename="Widgets/ImageWidgets/HistogramWindow.cpp" line="+31"/>
+        <location line="+12"/>
+        <location line="+12"/>
         <source>Histogram</source>
         <translation>Histogram</translation>
     </message>
     <message>
-        <location line="-19"/>
-        <location line="+11"/>
-        <location line="+11"/>
-        <source>Cumulative histogram</source>
-        <oldsource>Cumulated histogram</oldsource>
-        <translation>Cumulative histogram</translation>
+        <location line="-21"/>
+        <location line="+12"/>
+        <location line="+12"/>
+        <source>Cumulative histogram normalized</source>
+        <oldsource>Cumulative histogram</oldsource>
+        <translation>Cumulative histogram normalized</translation>
     </message>
 </context>
 <context>
@@ -608,9 +661,8 @@
         <translation>Rename</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Apply mask</source>
-        <translation>Apply mask</translation>
+        <translation type="vanished">Apply mask</translation>
     </message>
     <message>
         <location line="+37"/>
@@ -619,12 +671,12 @@
     </message>
     <message>
         <location line="+11"/>
-        <location line="+279"/>
+        <location line="+282"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message>
-        <location line="-273"/>
+        <location line="-276"/>
         <source>Selection mode</source>
         <translation>Selection mode</translation>
     </message>
@@ -644,7 +696,7 @@
         <translation>PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)</translation>
     </message>
     <message>
-        <location line="+102"/>
+        <location line="+105"/>
         <source>Rename image</source>
         <translation>Rename image</translation>
     </message>
@@ -654,13 +706,13 @@
         <translation>New name:</translation>
     </message>
     <message>
-        <location line="-366"/>
-        <location line="+100"/>
+        <location line="-367"/>
+        <location line="+98"/>
         <source>Save As</source>
         <translation>Save As</translation>
     </message>
     <message>
-        <location line="-97"/>
+        <location line="-95"/>
         <source>Zoom + (Ctrl+Scroll Wheel)</source>
         <translation>Zoom + (Ctrl+Scroll Wheel)</translation>
     </message>
@@ -670,7 +722,7 @@
         <translation>Zoom - (Ctrl+Scroll Wheel)</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+4"/>
         <source>Copy image</source>
         <translation>Copy image</translation>
     </message>
@@ -685,7 +737,7 @@
         <translation>Zoom -</translation>
     </message>
     <message>
-        <location line="+149"/>
+        <location line="+150"/>
         <source>Only images can be saved to a file.</source>
         <translation>Only images can be saved to a file.</translation>
     </message>
@@ -700,7 +752,7 @@
         <translation>Unknown exception</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+13"/>
         <source>Save a file</source>
         <translation>Save a file</translation>
     </message>
@@ -813,7 +865,7 @@
 <context>
     <name>genericinterface::SelectionWidget</name>
     <message>
-        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-306"/>
+        <location filename="Widgets/ImageWidgets/ImageWindow.cpp" line="-302"/>
         <source>Selection : </source>
         <translation>Selection : </translation>
     </message>
@@ -932,13 +984,13 @@
     <message>
         <location line="+9"/>
         <location line="+15"/>
-        <location line="+126"/>
+        <location line="+141"/>
         <location line="+15"/>
         <source>Color</source>
         <translation>Color</translation>
     </message>
     <message>
-        <location line="-150"/>
+        <location line="-165"/>
         <source>Hovered</source>
         <translation>Hovered</translation>
     </message>
@@ -1026,7 +1078,7 @@
         <translation>&amp;Cascade windows</translation>
     </message>
     <message>
-        <location line="+301"/>
+        <location line="+300"/>
         <source>Attention</source>
         <translation>Attention</translation>
     </message>
@@ -1036,17 +1088,15 @@
         <translation>You&apos;re going to close all the relative windows, are you sure you want to continue ?</translation>
     </message>
     <message>
-        <location line="+152"/>
         <source>Mask to apply : </source>
-        <translation>Mask to apply : </translation>
+        <translation type="vanished">Mask to apply : </translation>
     </message>
     <message>
-        <location line="+64"/>
         <source> - masked</source>
-        <translation> - masked</translation>
+        <translation type="vanished"> - masked</translation>
     </message>
     <message>
-        <location line="-511"/>
+        <location line="-294"/>
         <source>Hide/Show Image dock</source>
         <translation>Hide/Show Image dock</translation>
     </message>

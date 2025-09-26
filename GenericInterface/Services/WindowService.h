@@ -24,7 +24,7 @@
 
 #include <QDockWidget>
 #include <QMdiSubWindow>
-#include <QMutex>
+#include <QRecursiveMutex>
 #include <QMutexLocker>
 
 #include "Node.h"
@@ -79,7 +79,6 @@ namespace genericinterface
     void updateDisplay();
     void removeId(NodeId id);
     void moveToNode(StandardImageWindow* siw, int pos = -1);
-    void applyBinaryMask(ImageWindow* imgWnd);
 
   signals:
     void activeWidgetChanged(const QWidget*) const;
@@ -95,7 +94,7 @@ namespace genericinterface
     NavigationDock* _nav;
     std::map<NodeId, Node*> _widgets;
     Qt::DockWidgetArea _navPos;
-    mutable QMutex _mutex;
+    mutable QRecursiveMutex _mutex;
   };
 
 

@@ -145,7 +145,6 @@ class ImageWindow : public QWidget
         virtual void pixelHovered(int x, int y);
 
         void rename();
-        void applyBinaryMask();
 
         virtual void showHistogram();
         virtual void showPixelsGrid() = 0;
@@ -175,7 +174,6 @@ class ImageWindow : public QWidget
 
         void addWidget(ImageWindow*, QWidget*);
         void addImage(ImageWindow*, ImageWindow*);
-        void applyBinaryMask(ImageWindow*);
 
     protected:
         void setDisplayImage(const Image* displayImg);

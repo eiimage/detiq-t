@@ -84,17 +84,15 @@ ImageWindow::ImageWindow(QString path, const Image* displayImg, Rectangle rect)
     QObject::connect(_imageView, SIGNAL(customContextMenuRequested(const QPoint&)), _menu, SLOT(showContextMenu(const QPoint&)));
     _statusBar = new QWidget();
     initStatusBar();
-    menu()->addAction(tr("Save As"), this, SLOT(saveAs()),QKeySequence::Save);
+    menu()->addAction(tr("Save As"), QKeySequence::Save, this, SLOT(saveAs()));
     menu()->addSeparator();
 
-    menu()->addAction(tr("Zoom + (Ctrl+Scroll Wheel)"), this, SLOT(zoom_in()),QKeySequence::ZoomIn);
-    menu()->addAction(tr("Zoom - (Ctrl+Scroll Wheel)"), this, SLOT(zoom_out()),QKeySequence::ZoomOut);
+    menu()->addAction(tr("Zoom + (Ctrl+Scroll Wheel)"), QKeySequence::ZoomIn, this, SLOT(zoom_in()));
+    menu()->addAction(tr("Zoom - (Ctrl+Scroll Wheel)"), QKeySequence::ZoomOut, this, SLOT(zoom_out()));
     menu()->addSeparator();
     menu()->addAction(tr("Rename"), this, SLOT(rename()));
     menu()->addSeparator();
-    menu()->addAction(tr("Apply mask"), this, SLOT(applyBinaryMask()));
-    menu()->addSeparator();
-    menu()->addAction(tr("Copy image"), this, SLOT(copyImage()),QKeySequence::Copy);
+    menu()->addAction(tr("Copy image"), QKeySequence::Copy, this, SLOT(copyImage()));
     menu()->addSeparator();
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -199,6 +197,7 @@ void ImageWindow::initStatusBar()
     _infoLayout = new QVBoxLayout(_infoWidget);
 
     QObject::connect(_mouseButton, SIGNAL(toggled(bool)), this, SLOT(toggleMouseMode(bool)));
+    QObject::connect(_mouseButton, SIGNAL(toggled(bool)), _imageView, SLOT(selectAll()));
     QObject::connect(_selectButton, SIGNAL(toggled(bool)), this, SLOT(toggleSelectMode(bool)));
     QObject::connect(_selectAllButton, SIGNAL(clicked()), _imageView, SLOT(selectAll()));
     QObject::connect(_zoomInButton, SIGNAL(clicked()), this, SLOT(zoom_in()));
@@ -338,29 +337,31 @@ void ImageWindow::save(const QString& path, const QString& ext)
 
 void ImageWindow::saveAs()
 {
-    QString path;
-    //WindowService* ws = _gi->windowService();
-    //ImageWindow* currentWindow = ws->getCurrentImageWindow();
-    if(this != NULL) {
-    /*Use the processed name as the default name to be proposed*/
-//        path = this->getPath();
-        path = this->windowTitle();
-    }
+    //! Nom par défaut pour la boîte de dialogue
+    QString path = this->windowTitle();
     QString selectedFilter;
-    QString file = QFileDialog::getSaveFileName(this, tr("Save a file"), path, tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)"), &selectedFilter);
 
-    QString ext = selectedFilter.right(5).left(4);
-    if(file != "") {
-//        if(!file.contains('.')) file += ext;
-        /*Verify that the suffix of the original picture is the same as expected
-         * if different, replace the suffix with the one requested by the user*/
-        std::string existExt = file.toStdString().substr(file.toStdString().find_last_of('.'));
-        if(strcmp(ext.toStdString().c_str(),existExt.c_str())!=0){
-            std::string newFile = file.toStdString().substr(0,file.toStdString().find_last_of('.'));
-            newFile.append(ext.toStdString());
-            file = QString::fromLocal8Bit(newFile.c_str());
+    QString file = QFileDialog::getSaveFileName(
+            this,
+            tr("Save a file"),
+            path,
+            tr("PNG image (*.png);;BMP image (*.bmp);; JPEG image (*.jpeg *.jpg);; VFF image (*.vff)"),
+            &selectedFilter
+    );
+
+    if (!file.isEmpty()) {
+        QString fileExtension = selectedFilter.right(3).toLower();
+
+        if (file.endsWith(selectedFilter, Qt::CaseInsensitive)) {
+            //! extension valide
+            this->save(file,fileExtension);
+        } else {
+            //! extension non présente, on la rajoute
+            file += ".bmp";
+            this->save(file,"bmp");
         }
-        this->save(file, ext);
+    } else {
+        return;
     }
 }
 
@@ -424,9 +425,9 @@ void ImageWindow::updateZoom(double z) const
 
 void ImageWindow::wheelEvent (QWheelEvent * event) {
     bool ctrlPressed = event->modifiers().testFlag(Qt::ControlModifier);
-    if (ctrlPressed && event->orientation() == Qt::Vertical)
+    if (ctrlPressed && event->angleDelta().y() != 0)
     {
-        this->zoom(event->delta());
+        this->zoom(event->angleDelta().y());
     }
 }
 
@@ -454,10 +455,6 @@ void ImageWindow::rename() {
                                          windowTitle(), &ok);
     if (ok && !text.isEmpty())
         this->setWindowTitle(text);
-}
-
-void ImageWindow::applyBinaryMask() {
-    emit applyBinaryMask(this);
 }
 
 void ImageWindow::showHistogram()

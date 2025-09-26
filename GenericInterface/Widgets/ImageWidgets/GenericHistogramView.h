@@ -22,9 +22,11 @@
 
 #include <QMouseEvent>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <vector>
-
+#ifdef TOTO
+#error
+#endif
 #include <Image.h>
 #include <Rectangle.h>
 #include <Histogram.h>
@@ -33,7 +35,13 @@
 #include <ColumnProfile.h>
 #include "AlternativeImageView.h"
 
-#include <qwt_legend_data.h>
+#if __has_include(<qwt/qwt_legend_data.h>)
+#  include <qwt/qwt_legend_data.h>
+#elif __has_include(<qwt_legend_data.h>)
+#  include <qwt_legend_data.h>
+#else
+#  error "qwt_legend_data.h not found. Check QWT include directories."
+#endif
 #include "../../Utilities/Log.h"
 
 class QwtPlot;
@@ -63,7 +71,7 @@ public:
      * \param image The image concerned by the histogram
      * \param rect The part of the image where the histogram is applied
      */
-    GenericHistogramView(const imagein::Image* image, imagein::Rectangle rect, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false, bool lineProfile = false, bool columnProfile = false);
+    GenericHistogramView(const imagein::Image* image, const imagein::Rectangle& rect, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false, bool lineProfile = false, bool columnProfile = false);
 
     /*!
      * \brief Alternative constructor
@@ -74,7 +82,7 @@ public:
      * \param rect The part of the image where the histogram is applied
      */
 
-    GenericHistogramView(const imagein::ImageDouble* image, imagein::Rectangle rect, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false);
+    GenericHistogramView(const ImageDouble* image, const Rectangle& rect, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false);
 
     /*!
      * \brief Alternative constructor
@@ -85,16 +93,16 @@ public:
      * \param rect The part of the image where the histogram is applied
      */
 
-    GenericHistogramView(const imagein::ImageDouble* image, imagein::Rectangle rect, double binSize, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false);
+    GenericHistogramView(const ImageDouble* image, const Rectangle& rect, double binSize, bool horizontal=false, int value=0, bool projection=false, bool cumulated = false);
 
     /*!
      * \brief GenericHistogramView destructor.
      *
      * HistogramPicker are deleted
      */
-    virtual ~GenericHistogramView();
+    ~GenericHistogramView() override;
 
-    void update(const imagein::Image* image, imagein::Rectangle rect);
+    void update(const imagein::Image* image, const imagein::Rectangle& rect);
     void updateByBinSize(const ImageDouble *image, double binSize);
     void updateCumulativeByBinSize(const ImageDouble *image, double binSize);
 
@@ -137,7 +145,7 @@ signals:
     void rightSelected(const QPointF&) const;
 
 private slots:
-    void showItem(QVariant, bool, int) const;
+    void showItem(const QVariant&, bool, int) const;
     void move(const QPointF&) const;
     void leftClick(const QPointF&) const;
     void rightClick(const QPointF&) const;
@@ -157,13 +165,13 @@ protected:
 
 
 private:
+    void init(uint nbChannels);
     bool _projection;
     bool _cumulated;
     bool _lineProfile;
     bool _columnProfile;
     bool _double;
     double _maxBinSize = 0;
-    void init(uint nbChannels);
     // This is the origin value for the x axis. It is 0 by default on classical images,
     // but can be negative if the input image has negative values
     int _originValue;

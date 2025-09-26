@@ -91,12 +91,12 @@ void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
     int offsetY = (PIXEL_S+painter.fontMetrics().height())/2;
     for(int i = 0; i < srcSize.width(); ++i) {
         QString string = QString("%1").arg(_offset.x()+i);
-        const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
+        const int offsetX = (PIXEL_S - painter.fontMetrics().horizontalAdvance(string)) / 2;
         painter.drawText(QPointF((i+1)*PIXEL_S+offsetX, offsetY), string);
     }
     for(int j = 0; j < srcSize.height(); ++j) {
         QString string = QString("%1").arg(_offset.y()+j);
-        const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
+        const int offsetX = (PIXEL_S - painter.fontMetrics().horizontalAdvance(string)) / 2;
         painter.drawText(QPointF(offsetX, (j+1)*PIXEL_S+offsetY), string);
     }
 
@@ -109,7 +109,7 @@ void PixelGrid::paintEvent (QPaintEvent* /*event*/ ) {
                 Image::depth_t value = _image->getPixel(i+_offset.x(), j+_offset.y(), _channel);
                 painter.setPen( (sum(_image, i+_offset.x(), j+_offset.y()) >= 127) ? Qt::black : Qt::white );
                 QString string = QString("%1").arg(value);
-                const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
+                const int offsetX = (PIXEL_S - painter.fontMetrics().horizontalAdvance(string)) / 2;
                 painter.drawText(QPointF((i+1)*PIXEL_S+offsetX, (j+1)*PIXEL_S+offsetY), string);
             }
             catch(out_of_range&) {}
@@ -155,12 +155,12 @@ void DoublePixelGrid::paintEvent (QPaintEvent* /*event */) {
     int offsetY = (PIXEL_S+painter.fontMetrics().height())/2;
     for(int i = 0; i < srcSize.width(); ++i) {
         QString string = QString("%1").arg(_offset.x()+i);
-        const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
+        const int offsetX = (PIXEL_S - painter.fontMetrics().horizontalAdvance(string)) / 2;
         painter.drawText(QPointF((i+1)*PIXEL_S+offsetX, offsetY), string);
     }
     for(int j = 0; j < srcSize.height(); ++j) {
         QString string = QString("%1").arg(_offset.y()+j);
-        const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
+        const int offsetX = (PIXEL_S - painter.fontMetrics().horizontalAdvance(string)) / 2;
         painter.drawText(QPointF(offsetX, (j+1)*PIXEL_S+offsetY), string);
     }
 
@@ -200,7 +200,7 @@ void DoublePixelGrid::paintEvent (QPaintEvent* /*event */) {
                 double value = _dataImg->getPixel(i+_offset.x(), j+_offset.y(), _channel);
                 painter.setPen( (sum(_image, i+_offset.x(), j+_offset.y()) >= 127) ? Qt::black : Qt::white );
                 QString string = QString("%1").arg(value, 0, format, precision);
-                const int offsetX = (PIXEL_S-painter.fontMetrics().width(string))/2;
+                const int offsetX = (PIXEL_S - painter.fontMetrics().horizontalAdvance(string)) / 2;
                 painter.drawText(QPointF((i+1)*PIXEL_S+offsetX, (j+1)*PIXEL_S+offsetY), string);
             }
             catch(out_of_range&) {}

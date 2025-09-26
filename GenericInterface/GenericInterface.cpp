@@ -105,21 +105,21 @@ bool GenericInterface::removeService(Service* s) {
     return false;
 }
 
-void GenericInterface::addService(int id, Service* s) throw (BadIdException)
+void GenericInterface::addService(int id, Service* s)
 {
   if (_services.find(id) == _services.end())
   {
     _services[id] = s;
   }
   else
-    throw new BadIdException(id);
+    throw BadIdException(id);
 }
 
-void GenericInterface::changeService(int id, Service* s) throw (BadIdException)
+void GenericInterface::changeService(int id, Service* s)
 {
     map<int, Service*>::iterator it = _services.find(id);
     if (it == _services.end()) {
-        throw new BadIdException(id);
+        throw BadIdException(id);
     }
     Service* service = it->second;
     _services.erase(it);
@@ -128,7 +128,7 @@ void GenericInterface::changeService(int id, Service* s) throw (BadIdException)
 
 }
 
-Service* GenericInterface::getService(int id) throw (BadIdException)
+Service* GenericInterface::getService(int id)
 {
   if (_services.find(id) == _services.end())
     throw BadIdException(id);
@@ -210,8 +210,7 @@ QMdiArea* GenericInterface::initCentralWidget()
     setCentralWidget(res);
   }
   else
-    throw new AlreadyInitException;
-
+    throw AlreadyInitException();
   return res;
 }
 
